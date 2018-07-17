@@ -1,0 +1,14 @@
+<table width="100%">
+    <?php if (!empty($this->fields)): ?>
+        <?php foreach ($this->fields as $strName => $varValue) : ?>
+            <tr nobr="true">
+                <td>
+                    <br><br><strong><?= $varValue['label'] ?></strong>
+                    <br><?= $varValue['formatted'] ?: '-' ?>
+                </td>
+            </tr>
+        <?php endforeach ?>
+    <?php else: ?>
+        Please pass a field array to ModuleExporter::export() or copy the template exporter_pdf_item_default and adjust it to your needs. You have access to your entity's properties by $this.
+    <?php endif; ?>
+</table>

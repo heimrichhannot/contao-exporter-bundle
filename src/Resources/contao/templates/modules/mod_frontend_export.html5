@@ -1,0 +1,12 @@
+<?php $this->extend('block_unsearchable'); ?>
+
+<?php $this->block('content'); ?>
+
+<div class="exporter">
+    <form action="<?= $this->action ?>" method="<?= $this->method ?>">
+        <input type="hidden" name="REQUEST_TOKEN" value="{{request_token}}">
+        <button type="submit" name="export" value="<?= $this->type ?>"><?= $this->btnLabel; ?></button>
+    </form>
+</div>
+
+<?php $this->endblock(); ?>
