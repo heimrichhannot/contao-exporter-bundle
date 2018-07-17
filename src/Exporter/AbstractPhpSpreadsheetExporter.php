@@ -11,49 +11,67 @@
 
 namespace HeimrichHannot\ContaoExporterBundle\Exporter;
 
-use HeimrichHannot\Haste\Dca\DC_HastePlus;
-use HeimrichHannot\Haste\Util\Arrays;
-use HeimrichHannot\Haste\Util\FormSubmission;
+use Contao\File;
+use Contao\System;
+use HeimrichHannot\ContaoExporterBundle\Event\ModifyFieldValueEvent;
+use HeimrichHannot\UtilsBundle\Driver\DC_Table_Utils;
+use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\BaseWriter;
+use PhpOffice\PhpSpreadsheet\Writer\Csv;
 
 abstract class AbstractPhpSpreadsheetExporter extends AbstractTableExporter
 {
     protected $arrExportFields = [];
 
-    public static function getSupportedExportTypes(): array
-    {
-        return [AbstractExporter::TYPE_LIST];
-    }
-
-
+    /**
+     * @param null $entity
+     * @param array $fields
+     * @return mixed
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     */
     protected function doExport($entity = null, array $fields = [])
     {
-        $databaseResult = $this->getEntities();
-        $arrDca      = $GLOBALS['TL_DCA'][$this->config->linkedTable];
+        return $this->exportList();
+    }
 
-        $intCol = 0;
-        $intRow = 1;
+    /**
+     * @param array|null $context
+     * @return Spreadsheet
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     */
+    public function exportList()
+    {
+        $databaseResult = $this->getEntities();
+        $table = $this->config->linkedTable;
+        $arrDca         = $GLOBALS['TL_DCA'][$table];
+        $spreadsheet    = new Spreadsheet();
+
+        $columnIndex = 1;
+        $rowIndex    = 1;
 
         // header
         if ($this->config->addHeaderToExportTable && is_array($this->headerFields)) {
-            foreach ($this->headerFields as $varValue) {
-                $this->objPhpExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($intCol, $intRow, $varValue);
-                $this->processHeaderRow($intCol);
-                $intCol++;
+            foreach ($this->headerFields as $value) {
+                $spreadsheet->setActiveSheetIndex(0)->setCellValueByColumnAndRow($columnIndex, $rowIndex, $value);
+                $this->processHeaderRow($columnIndex);
+                $columnIndex++;
             }
-            $intRow++;
+            $rowIndex++;
         }
 
         // body
         if ($databaseResult->numRows > 0) {
 
             while ($databaseResult->next()) {
-                $arrRow = $databaseResult->row();
-                $intCol = 0;
+                $row         = $databaseResult->row();
+                $columnIndex = 1;
 
-                $objDc               = new DC_HastePlus($this->linkedTable);
-                $objDc->activeRecord = $databaseResult;
-                $strId               = $this->linkedTable . '.id';
-                $objDc->id           = $databaseResult->{$strId};
+                $dcTable               = new DC_Table_Utils($table);
+                $dcTable->activeRecord = $databaseResult;
+                $strId                 = $table . '.id';
+                $dcTable->id           = $databaseResult->{$strId};
 
                 // trigger onload_callback since these could modify the dca
                 if (is_array($arrDca['config']['onload_callback'])) {
@@ -62,80 +80,101 @@ abstract class AbstractPhpSpreadsheetExporter extends AbstractTableExporter
                             if (!isset($arrOnload[implode(',', $callback)])) {
                                 $arrOnload[implode(',', $callback)] = 0;
                             }
-
-                            $this->import($callback[0]);
-                            $this->{$callback[0]}->{$callback[1]}($objDc);
+                            System::importStatic($callback[0])->{$callback[1]}($dcTable);
                         } elseif (is_callable($callback)) {
-                            $callback($objDc);
+                            $callback($dcTable);
                         }
                     }
 
                     // refresh
-                    $arrDca = $GLOBALS['TL_DCA'][$this->linkedTable];
+                    $arrDca = $GLOBALS['TL_DCA'][$table];
                 }
 
-                foreach ($arrRow as $key => $varValue) {
-                    $strField = str_replace($this->linkedTable . '.', '', $key);
+                foreach ($row as $key => $value)
+                {
+                    $strField = str_replace($table . '.', '', $key);
+                    $this->container->get('huh.utils.form')->prepareSpecialValueForOutput($strField, $value, $dcTable);
 
-                    $varValue = $this->localizeFields ? FormSubmission::prepareSpecialValueForPrint(
-                        $varValue,
-                        $arrDca['fields'][$strField],
-                        $this->linkedTable,
-                        $objDc
-                    ) : $varValue;
+                    $value = $this->config->localizeFields ? $this->container->get('huh.utils.form')->prepareSpecialValueForOutput(
+                        $strField, $value, $dcTable
+                    ) : $value;
 
-                    if (is_array($varValue)) {
-                        $varValue = Arrays::flattenArray($varValue);
+                    if (is_array($value)) {
+                        $value = $this->container->get('huh.utils.array')->flattenArray($value);
                     }
 
-                    if (isset($GLOBALS['TL_HOOKS']['exporter_modifyFieldValue'])
-                        && is_array(
-                            $GLOBALS['TL_HOOKS']['exporter_modifyFieldValue']
-                        )
-                    ) {
-                        foreach ($GLOBALS['TL_HOOKS']['exporter_modifyFieldValue'] as $callback) {
-                            $objCallback = \System::importStatic($callback[0]);
-                            $varValue    = $objCallback->{$callback[1]}($varValue, $strField, $arrRow, $intCol);
-                        }
-                    }
+                    $event = $this->dispatcher->dispatch(ModifyFieldValueEvent::NAME, new ModifyFieldValueEvent($value, $strField, $row, $columnIndex, $rowIndex, $this));
 
-                    $this->objPhpExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow(
-                        $intCol,
-                        $intRow,
-                        html_entity_decode($varValue)
+                    $spreadsheet->setActiveSheetIndex(0)->setCellValueByColumnAndRow(
+                        $event->getColumnIndex(),
+                        $event->getRowIndex(),
+                        html_entity_decode($event->getValue())
                     );
 
-                    $this->objPhpExcel->getActiveSheet()->getColumnDimension(\PHPExcel_Cell::stringFromColumnIndex($intCol))->setAutoSize(true);
-                    $this->processBodyRow($intCol);
+                    $spreadsheet->getActiveSheet()->getColumnDimension(Coordinate::stringFromColumnIndex($columnIndex))->setAutoSize(true);
+                    $this->processBodyRow($columnIndex);
 
-                    $intCol++;
+                    $columnIndex++;
                 }
-                $this->objPhpExcel->getActiveSheet()->getRowDimension($intRow)->setRowHeight(-1);
-                $intRow++;
+                $spreadsheet->getActiveSheet()->getRowDimension($rowIndex)->setRowHeight(-1);
+                $rowIndex++;
             }
         }
 
-        $this->objPhpExcel->setActiveSheetIndex(0);
-        $this->objPhpExcel->getActiveSheet()->setTitle('Export');
+        $spreadsheet->setActiveSheetIndex(0);
+        $spreadsheet->getActiveSheet()->setTitle('Export');
 
-        return $this->objPhpExcel;
+        return $spreadsheet;
     }
 
-    public function exportToDownload($objResult)
+    /**
+     * @param Spreadsheet $spreadsheet
+     * @param string $fileDir
+     * @param string $fileName
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     */
+    public function exportToDownload($spreadsheet, string $fileDir, string $fileName)
     {
-        $strTmpFile = 'system/tmp/' . $this->strFilename;
-
         // send file to browser
-        $objWriter = \PHPExcel_IOFactory::createWriter($objResult, $this->strWriterOutputType);
-        $this->updateWriter($objWriter);
-        $objWriter->save(TL_ROOT . '/' . $strTmpFile);
-        $objFile = new \File($strTmpFile);
-        $objFile->sendToBrowser();
+        $writer = $this->getDocumentWriter($spreadsheet);
+        $this->createHeaders($fileName);
+        $writer->save('php://output');
     }
 
-    public function exportToFile($objResult)
+    /**
+     * @param Spreadsheet $spreadsheet
+     * @return \PhpOffice\PhpSpreadsheet\Writer\IWriter
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     */
+    protected function getDocumentWriter(Spreadsheet $spreadsheet) {
+        return IOFactory::createWriter($spreadsheet, $this->config->fileType);
+    }
+
+    protected function createHeaders($fileName)
+    {
+        header("Content-Type: text/plain");
+        header('Content-Disposition: attachment;filename="'.$fileName.'"');
+        header('Cache-Control: max-age=0');
+// If you're serving to IE 9, then the following may be needed
+        header('Cache-Control: max-age=1');
+        // If you're serving to IE over SSL, then the following may be needed
+        header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
+        header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT'); // always modified
+        header('Cache-Control: cache, must-revalidate'); // HTTP/1.1
+        header('Pragma: public'); // HTTP/1.0
+    }
+
+    public function exportToFile($objResult, string $fileDir, string $fileName)
     {
 
+    }
+
+    public function processHeaderRow(int $col)
+    {
+    }
+
+    public function processBodyRow(int $col)
+    {
     }
 
 

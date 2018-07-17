@@ -17,13 +17,10 @@ use Contao\Database;
 use Contao\FilesModel;
 use Contao\FrontendUser;
 use Contao\Input;
-use Contao\Message;
 use Contao\Model;
 use HeimrichHannot\ContaoExporterBundle\Event\BeforeExportEvent;
 use HeimrichHannot\ContaoExporterBundle\Event\BeforeBuildQueryEvent;
 use HeimrichHannot\ContaoExporterBundle\Model\ExporterModel;
-use HeimrichHannot\UtilsBundle\Container\ContainerUtil;
-use HeimrichHannot\UtilsBundle\File\FileUtil;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
@@ -36,6 +33,11 @@ abstract class AbstractExporter implements ExporterInterface
     const TYPE_LIST = 'list';
 
     const EXPORTER_RAW_FIELD_SUFFIX = 'ERawE';
+
+    /**
+     * @var string
+     */
+    protected $tempFolderPath = 'system/tmp';
 
     /**
      * @var ExporterModel
@@ -71,9 +73,10 @@ abstract class AbstractExporter implements ExporterInterface
      * @param Model|null $entity
      * @param ExporterModel|null $config
      * @param array $fields
+     * @return bool
      * @throws \Exception
      */
-    public function export(ExporterModel $config = null, $entity = null, array $fields = [])
+    public function export(ExporterModel $config = null, $entity = null, array $fields = []): bool
     {
         if ($config)
         {
@@ -84,16 +87,7 @@ abstract class AbstractExporter implements ExporterInterface
             throw new \Exception("No configuration found for current export action.");
         }
 
-        $fileName = $this->buildFilename($entity);
-
-        if ($this->config->target == static::TARGET_FILE)
-        {
-            $fileDir = $this->buildFileDir($entity);
-        }
-
-        $event = $this->dispatcher->dispatch(BeforeExportEvent::NAME, new BeforeExportEvent($entity, $fields, $fileDir, $fileName, $config, $this));
-
-        if (!in_array($this->config->type, static::getSupportedExportTypes()))
+        if (!$this->hasType($this->config->type))
         {
             if ($this->container->getParameter('kernel.environment') != 'prod') {
                 throw new \Exception("Export type ".$this->config->type." is not supported by export class ".static::class
@@ -101,6 +95,15 @@ abstract class AbstractExporter implements ExporterInterface
             }
             return false;
         }
+
+        $fileName = $this->buildFileName($entity);
+
+        if ($this->config->target == static::TARGET_FILE)
+        {
+            $fileDir = $this->buildFileDir($entity);
+        }
+
+        $event = $this->dispatcher->dispatch(BeforeExportEvent::NAME, new BeforeExportEvent($entity, $fields, $fileDir, $fileName, $config, $this));
 
         $result = $this->doExport($event->getEntity(), $event->getFields());
 
@@ -123,9 +126,9 @@ abstract class AbstractExporter implements ExporterInterface
      */
     abstract protected function doExport($entity, array $fields);
 
-    abstract public function exportToDownload($result, $fileDir, $fileName);
+    abstract public function exportToDownload($result, string $fileDir, string $fileName);
 
-    abstract public function exportToFile($result, $fileDir, $fileName);
+    abstract public function exportToFile($result, string $fileDir, string $fileName);
 
     /**
      *
@@ -171,7 +174,7 @@ abstract class AbstractExporter implements ExporterInterface
      * @param Model $entity
      * @return string
      */
-    protected function buildFilename(Model $entity)
+    protected function buildFileName(Model $entity)
     {
         $fileName = $this->config->fileName ?: 'export';
 
@@ -183,7 +186,12 @@ abstract class AbstractExporter implements ExporterInterface
         return $fileName . '.' . $this->config->fileType;
     }
 
-    protected function getEntities()
+    /**
+     * Returns the entites for list export
+     *
+     * @return Database\Result
+     */
+    public function getEntities()
     {
         $exportFields = [];
         $dca          = $GLOBALS['TL_DCA'][$this->config->linkedTable];
@@ -281,5 +289,33 @@ abstract class AbstractExporter implements ExporterInterface
     public function setConfig(ExporterModel $config): void
     {
         $this->config = $config;
+    }
+
+    public function hasType(string $type): bool
+    {
+        switch ($type)
+        {
+            case static::TYPE_LIST:
+                return $this instanceof ExportTypeListInterface;
+            case static::TYPE_ITEM:
+                return $this instanceof ExportTypeItemInterface;
+        }
+        return false;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTempFolderPath(): string
+    {
+        return $this->tempFolderPath;
+    }
+
+    /**
+     * @param string $tempFolderPath
+     */
+    public function setTempFolderPath(string $tempFolderPath): void
+    {
+        $this->tempFolderPath = $tempFolderPath;
     }
 }

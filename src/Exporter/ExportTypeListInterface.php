@@ -10,9 +10,12 @@ namespace HeimrichHannot\ContaoExporterBundle\Exporter;
 
 
 
-interface ListExportTypeInterface
+interface ExportTypeListInterface
 {
-    const TYPE = 'list';
-
-    public function getListData();
+    /**
+     * Export list
+     *
+     * @return mixed
+     */
+    public function exportList();
 }

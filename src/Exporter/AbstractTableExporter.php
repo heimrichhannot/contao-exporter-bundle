@@ -16,14 +16,14 @@ use Contao\Controller;
 use Contao\System;
 use HeimrichHannot\ContaoExporterBundle\Model\ExporterModel;
 
-abstract class AbstractTableExporter extends AbstractExporter
+abstract class AbstractTableExporter extends AbstractExporter implements ExportTypeListInterface
 {
     protected $headerFields;
 
-    public function export(ExporterModel $config = null, $entity = null, array $fields = [])
+    public function export(ExporterModel $config = null, $entity = null, array $fields = []): bool
     {
         $this->setHeaderFields();
-        parent::export($config, $entity, $fields);
+        return parent::export($config, $entity, $fields);
     }
 
 

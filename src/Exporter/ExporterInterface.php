@@ -18,8 +18,9 @@ interface ExporterInterface
 {
     public static function getName(): string;
     public static function getSupportedFileTypes(): array;
-    public static function getSupportedExportTypes(): array;
     public static function getSupportedExportTarget(): array;
+
+    public function hasType(string $type): bool;
 
     /**
      * Export with given parameters.
