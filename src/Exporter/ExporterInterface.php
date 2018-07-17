@@ -16,9 +16,22 @@ use HeimrichHannot\ContaoExporterBundle\Model\ExporterModel;
 
 interface ExporterInterface
 {
-    public static function getName(): string;
-    public static function getSupportedFileTypes(): array;
-    public static function getSupportedExportTarget(): array;
+    /**
+     * Returns a unique identifier.
+     * @return string
+     */
+    public function getName(): string;
+
+    /**
+     * Return a friendly name or translation id.
+     *
+     * @return string
+     */
+    public function getLabel(): string;
+
+    public function getSupportedFileTypes(): array;
+
+    public function getSupportedExportTarget(): array;
 
     public function hasType(string $type): bool;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace HeimrichHannot\ContaoExporterBundle\FrontendModule;
+namespace HeimrichHannot\ContaoExporterBundle\Module;
 
 use Contao\BackendTemplate;
 use Contao\Module;

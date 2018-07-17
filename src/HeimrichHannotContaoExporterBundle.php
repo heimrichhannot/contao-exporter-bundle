@@ -12,8 +12,22 @@
 namespace HeimrichHannot\ContaoExporterBundle;
 
 
+use HeimrichHannot\ContaoExporterBundle\DependencyInjection\Compiler\ExporterCompiler;
+use HeimrichHannot\ContaoExporterBundle\DependencyInjection\ExporterExtension;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class HeimrichHannotContaoExporterBundle extends Bundle
 {
+    public function getContainerExtension()
+    {
+        return new ExporterExtension();
+    }
+
+    public function build(ContainerBuilder $container)
+    {
+        $container->addCompilerPass(new ExporterCompiler());
+    }
+
+
 }

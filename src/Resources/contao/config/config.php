@@ -3,6 +3,7 @@
 /**
  * Constants
  */
+
 define('EXPORTER_RAW_FIELD_SUFFIX', 'ERawE');
 define('EXPORTER_FILE_TYPE_CSV', 'csv');
 define('EXPORTER_FILE_TYPE_MEDIA', 'media');
@@ -18,7 +19,7 @@ define('EXPORTER_FRONTEND_FORMID', 'exporter_download');
 array_insert(
 	$GLOBALS['FE_MOD'], count($GLOBALS['FE_MOD']) - 1, [
 		'exporter' => [
-			'frontendExporter' => 'HeimrichHannot\Exporter\ModuleFrontendExporter'
+			'frontendExporter' => \HeimrichHannot\ContaoExporterBundle\Module\ModuleFrontendExporter::class
         ]
                       ]
 );
@@ -40,4 +41,4 @@ array_insert(
 /**
  * Models
  */
-$GLOBALS['TL_MODELS'][\HeimrichHannot\Exporter\ExporterModel::getTable()] = '\HeimrichHannot\Exporter\ExporterModel';
+$GLOBALS['TL_MODELS'][HeimrichHannot\ContaoExporterBundle\Model\ExporterModel::getTable()] = \HeimrichHannot\ContaoExporterBundle\Model\ExporterModel::class;

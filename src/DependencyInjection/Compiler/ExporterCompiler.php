@@ -14,6 +14,7 @@ namespace HeimrichHannot\ContaoExporterBundle\DependencyInjection\Compiler;
 
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Reference;
 
 class ExporterCompiler implements CompilerPassInterface
 {
@@ -23,6 +24,16 @@ class ExporterCompiler implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
+        if (!$container->has('huh.exporter.manager.exporter'))
+        {
+            return;
+        }
+        $definition = $container->findDefinition('huh.exporter.manager.exporter');
 
+        $taggedServices = $container->findTaggedServiceIds('huh_exporter.exporter');
+
+        foreach ($taggedServices as $id => $tags) {
+            $definition->addMethodCall('addExporter', array($id, new Reference($id)));
+        }
     }
 }

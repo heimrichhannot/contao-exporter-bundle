@@ -19,7 +19,7 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
         'dataContainer'    => 'Table',
         'enableVersioning' => true,
         'onload_callback'  => [
-            ['tl_exporter', 'checkPermission'],
+            ['huh.exporter.listener.dc.exporter', 'checkPermission'],
         ],
         'sql'              => [
             'keys' => [
@@ -218,7 +218,7 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
         'tableFieldsForExport'      => [
             'inputType'        => 'checkboxWizard',
             'label'            => &$GLOBALS['TL_LANG']['tl_exporter']['tableFieldsForExport'],
-            'options_callback' => ['HeimrichHannot\Exporter\Backend', 'getTableFields'],
+            'options_callback' => ['huh.exporter.listener.dc.exporter', 'getTableFields'],
             'exclude'          => true,
             'eval'             => [
                 'multiple'  => true,
@@ -252,7 +252,7 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
             'label'            => &$GLOBALS['TL_LANG']['tl_exporter']['exporterClass'],
             'inputType'        => 'select',
             'eval'             => ['mandatory' => true, 'tl_class' => 'w50', 'decodeEntities' => true],
-            'options_callback' => ['HeimrichHannot\Exporter\Backend', 'getExporterClasses'],
+            'options_callback' => ['huh.exporter.listener.dc.exporter', 'getExporterClasses'],
             'sql'              => "varchar(255) NOT NULL default ''",
         ],
         'fieldDelimiter'            => [
@@ -616,18 +616,4 @@ if (in_array('protected_homedirs', \ModuleLoader::getActive()))
         'eval'      => ['tl_class' => 'w50'],
         'sql'       => "char(1) NOT NULL default ''",
     ];
-}
-
-class tl_exporter extends \Backend
-{
-    /**
-     * Check permissions to edit table tl_exporter
-     */
-    public function checkPermission()
-    {
-        if (\BackendUser::getInstance()->isAdmin)
-        {
-            return;
-        }
-    }
 }

@@ -1,0 +1,25 @@
+services:
+
+#  _instanceof:
+#    HeimrichHannot\ContaoExporterBundle\Exporter\AbstractExporter:
+#      tags: ['huh_exporter.exporter']
+#      autowire: true
+
+# Manager
+
+  huh.exporter.manager.exporter:
+    class: HeimrichHannot\ContaoExporterBundle\ContaoManager\ExporterManager
+
+# Listener
+
+  huh.exporter.listener.dc.exporter:
+    class: HeimrichHannot\ContaoExporterBundle\EventListener\DataContainer\Exporter
+    arguments: ['@huh.exporter.manager.exporter']
+  huh.exporter.listener.dc.module:
+    class: HeimrichHannot\ContaoExporterBundle\EventListener\DataContainer\Module
+
+# Exporter
+
+  HeimrichHannot\ContaoExporterBundle\Exporter\Concrete\CsvExporter:
+    tags: [huh_exporter.exporter]
+    arguments: ['@service_container', '@contao.framework', '@debug.event_dispatcher.inner']

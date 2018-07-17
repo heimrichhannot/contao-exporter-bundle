@@ -5,6 +5,7 @@ namespace HeimrichHannot\Exporter;
 
 use HeimrichHannot\Haste\Dca\General;
 use HeimrichHannot\Haste\Util\Classes;
+use HeimrichHannot\ContaoExporterBundle\Model\ExporterModel;
 
 class Backend extends \Controller
 {

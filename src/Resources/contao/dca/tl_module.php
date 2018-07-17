@@ -29,7 +29,7 @@ $arrFields = [
     'exporterConfig'       => [
         'label'            => &$GLOBALS['TL_LANG']['tl_module']['exporterConfig'],
         'inputType'        => 'select',
-        'options_callback' => ['tl_module_frontend_exporter', 'getExportConfigs'],
+        'options_callback' => ['huh.exporter.listener.dc.module', 'getExportConfigs'],
         'eval'             => [
             'chosen'             => true,
             'includeBlankOption' => true,
@@ -59,7 +59,7 @@ $arrFields = [
     'exporterUseIdGroups'  => [
         'label'            => &$GLOBALS['TL_LANG']['tl_module']['exporterUseIdGroups'],
         'inputType'        => 'select',
-        'options_callback' => ['tl_module_frontend_exporter', 'getMemberGroups'],
+        'options_callback' => ['huh.exporter.listener.dc.module', 'getMemberGroups'],
         'eval'             => [
             'chosen'             => true,
             'includeBlankOption' => true,
@@ -71,39 +71,3 @@ $arrFields = [
 ];
 
 $arrDca['fields'] += $arrFields;
-
-class tl_module_frontend_exporter
-{
-
-    public static function getExportConfigs()
-    {
-        $arrOptions = [];
-        $arrConfigs = \HeimrichHannot\Exporter\ExporterModel::findAll();
-
-        if ($arrConfigs !== null)
-        {
-            foreach ($arrConfigs as $objConfig)
-            {
-                $arrOptions[$objConfig->id] = $objConfig->title;
-            }
-        }
-
-        return $arrOptions;
-    }
-
-    public static function getMemberGroups()
-    {
-        $arrOptions      = [];
-        $arrMemberGroups = \MemberGroupModel::findAllActive();
-
-        if ($arrMemberGroups !== null)
-        {
-            foreach ($arrMemberGroups as $objMemberGroup)
-            {
-                $arrOptions[$objMemberGroup->id] = $objMemberGroup->name;
-            }
-        }
-
-        return $arrOptions;
-    }
-}
