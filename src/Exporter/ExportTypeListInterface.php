@@ -15,7 +15,16 @@ interface ExportTypeListInterface
     /**
      * Export list
      *
+     * @param $entity
      * @return mixed
      */
-    public function exportList();
+    public function exportList($entity);
+
+    /**
+     * Retrieve and return list entries
+     *
+     * @param $entity
+     * @return mixed
+     */
+    public function getEntities($entity);
 }

@@ -45,30 +45,13 @@ class BeforeExportEvent extends Event
      */
     private $exporter;
 
-    public function __construct(Model $entity, array $fields, string $fileDir, string $fileName, ExporterModel $config, AbstractExporter $exporter)
+    public function __construct($entity, array $fields, string $fileDir = '', string $fileName, AbstractExporter $exporter)
     {
         $this->entity = $entity;
         $this->fields = $fields;
         $this->fileDir = $fileDir;
         $this->fileName = $fileName;
-        $this->config = $config;
         $this->exporter = $exporter;
-    }
-
-    /**
-     * @return ExporterModel
-     */
-    public function getConfig(): ExporterModel
-    {
-        return $this->config;
-    }
-
-    /**
-     * @param ExporterModel $config
-     */
-    public function setConfig(ExporterModel $config): void
-    {
-        $this->config = $config;
     }
 
     /**
@@ -88,17 +71,17 @@ class BeforeExportEvent extends Event
     }
 
     /**
-     * @return Model
+     * @return mixed
      */
-    public function getEntity(): Model
+    public function getEntity()
     {
         return $this->entity;
     }
 
     /**
-     * @param Model $entity
+     * @param mixed $entity
      */
-    public function setEntity(Model $entity): void
+    public function setEntity($entity): void
     {
         $this->entity = $entity;
     }

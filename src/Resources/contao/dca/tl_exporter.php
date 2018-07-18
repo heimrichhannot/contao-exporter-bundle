@@ -86,9 +86,9 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
             'fileNameAddDatime',
         ],
         'default'                                    => '{title_legend},title,type;',
-        \HeimrichHannot\Exporter\Exporter::TYPE_LIST => '{title_legend},title,type;' . '{export_legend},target,fileType;'
+        \HeimrichHannot\ContaoExporterBundle\Exporter\AbstractExporter::TYPE_LIST => '{title_legend},title,type;' . '{export_legend},target,fileType;'
                                                         . '{table_legend},globalOperationKey,linkedTable,addJoinTables,addUnformattedFields,tableFieldsForExport,restrictToPids,whereClause,orderBy;',
-        \HeimrichHannot\Exporter\Exporter::TYPE_ITEM => '{title_legend},title,type;' . '{export_legend},target,fileType;'
+        \HeimrichHannot\ContaoExporterBundle\Exporter\AbstractExporter::TYPE_ITEM => '{title_legend},title,type;' . '{export_legend},target,fileType;'
                                                         . '{table_legend},linkedTable,addJoinTables,skipFields,skipLabels,whereClause,orderBy;',
     ],
 
@@ -101,8 +101,8 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
         'addHeaderToExportTable'                                       => 'localizeHeader,overrideHeaderFieldLabels',
         'overrideHeaderFieldLabels'                                    => 'headerFieldLabels',
         'addJoinTables'                                                => 'joinTables',
-        'target_' . \HeimrichHannot\Exporter\Exporter::TARGET_DOWNLOAD => 'fileName,fileNameAddDatime',
-        'target_' . \HeimrichHannot\Exporter\Exporter::TARGET_FILE     => 'fileDir,useHomeDir,fileSubDirName,fileName,fileNameAddDatime',
+        'target_' . \HeimrichHannot\ContaoExporterBundle\Exporter\AbstractExporter::TARGET_DOWNLOAD => 'fileName,fileNameAddDatime',
+        'target_' . \HeimrichHannot\ContaoExporterBundle\Exporter\AbstractExporter::TARGET_FILE     => 'fileDir,useHomeDir,fileSubDirName,fileName,fileNameAddDatime',
         'fileNameAddDatime'                                            => 'fileNameAddDatimeFormat',
     ],
 
@@ -132,8 +132,8 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
             'label'     => &$GLOBALS['TL_LANG']['tl_exporter']['type'],
             'inputType' => 'select',
             'options'   => [
-                \HeimrichHannot\Exporter\Exporter::TYPE_LIST,
-                \HeimrichHannot\Exporter\Exporter::TYPE_ITEM,
+                \HeimrichHannot\ContaoExporterBundle\Exporter\AbstractExporter::TYPE_LIST,
+                \HeimrichHannot\ContaoExporterBundle\Exporter\AbstractExporter::TYPE_ITEM,
             ],
             'reference' => &$GLOBALS['TL_LANG']['tl_exporter']['reference'],
             'eval'      => [
@@ -149,7 +149,7 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
             'label'            => &$GLOBALS['TL_LANG']['tl_exporter']['linkedTable'],
             'exclude'          => true,
             'inputType'        => 'select',
-            'options_callback' => ['HeimrichHannot\Exporter\Backend', 'getLinkedTablesAsOptions'],
+            'options_callback' => ['huh.exporter.listener.dc.exporter', 'getLinkedTablesAsOptions'],
             'eval'             => [
                 'chosen'             => true,
                 'mandatory'          => true,
@@ -163,7 +163,7 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
             'label'            => &$GLOBALS['TL_LANG']['tl_exporter']['globalOperationKey'],
             'exclude'          => true,
             'inputType'        => 'select',
-            'options_callback' => ['HeimrichHannot\Exporter\Backend', 'getGlobalOperationKeysAsOptions'],
+            'options_callback' => ['huh.exporter.listener.dc.exporter', 'getGlobalOperationKeysAsOptions'],
             'eval'             => [
                 'mandatory'          => true,
                 'submitOnChange'     => true,
@@ -177,7 +177,7 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
             'exclude'          => true,
             'filter'           => true,
             'inputType'        => 'select',
-            'options_callback' => ['\HeimrichHannot\Exporter\Backend', 'getTableArchives'],
+            'options_callback' => ['huh.exporter.listener.dc.exporter', 'getTableArchives'],
             'eval'             => [
                 'tl_class'           => 'long clr',
                 'style'              => 'width: 97%',
@@ -192,7 +192,7 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
             'exclude'          => true,
             'filter'           => true,
             'inputType'        => 'select',
-            'options_callback' => ['HeimrichHannot\Exporter\Backend', 'getTableFields'],
+            'options_callback' => ['huh.exporter.listener.dc.exporter', 'getTableFields'],
             'eval'             => ['multiple' => true, 'chosen' => true, 'tl_class' => 'long', 'style' => 'width: 97%'],
             'sql'              => "blob NULL",
         ],
@@ -201,7 +201,7 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
             'exclude'          => true,
             'filter'           => true,
             'inputType'        => 'select',
-            'options_callback' => ['HeimrichHannot\Exporter\Backend', 'getTableFields'],
+            'options_callback' => ['huh.exporter.listener.dc.exporter', 'getTableFields'],
             'eval'             => ['multiple' => true, 'chosen' => true, 'tl_class' => 'long', 'style' => 'width: 97%'],
             'sql'              => "blob NULL",
         ],
@@ -233,12 +233,7 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
             'label'     => &$GLOBALS['TL_LANG']['tl_exporter']['fileType'],
             'exclude'   => true,
             'inputType' => 'select',
-            'options'   => [
-                EXPORTER_FILE_TYPE_CSV,
-                EXPORTER_FILE_TYPE_PDF,
-                EXPORTER_FILE_TYPE_XLS,
-                EXPORTER_FILE_TYPE_MEDIA,
-            ],
+            'options_callback' => ['huh.exporter.listener.dc.exporter', 'getFileType'],
             'reference' => &$GLOBALS['TL_LANG']['tl_exporter']['fileType'],
             'eval'      => [
                 'mandatory'          => true,
@@ -316,7 +311,7 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
                     'fields'      => [
                         'field' => [
                             'label'            => &$GLOBALS['TL_LANG']['tl_exporter']['headerFieldLabels']['field'],
-                            'options_callback' => ['HeimrichHannot\Exporter\Backend', 'getTableFields'],
+                            'options_callback' => ['huh.exporter.listener.dc.exporter', 'getTableFields'],
                             'inputType'        => 'select',
                             'eval'             => ['chosen' => true, 'style' => 'width: 250px'],
                         ],
@@ -365,8 +360,8 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
             'exclude'   => true,
             'inputType' => 'select',
             'options'   => [
-                \HeimrichHannot\Exporter\Exporter::TARGET_DOWNLOAD,
-                \HeimrichHannot\Exporter\Exporter::TARGET_FILE,
+                \HeimrichHannot\ContaoExporterBundle\Exporter\AbstractExporter::TARGET_DOWNLOAD,
+                \HeimrichHannot\ContaoExporterBundle\Exporter\AbstractExporter::TARGET_FILE,
             ],
             'reference' => &$GLOBALS['TL_LANG']['tl_exporter']['reference'],
             'eval'      => [
@@ -375,7 +370,7 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
                 'includeBlankOption' => true,
                 'tl_class'           => 'w50',
             ],
-            'sql'       => "varchar(255) NOT NULL default '" . \HeimrichHannot\Exporter\Exporter::TARGET_DOWNLOAD . "'",
+            'sql'       => "varchar(255) NOT NULL default '" . \HeimrichHannot\ContaoExporterBundle\Exporter\AbstractExporter::TARGET_DOWNLOAD . "'",
         ],
         'fileDir'                   => [
             'label'     => &$GLOBALS['TL_LANG']['tl_exporter']['fileDir'],
@@ -438,7 +433,7 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
                         'joinTable'     => [
                             'label'            => &$GLOBALS['TL_LANG']['tl_exporter']['joinTable'],
                             'inputType'        => 'select',
-                            'options_callback' => ['HeimrichHannot\Exporter\Backend', 'getAllTablesAsOptions'],
+                            'options_callback' => ['huh.exporter.listener.dc.exporter', 'getAllTablesAsOptions'],
                             'eval'             => [
                                 'chosen'             => true,
                                 'mandatory'          => true,
@@ -493,7 +488,7 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
             'label'            => &$GLOBALS['TL_LANG']['tl_exporter']['pdfTemplate'],
             'exclude'          => true,
             'inputType'        => 'select',
-            'options_callback' => ['HeimrichHannot\Exporter\Backend', 'getPdfExporterTemplates'],
+            'options_callback' => ['huh.exporter.listener.dc.exporter', 'getPdfExporterTemplates'],
             'eval'             => [
                 'tl_class'           => 'w50 clr',
                 'includeBlankOption' => true,
@@ -603,10 +598,10 @@ $arrDca = &$GLOBALS['TL_DCA']['tl_exporter'];
 
 if (in_array('protected_homedirs', \ModuleLoader::getActive()))
 {
-    $arrDca['subpalettes']['target_' . \HeimrichHannot\Exporter\Exporter::TARGET_FILE] = str_replace(
+    $arrDca['subpalettes']['target_' . \HeimrichHannot\ContaoExporterBundle\Exporter\AbstractExporter::TARGET_FILE] = str_replace(
         'useHomeDir',
         'useHomeDir,useProtectedHomeDir',
-        $arrDca['subpalettes']['target_' . \HeimrichHannot\Exporter\Exporter::TARGET_FILE]
+        $arrDca['subpalettes']['target_' . \HeimrichHannot\ContaoExporterBundle\Exporter\AbstractExporter::TARGET_FILE]
     );
 
     $arrDca['fields']['useProtectedHomeDir'] = [

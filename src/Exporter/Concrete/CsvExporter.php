@@ -12,6 +12,7 @@
 namespace HeimrichHannot\ContaoExporterBundle\Exporter\Concrete;
 
 
+use HeimrichHannot\ContaoExporterBundle\Exporter\AbstractExporter;
 use HeimrichHannot\ContaoExporterBundle\Exporter\AbstractPhpSpreadsheetExporter;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\BaseWriter;
@@ -19,20 +20,19 @@ use PhpOffice\PhpSpreadsheet\Writer\Csv;
 
 class CsvExporter extends AbstractPhpSpreadsheetExporter
 {
-
-    public static function getName(): string
+    public function getName(): string
     {
         return 'csv-exporter';
     }
 
-    public static function getSupportedFileTypes(): array
+    public function getSupportedFileTypes(): array
     {
         return ['csv'];
     }
 
-    public static function getSupportedExportTypes(): array
+    public function getSupportedExportTarget(): array
     {
-        // TODO: Implement getSupportedExportTypes() method.
+        return [AbstractExporter::TARGET_DOWNLOAD];
     }
 
     protected function getDocumentWriter(Spreadsheet $spreadsheet): BaseWriter
@@ -47,11 +47,5 @@ class CsvExporter extends AbstractPhpSpreadsheetExporter
     {
         parent::createHeaders($fileName);
         header("Content-Type: application/csv");
-    }
-
-
-    public static function getSupportedExportTarget(): array
-    {
-        // TODO: Implement getSupportedExportTarget() method.
     }
 }

@@ -11,17 +11,14 @@
 
 namespace HeimrichHannot\ContaoExporterBundle\Exporter;
 
-use Contao\File;
 use Contao\System;
 use HeimrichHannot\ContaoExporterBundle\Event\ModifyFieldValueEvent;
 use HeimrichHannot\UtilsBundle\Driver\DC_Table_Utils;
 use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Writer\BaseWriter;
-use PhpOffice\PhpSpreadsheet\Writer\Csv;
 
-abstract class AbstractPhpSpreadsheetExporter extends AbstractTableExporter
+abstract class AbstractPhpSpreadsheetExporter extends AbstractTableExporter implements ExportTargetDownloadInterface, ExportTargetFileInterface
 {
     protected $arrExportFields = [];
 
@@ -29,21 +26,18 @@ abstract class AbstractPhpSpreadsheetExporter extends AbstractTableExporter
      * @param null $entity
      * @param array $fields
      * @return mixed
-     * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
     protected function doExport($entity = null, array $fields = [])
     {
-        return $this->exportList();
+        return $this->exportList($this->getEntities($entity));
     }
 
     /**
-     * @param array|null $context
+     * @param $databaseResult
      * @return Spreadsheet
-     * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
-    public function exportList()
+    public function exportList($databaseResult)
     {
-        $databaseResult = $this->getEntities();
         $table = $this->config->linkedTable;
         $arrDca         = $GLOBALS['TL_DCA'][$table];
         $spreadsheet    = new Spreadsheet();
@@ -142,9 +136,21 @@ abstract class AbstractPhpSpreadsheetExporter extends AbstractTableExporter
     }
 
     /**
+     * @param $spreadsheet
+     * @param string $fileDir
+     * @param string $fileName
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     */
+    public function exportToFile($spreadsheet, string $fileDir, string $fileName)
+    {
+        $writer = $this->getDocumentWriter($spreadsheet);
+        $writer->save($fileDir . '/' . $fileName);
+    }
+
+
+    /**
      * @param Spreadsheet $spreadsheet
      * @return \PhpOffice\PhpSpreadsheet\Writer\IWriter
-     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      */
     protected function getDocumentWriter(Spreadsheet $spreadsheet) {
         return IOFactory::createWriter($spreadsheet, $this->config->fileType);
@@ -162,11 +168,6 @@ abstract class AbstractPhpSpreadsheetExporter extends AbstractTableExporter
         header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT'); // always modified
         header('Cache-Control: cache, must-revalidate'); // HTTP/1.1
         header('Pragma: public'); // HTTP/1.0
-    }
-
-    public function exportToFile($objResult, string $fileDir, string $fileName)
-    {
-
     }
 
     public function processHeaderRow(int $col)

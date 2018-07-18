@@ -14,16 +14,16 @@ namespace HeimrichHannot\ContaoExporterBundle\Exporter;
 
 use Contao\Controller;
 use Contao\System;
-use HeimrichHannot\ContaoExporterBundle\Model\ExporterModel;
+use HeimrichHannot\ContaoExporterBundle\Event\ModifyHeaderFieldsEvent;
 
 abstract class AbstractTableExporter extends AbstractExporter implements ExportTypeListInterface
 {
     protected $headerFields;
 
-    public function export(ExporterModel $config = null, $entity = null, array $fields = []): bool
+    protected function beforeExport($fileDir, $fileName)
     {
+        parent::beforeExport($fileDir, $fileName);
         $this->setHeaderFields();
-        return parent::export($config, $entity, $fields);
     }
 
 
@@ -65,20 +65,8 @@ abstract class AbstractTableExporter extends AbstractExporter implements ExportT
             $headerFields[] = strip_tags(html_entity_decode($strLabel)) . ($blnRawField ? $GLOBALS['TL_LANG']['MSC']['exporter']['unformatted'] : '');
         }
 
-        //@TODO: replace
-//        if (isset($GLOBALS['TL_HOOKS']['exporter_modifyHeaderFields'])
-//            && is_array(
-//                $GLOBALS['TL_HOOKS']['exporter_modifyXlsHeaderFields']
-//            )
-//        )
-//        {
-//            foreach ($GLOBALS['TL_HOOKS']['exporter_modifyHeaderFields'] as $callback)
-//            {
-//                $objCallback = \System::importStatic($callback[0]);
-//                $headerFields   = $objCallback->{$callback[1]}($headerFields, $this);
-//            }
-//        }
+        $event = $this->dispatcher->dispatch(ModifyHeaderFieldsEvent::NAME, new ModifyHeaderFieldsEvent($headerFields, $this));
 
-        $this->headerFields = $headerFields;
+        $this->headerFields = $event->getHeaderFields();
     }
 }

@@ -17,23 +17,13 @@ use HeimrichHannot\ContaoExporterBundle\Model\ExporterModel;
 interface ExporterInterface
 {
     /**
-     * Returns a unique identifier.
-     * @return string
-     */
-    public function getName(): string;
-
-    /**
-     * Return a friendly name or translation id.
+     * Return a list of supported file types
      *
-     * @return string
+     * Example: ['csv','xslt']
+     *
+     * @return array
      */
-    public function getLabel(): string;
-
     public function getSupportedFileTypes(): array;
-
-    public function getSupportedExportTarget(): array;
-
-    public function hasType(string $type): bool;
 
     /**
      * Export with given parameters.

@@ -85,10 +85,10 @@ $arrLang['delete'] = ['Export-Konfiguration löschen', 'Export-Konfiguration ID 
 /**
  * References
  */
-$arrLang['reference'][\HeimrichHannot\Exporter\Exporter::TYPE_LIST] = 'Listenexport';
-$arrLang['reference'][\HeimrichHannot\Exporter\Exporter::TYPE_ITEM] = 'Einzelexport';
-$arrLang['reference'][\HeimrichHannot\Exporter\Exporter::TARGET_DOWNLOAD] = 'Download';
-$arrLang['reference'][\HeimrichHannot\Exporter\Exporter::TARGET_FILE] = 'Datei';
+$arrLang['reference'][\HeimrichHannot\ContaoExporterBundle\Exporter\AbstractExporter::TYPE_LIST] = 'Listenexport';
+$arrLang['reference'][\HeimrichHannot\ContaoExporterBundle\Exporter\AbstractExporter::TYPE_ITEM] = 'Einzelexport';
+$arrLang['reference'][\HeimrichHannot\ContaoExporterBundle\Exporter\AbstractExporter::TARGET_DOWNLOAD] = 'Download';
+$arrLang['reference'][\HeimrichHannot\ContaoExporterBundle\Exporter\AbstractExporter::TARGET_FILE] = 'Datei';
 $arrLang['reference']['fontWeights'] = [
     'R' => 'Normal',
     'B' => 'Fett',

@@ -31,9 +31,7 @@ PdfExporter | An exporter for creating a pdf out of an entity
 
 Name | Arguments | Expected return value | Description
 ---- | --------- | --------------------- | -----------
-exporter_modifyHeaderFields | $arrFields, $objExporter | $arrFields | Modify the header fields just before just before being written to file
 exporter_modifyMediaFilename | $objFile, $strFieldname, $varFieldValue, $objMediaExporter | $objFile->path | Modify a filename just before added to the archive when using *MediaExporter* (also folder structure could be modified here)
-exporter_modifyFieldValue | $varValue, $strField, $arrRow, $intCol | $varValue | Modify the field values. Only available in PhpExcelExporter
 
 ## Technical instruction
 
@@ -42,10 +40,10 @@ exporter_modifyFieldValue | $varValue, $strField, $arrRow, $intCol | $varValue |
 ### Step 1
 Define your global operation in your entity's dca as follows:
 
-```
+```php
 'global_operations' => array
 (
-    'export_csv' => \HeimrichHannot\Exporter\ModuleExporter::getGlobalOperation('export_csv',
+    'export_csv' => HeimrichHannot\ContaoExporterBundle\Action\BackendExportAction::getGlobalOperation('export_csv',
                  $GLOBALS['TL_LANG']['MSC']['export_csv'],
                  'system/modules/exporter/assets/img/icon_export.png')
 ),
@@ -54,11 +52,10 @@ Define your global operation in your entity's dca as follows:
 ### Step 2
 Add your backend module in your entity's config.php as follows:
 
-```
-$GLOBALS['BE_MOD']['mygroup'] = array
-(
-    'export_csv' => \HeimrichHannot\Exporter\ModuleExporter::getBackendModule()
-),
+```php
+$GLOBALS['BE_MOD']['mygroup'] = [
+    'export_csv' => ['huh.exporter.action.backendexport', 'export']
+]
 ```
 
 ### Step 3
@@ -72,19 +69,21 @@ You can use [frontendedit](https://github.com/heimrichhannot/contao-frontendedit
 Create a configuration for your export by using the exporter's backend module (group devtools).
 
 ### Step 2
-Add the following code to your module in order to your module:
+Call `export()` of `huh.exporter.action.export` service in your module:
 
-```
-ModuleExporter::export($objConfig, $objEntity, $arrFields);
+```php
+$container->get('huh.exporter.action.export')->export($config, $entity, $fields);
 ```
 
-If you add ```$arrFields```, this array will be iteratd automatically in your template. Alternatively you can print every entity's property using $this in the template.
+If you add ```$fields```, this array will be iteratd automatically in your template. Alternatively you can print every entity's property using $this in the template.
 
 ## Developers
 
 ### Events
 
-Eventname          | Event-ID                              | Description
--------------------|---------------------------------------|------------
-Before Export      | huh.exporter.event.before_export      | Fired before start of export. Customize file name and file path.
-Before Build Query | huh.exporter.event.before_build_query | Fired before building and executing the query for collecting list content. 
+Eventname                 | Event-ID                              | Description
+--------------------------|---------------------------------------|------------
+Before Export             | huh.exporter.event.before_export      | Fired before start of export. Customize file name and file path.
+Before Build Query        | huh.exporter.event.before_build_query | Fired before building and executing the query for collecting list content. 
+Modify Table Header field | huh.exporter.event.modifyheaderfields | Modify header field values in tables.
+Modify Table field value  | huh.exporter.event.modifyfieldvalue   | Fired before writing a table value to the table object (e.g. spreadsheet).

@@ -9,15 +9,15 @@
 namespace HeimrichHannot\ContaoExporterBundle\Exporter;
 
 
-interface ExportTargetDownload
+interface ExportTargetFileInterface
 {
     /**
      * Start the download
      *
-     * @param $data
+     * @param mixed $data
      * @param string $fileDir
      * @param string $fileName
      * @return mixed
      */
-    public function exportToDownload($data, string $fileDir, string $fileName);
+    public function exportToFile($data, string $fileDir, string $fileName);
 }

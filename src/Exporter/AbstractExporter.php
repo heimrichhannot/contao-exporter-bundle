@@ -63,12 +63,6 @@ abstract class AbstractExporter implements ExporterInterface
         $this->dispatcher    = $dispatcher;
     }
 
-    abstract public static function getName(): string;
-
-    abstract public static function getSupportedFileTypes(): array;
-
-    abstract public static function getSupportedExportTypes(): array;
-
     /**
      * @param Model|null $entity
      * @param ExporterModel|null $config
@@ -95,15 +89,28 @@ abstract class AbstractExporter implements ExporterInterface
             }
             return false;
         }
+//        if (!$this->hasTarget($this->config->target))
+//        {
+//            if ($this->container->getParameter('kernel.environment') != 'prod') {
+//                throw new \Exception("Export target ".$this->config->target." is not supported by export class ".static::class
+//                    .' for export configuration '.$this->config->title.' (ID: '.$this->config->id.')');
+//            }
+//            return false;
+//        }
+
+
 
         $fileName = $this->buildFileName($entity);
+        $fileDir = '';
 
         if ($this->config->target == static::TARGET_FILE)
         {
             $fileDir = $this->buildFileDir($entity);
         }
 
-        $event = $this->dispatcher->dispatch(BeforeExportEvent::NAME, new BeforeExportEvent($entity, $fields, $fileDir, $fileName, $config, $this));
+        $this->beforeExport($fileDir, $fileName);
+
+        $event = $this->dispatcher->dispatch(BeforeExportEvent::NAME, new BeforeExportEvent($entity, $fields, $fileDir, $fileName, $this));
 
         $result = $this->doExport($event->getEntity(), $event->getFields());
 
@@ -120,8 +127,7 @@ abstract class AbstractExporter implements ExporterInterface
      * Concrete exporter implementation
      *
      * @param $entity
-     * @param $fields
-     * @param $target
+     * @param array $fields
      * @return mixed
      */
     abstract protected function doExport($entity, array $fields);
@@ -137,9 +143,9 @@ abstract class AbstractExporter implements ExporterInterface
      * @return string
      * @throws \Exception
      */
-    protected function buildFileDir(Model $entity)
+    protected function buildFileDir($entity)
     {
-        if ($this->config->fileDir && $objFolder = $this->framework->getAdapter(FilesModel::class)->findByUuid($this->fileDir))
+        if ($this->config->fileDir && $objFolder = $this->framework->getAdapter(FilesModel::class)->findByUuid($this->config->fileDir))
         {
             $objMember = FrontendUser::getInstance();
             $strDir    = $objFolder->path;
@@ -174,7 +180,7 @@ abstract class AbstractExporter implements ExporterInterface
      * @param Model $entity
      * @return string
      */
-    protected function buildFileName(Model $entity)
+    protected function buildFileName($entity)
     {
         $fileName = $this->config->fileName ?: 'export';
 
@@ -191,7 +197,7 @@ abstract class AbstractExporter implements ExporterInterface
      *
      * @return Database\Result
      */
-    public function getEntities()
+    public function getEntities($pid)
     {
         $exportFields = [];
         $dca          = $GLOBALS['TL_DCA'][$this->config->linkedTable];
@@ -208,7 +214,7 @@ abstract class AbstractExporter implements ExporterInterface
         }
 
         // JOIN
-        $joinTables = null;
+        $joinTables = [];
         if ($this->config->addJoinTables)
         {
             if (($joinExportConfig = ExporterModel::findByPk($this->config->id)) && $joinExportConfig->addJoinTables)
@@ -228,24 +234,22 @@ abstract class AbstractExporter implements ExporterInterface
         if (TL_MODE == 'BE' && ($this->config->type == static::TYPE_LIST || !$this->config->type))
         {
             $strAct = Input::get('act');
-            $intPid = Input::get('id');
 
-            if ($intPid && !$strAct && is_array($dca['fields']) && $dca['config']['ptable'])
+            if ($pid && !$strAct && is_array($dca['fields']) && $dca['config']['ptable'])
             {
-                $wheres[] = 'pid = ' . $intPid;
+                $wheres[] = 'pid = ' . $pid;
             }
         }
-
 
         $event = $this->dispatcher->dispatch(
             BeforeBuildQueryEvent::NAME,
             new BeforeBuildQueryEvent($this->config, $exportFields, $joinTables, $wheres, $this->config->orderBy, $this)
         );
 
-
         $query = 'SELECT ' . implode(',', $event->getExportFields()) . ' FROM ' . $this->config->linkedTable;
 
-        if (is_array($event->getJoinTables()))
+        $joinTables = $event->getJoinTables();
+        if (is_array($joinTables) && !empty($joinTables))
         {
             foreach ($joinTables as $joinT)
             {
@@ -253,7 +257,9 @@ abstract class AbstractExporter implements ExporterInterface
             }
         }
 
-        if (is_array($wheres = $event->getWheres()))
+
+        $wheres = $event->getWheres();
+        if (is_array($wheres) && !empty($wheres))
         {
             $query .= ' WHERE ' . implode(
                     ' AND ',
@@ -267,7 +273,7 @@ abstract class AbstractExporter implements ExporterInterface
         }
 
         // ORDER BY
-        if ($event->getOrderBy())
+        if (!empty($event->getOrderBy()))
         {
             $query .= ' ORDER BY ' . $event->getOrderBy();
         }
@@ -303,6 +309,18 @@ abstract class AbstractExporter implements ExporterInterface
         return false;
     }
 
+    public function hasTarget(string $target): bool
+    {
+        switch ($target)
+        {
+            case static::TARGET_DOWNLOAD:
+                return $this instanceof ExportTargetDownloadInterface;
+            case static::TARGET_FILE:
+                return $this instanceof ExportTargetFileInterface;
+        }
+        return false;
+    }
+
     /**
      * @return string
      */
@@ -317,5 +335,9 @@ abstract class AbstractExporter implements ExporterInterface
     public function setTempFolderPath(string $tempFolderPath): void
     {
         $this->tempFolderPath = $tempFolderPath;
+    }
+
+    protected function beforeExport($fileDir, $fileName)
+    {
     }
 }
