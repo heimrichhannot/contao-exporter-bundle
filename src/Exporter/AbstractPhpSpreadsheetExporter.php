@@ -11,6 +11,7 @@
 
 namespace HeimrichHannot\ContaoExporterBundle\Exporter;
 
+use Contao\Folder;
 use Contao\System;
 use HeimrichHannot\ContaoExporterBundle\Event\ModifyFieldValueEvent;
 use HeimrichHannot\UtilsBundle\Driver\DC_Table_Utils;
@@ -19,6 +20,9 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Settings;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Symfony\Component\Cache\Simple\FilesystemCache;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\File\MimeType\FileinfoMimeTypeGuesser;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 abstract class AbstractPhpSpreadsheetExporter extends AbstractTableExporter
 {
@@ -28,6 +32,7 @@ abstract class AbstractPhpSpreadsheetExporter extends AbstractTableExporter
      * @param null $entity
      * @param array $fields
      * @return mixed
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
     protected function doExport($entity = null, array $fields = [])
     {
@@ -37,10 +42,11 @@ abstract class AbstractPhpSpreadsheetExporter extends AbstractTableExporter
     /**
      * @param $databaseResult
      * @return Spreadsheet
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
     public function exportList($databaseResult)
     {
-        Settings::setCache(new FilesystemCache('huh.exporter.phpstreadsheet'));
+        Settings::setCache(new FilesystemCache('huh.exporter.phpspreadsheet'));
         $table = $this->config->linkedTable;
         $arrDca         = $GLOBALS['TL_DCA'][$table];
         $spreadsheet    = new Spreadsheet();
@@ -58,6 +64,7 @@ abstract class AbstractPhpSpreadsheetExporter extends AbstractTableExporter
             $rowIndex++;
         }
 
+        $colCount = 0;
         // body
         if ($databaseResult->numRows > 0) {
 
@@ -90,8 +97,6 @@ abstract class AbstractPhpSpreadsheetExporter extends AbstractTableExporter
                 foreach ($row as $key => $value)
                 {
                     $strField = str_replace($table . '.', '', $key);
-                    $this->container->get('huh.utils.form')->prepareSpecialValueForOutput($strField, $value, $dcTable);
-
                     $value = $this->config->localizeFields ? $this->container->get('huh.utils.form')->prepareSpecialValueForOutput(
                         $strField, $value, $dcTable
                     ) : $value;
@@ -108,17 +113,21 @@ abstract class AbstractPhpSpreadsheetExporter extends AbstractTableExporter
                         html_entity_decode($event->getValue())
                     );
 
-                    $spreadsheet->getActiveSheet()->getColumnDimension(Coordinate::stringFromColumnIndex($columnIndex))->setAutoSize(true);
                     $this->processBodyRow($columnIndex);
 
                     $columnIndex++;
                 }
-                $spreadsheet->getActiveSheet()->getRowDimension($rowIndex)->setRowHeight(-1);
+//                $spreadsheet->getActiveSheet()->getRowDimension($rowIndex)->setRowHeight(-1);
+                $colCount = max($colCount, $columnIndex);
                 $rowIndex++;
             }
         }
 
         $spreadsheet->setActiveSheetIndex(0);
+        for ($i = 1; $i <= $colCount; $i++)
+        {
+            $spreadsheet->getActiveSheet()->getColumnDimension(Coordinate::stringFromColumnIndex($i))->setAutoSize(true);
+        }
         $spreadsheet->getActiveSheet()->setTitle('Export');
 
         return $spreadsheet;
@@ -132,28 +141,58 @@ abstract class AbstractPhpSpreadsheetExporter extends AbstractTableExporter
      */
     public function exportToDownload($spreadsheet, string $fileDir, string $fileName)
     {
+        $projectDir = $this->container->getParameter('kernel.project_dir').'/';
+        $tempDir = $this->getUniqueTempFolderPath('phpspreadsheetexporter');
+        $tempFilePath = $tempDir.$fileName;
+
         // send file to browser
         $writer = $this->getDocumentWriter($spreadsheet);
-        $this->createHeaders($fileName);
-        $writer->save('php://output');
+//        $this->createHeaders($fileName);
+        $folder = new Folder($tempDir);
+        $writer->save($tempFilePath);
+
+        $response = new BinaryFileResponse($tempFilePath);
+        $response->setContentDisposition(
+            ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+            $fileName
+        );
+
+        if (FileinfoMimeTypeGuesser::isSupported())
+        {
+            $mimeTypeGuesser = new FileinfoMimeTypeGuesser();
+            $response->headers->set('Content-Type', $mimeTypeGuesser->guess($tempFilePath));
+        }
+        $response->headers->set('Content-Type', 'text/plain');
+        $this->beforeResponce($response);
+
+        $response->send();
+        exit();
     }
 
     /**
-     * @param $spreadsheet
+     * @param Spreadsheet $spreadsheet
      * @param string $fileDir
      * @param string $fileName
+     * @return bool
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      */
     public function exportToFile($spreadsheet, string $fileDir, string $fileName)
     {
         $writer = $this->getDocumentWriter($spreadsheet);
-        $writer->save($fileDir . '/' . $fileName);
+        try {
+            $writer->save($fileDir . '/' . $fileName);
+        } catch (\Exception $e) {
+            return false;
+        }
+        return true;
+
     }
 
 
     /**
      * @param Spreadsheet $spreadsheet
      * @return \PhpOffice\PhpSpreadsheet\Writer\IWriter
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      */
     protected function getDocumentWriter(Spreadsheet $spreadsheet) {
         return IOFactory::createWriter($spreadsheet, ucfirst($this->config->fileType));
@@ -178,6 +217,15 @@ abstract class AbstractPhpSpreadsheetExporter extends AbstractTableExporter
     }
 
     public function processBodyRow(int $col)
+    {
+    }
+
+    /**
+     * Update the responce
+     *
+     * @param BinaryFileResponse $response
+     */
+    protected function beforeResponce(BinaryFileResponse &$response)
     {
     }
 

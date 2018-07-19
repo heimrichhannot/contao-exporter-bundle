@@ -97,6 +97,7 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
         'fileType_csv'              => 'exporterClass,fieldDelimiter,fieldEnclosure,localizeFields,addHeaderToExportTable',
         'fileType_pdf'              => 'exporterClass;{pdf_config_legend},pdfBackground,pdfFontDirectories,pdfMargins,pdfTitle,pdfSubject,pdfCreator;localizeFields,pdfCss,pdfTemplate',
         'fileType_xls'              => 'exporterClass,localizeFields,addHeaderToExportTable',
+        'fileType_xlsx'              => 'exporterClass,localizeFields,addHeaderToExportTable',
         'fileType_media'            => 'exporterClass,compressionType',
         'addHeaderToExportTable'    => 'localizeHeader,overrideHeaderFieldLabels',
         'overrideHeaderFieldLabels' => 'headerFieldLabels',

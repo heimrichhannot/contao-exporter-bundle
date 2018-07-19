@@ -37,7 +37,7 @@ abstract class AbstractExporter implements ExporterInterface
     /**
      * @var string
      */
-    protected $tempFolderPath = 'var/tmp/huh_exporter/';
+    protected $tempFolderPath = 'files/tmp/huh_exporter/';
 
     /**
      * @var ExporterModel
