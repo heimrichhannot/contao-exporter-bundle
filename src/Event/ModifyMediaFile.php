@@ -16,9 +16,9 @@ use Contao\File;
 use HeimrichHannot\ContaoExporterBundle\Exporter\AbstractExporter;
 use Symfony\Component\EventDispatcher\Event;
 
-class ModifyMediaFileName extends Event
+class ModifyMediaFile extends Event
 {
-    const NAME = 'huh.exporter.event.modifymediafilename';
+    const NAME = 'huh.exporter.event.modifymediafile';
     /**
      * @var string
      */

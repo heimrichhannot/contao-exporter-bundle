@@ -12,9 +12,7 @@ services:
 # Manager
 
   huh.exporter.manager.exporter:
-    class: HeimrichHannot\ContaoExporterBundle\ContaoManager\ExporterManager
-  huh.exporter.manager.module:
-    class: HeimrichHannot\ContaoExporterBundle\ContaoManager\ModuleManager
+    class: HeimrichHannot\ContaoExporterBundle\Manager\ExporterManager
 
 # Listener
 

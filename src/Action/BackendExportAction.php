@@ -15,7 +15,7 @@ namespace HeimrichHannot\ContaoExporterBundle\Action;
 use Contao\Controller;
 use Contao\Input;
 use Contao\Message;
-use HeimrichHannot\ContaoExporterBundle\ContaoManager\ExporterManager;
+use HeimrichHannot\ContaoExporterBundle\Manager\ExporterManager;
 use HeimrichHannot\ContaoExporterBundle\Model\ExporterModel;
 
 class BackendExportAction

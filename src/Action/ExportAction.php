@@ -12,7 +12,7 @@
 namespace HeimrichHannot\ContaoExporterBundle\Action;
 
 
-use HeimrichHannot\ContaoExporterBundle\ContaoManager\ExporterManager;
+use HeimrichHannot\ContaoExporterBundle\Manager\ExporterManager;
 use HeimrichHannot\ContaoExporterBundle\Model\ExporterModel;
 
 class ExportAction

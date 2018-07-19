@@ -9,10 +9,9 @@
  */
 
 
-namespace HeimrichHannot\ContaoExporterBundle\ContaoManager;
+namespace HeimrichHannot\ContaoExporterBundle\Manager;
 
 
-use Contao\System;
 use HeimrichHannot\ContaoExporterBundle\Exporter\ExporterInterface;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Cache\Simple\FilesystemCache;

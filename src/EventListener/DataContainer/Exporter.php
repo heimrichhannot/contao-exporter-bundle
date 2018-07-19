@@ -18,7 +18,7 @@ use Contao\Database;
 use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\System;
-use HeimrichHannot\ContaoExporterBundle\ContaoManager\ExporterManager;
+use HeimrichHannot\ContaoExporterBundle\Manager\ExporterManager;
 use HeimrichHannot\ContaoExporterBundle\Exporter\AbstractExporter;
 use HeimrichHannot\ContaoExporterBundle\Model\ExporterModel;
 use Symfony\Component\DependencyInjection\ContainerInterface;

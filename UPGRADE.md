@@ -20,6 +20,8 @@ The hook `exporter_modifyFieldValue` was replaced with `huh.exporter.event.modif
 
 The hook `exporter_modifyHeaderFields` was replaced with `huh.exporter.event.modifyheaderfields` event.
 
+The hook `exporter_modifyMediaFilename` was replaced with `huh.exporter.event.modifymediafile` event.
+
 ### PDF Export
 
 The pdf export was migrated to [mPDF 7][1] and [Contao Utils Bundle][2] PDF Writer. Also the template handling is changed.

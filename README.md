@@ -4,7 +4,7 @@
 
 A backend module for exporting any contao entity to file.
 
-![alt myModulePreview](docs/img/screenshot.png)
+![Contao Exporter Bundle Backend Config Preview](docs/img/screenshot.png)
 
 *Export config preview*
 
@@ -26,12 +26,6 @@ CsvExporter | An exporter for writing entity instances into a CSV file
 XlsExporter | An exporter for writing entity instances into an excel file (XLS)
 MediaExporter | An exporter that combines all files referenced by the selected properties of an entity in one archive file (e.g. zip) preserving the folder structure
 PdfExporter | An exporter for creating a pdf out of an entity
-
-### Hooks
-
-Name | Arguments | Expected return value | Description
----- | --------- | --------------------- | -----------
-exporter_modifyMediaFilename | $objFile, $strFieldname, $varFieldValue, $objMediaExporter | $objFile->path | Modify a filename just before added to the archive when using *MediaExporter* (also folder structure could be modified here)
 
 ## Technical instruction
 
@@ -87,3 +81,4 @@ Before Export             | huh.exporter.event.before_export      | Fired before
 Before Build Query        | huh.exporter.event.before_build_query | Fired before building and executing the query for collecting list content. 
 Modify Table Header field | huh.exporter.event.modifyheaderfields | Modify header field values in tables.
 Modify Table field value  | huh.exporter.event.modifyfieldvalue   | Fired before writing a table value to the table object (e.g. spreadsheet).
+Modify Media File Name    | huh.exporter.event.modifymediafilename| Modify media file before adding to archive (filename and file object). 

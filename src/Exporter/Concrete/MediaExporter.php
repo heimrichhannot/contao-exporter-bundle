@@ -15,7 +15,7 @@ use Contao\Environment;
 use Contao\File;
 use Contao\Folder;
 use Contao\ZipWriter;
-use HeimrichHannot\ContaoExporterBundle\Event\ModifyMediaFileName;
+use HeimrichHannot\ContaoExporterBundle\Event\ModifyMediaFile;
 use HeimrichHannot\ContaoExporterBundle\Exporter\AbstractExporter;
 use HeimrichHannot\ContaoExporterBundle\Exporter\ExportTypeListInterface;
 use HeimrichHannot\UtilsBundle\Driver\DC_Table_Utils;
@@ -95,16 +95,16 @@ class MediaExporter extends AbstractExporter implements ExportTypeListInterface
                     if ($path && ($file = new File(str_replace(Environment::get('url'), '', $path), true)) !== null && $file->exists())
                     {
                         $event = $this->dispatcher->dispatch(
-                            ModifyMediaFileName::NAME,
-                            new ModifyMediaFileName('', $file, $field, $path, $this)
+                            ModifyMediaFile::NAME,
+                            new ModifyMediaFile('', $file, $field, $path, $this)
                         );
 
                         if (!empty($event->getNewFileName()))
                         {
-                            $mediaFileList[] = ['path' => $file->path, 'name' => $event->getNewFileName()];
+                            $mediaFileList[] = ['path' => $event->getFile()->path, 'name' => $event->getNewFileName()];
                         }
                         else {
-                            $mediaFileList[] = $file->path;
+                            $mediaFileList[] = $event->getFile()->path;
                         }
 
 
