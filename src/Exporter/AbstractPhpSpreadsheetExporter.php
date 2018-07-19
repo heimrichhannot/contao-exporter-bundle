@@ -20,7 +20,7 @@ use PhpOffice\PhpSpreadsheet\Settings;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Symfony\Component\Cache\Simple\FilesystemCache;
 
-abstract class AbstractPhpSpreadsheetExporter extends AbstractTableExporter implements ExportTargetDownloadInterface, ExportTargetFileInterface
+abstract class AbstractPhpSpreadsheetExporter extends AbstractTableExporter
 {
     protected $arrExportFields = [];
 

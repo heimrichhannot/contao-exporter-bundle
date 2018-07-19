@@ -36,3 +36,4 @@ services:
   HeimrichHannot\ContaoExporterBundle\Exporter\Concrete\XlsExporter: ~
   HeimrichHannot\ContaoExporterBundle\Exporter\Concrete\XlsxExporter: ~
   HeimrichHannot\ContaoExporterBundle\Exporter\Concrete\PdfExporter: ~
+  HeimrichHannot\ContaoExporterBundle\Exporter\Concrete\MediaExporter: ~

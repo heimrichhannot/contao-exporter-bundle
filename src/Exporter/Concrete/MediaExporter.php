@@ -8,7 +8,7 @@
  * @license http://www.gnu.org/licences/lgpl-3.0.html LGPL
  */
 
-namespace HeimrichHannot\Exporter\Concrete;
+namespace HeimrichHannot\ContaoExporterBundle\Exporter\Concrete;
 
 use Contao\Database\Result;
 use Contao\Environment;

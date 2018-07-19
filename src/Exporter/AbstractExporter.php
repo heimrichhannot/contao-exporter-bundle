@@ -89,16 +89,6 @@ abstract class AbstractExporter implements ExporterInterface
             }
             return false;
         }
-//        if (!$this->hasTarget($this->config->target))
-//        {
-//            if ($this->container->getParameter('kernel.environment') != 'prod') {
-//                throw new \Exception("Export target ".$this->config->target." is not supported by export class ".static::class
-//                    .' for export configuration '.$this->config->title.' (ID: '.$this->config->id.')');
-//            }
-//            return false;
-//        }
-
-
 
         $fileName = $this->buildFileName($entity);
         $fileDir = '';
@@ -307,18 +297,6 @@ abstract class AbstractExporter implements ExporterInterface
                 return $this instanceof ExportTypeListInterface;
             case static::TYPE_ITEM:
                 return $this instanceof ExportTypeItemInterface;
-        }
-        return false;
-    }
-
-    public function hasTarget(string $target): bool
-    {
-        switch ($target)
-        {
-            case static::TARGET_DOWNLOAD:
-                return $this instanceof ExportTargetDownloadInterface;
-            case static::TARGET_FILE:
-                return $this instanceof ExportTargetFileInterface;
         }
         return false;
     }
