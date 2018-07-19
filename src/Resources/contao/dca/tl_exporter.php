@@ -94,13 +94,13 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
 
     // Subpalettes
     'subpalettes' => [
-        'fileType_csv'                                                 => 'exporterClass,fieldDelimiter,fieldEnclosure,localizeFields,addHeaderToExportTable',
-        'fileType_pdf'                                                 => 'exporterClass,pdfBackground,pdfFonts,pdfMargins,pdfTitle,pdfSubject,pdfCreator,localizeFields,pdfCss,pdfTemplate',
-        'fileType_xls'                                                 => 'exporterClass,localizeFields,addHeaderToExportTable',
-        'fileType_media'                                               => 'exporterClass,compressionType',
-        'addHeaderToExportTable'                                       => 'localizeHeader,overrideHeaderFieldLabels',
-        'overrideHeaderFieldLabels'                                    => 'headerFieldLabels',
-        'addJoinTables'                                                => 'joinTables',
+        'fileType_csv'              => 'exporterClass,fieldDelimiter,fieldEnclosure,localizeFields,addHeaderToExportTable',
+        'fileType_pdf'              => 'exporterClass;{pdf_config_legend},pdfBackground,pdfFontDirectories,pdfMargins,pdfTitle,pdfSubject,pdfCreator;localizeFields,pdfCss,pdfTemplate',
+        'fileType_xls'              => 'exporterClass,localizeFields,addHeaderToExportTable',
+        'fileType_media'            => 'exporterClass,compressionType',
+        'addHeaderToExportTable'    => 'localizeHeader,overrideHeaderFieldLabels',
+        'overrideHeaderFieldLabels' => 'headerFieldLabels',
+        'addJoinTables'             => 'joinTables',
         'target_' . \HeimrichHannot\ContaoExporterBundle\Exporter\AbstractExporter::TARGET_DOWNLOAD => 'fileName,fileNameAddDatime',
         'target_' . \HeimrichHannot\ContaoExporterBundle\Exporter\AbstractExporter::TARGET_FILE     => 'fileDir,useHomeDir,fileSubDirName,fileName,fileNameAddDatime',
         'fileNameAddDatime'                                            => 'fileNameAddDatimeFormat',
@@ -484,7 +484,7 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
             ],
             'sql'       => "binary(16) NULL",
         ],
-        'pdfTemplate'               => [
+        'pdfTemplate'        => [
             'label'            => &$GLOBALS['TL_LANG']['tl_exporter']['pdfTemplate'],
             'exclude'          => true,
             'inputType'        => 'select',
@@ -495,7 +495,7 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
             ],
             'sql'              => "varchar(128) NOT NULL default ''",
         ],
-        'pdfCss'                    => [
+        'pdfCss'             => [
             'label'     => &$GLOBALS['TL_LANG']['tl_exporter']['pdfCss'],
             'inputType' => 'fileTree',
             'exclude'   => true,
@@ -507,56 +507,16 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
             ],
             'sql'       => "blob NULL",
         ],
-        'pdfFonts'                  => [
-            'label'        => &$GLOBALS['TL_LANG']['tl_exporter']['pdfFonts'],
-            'exclude'      => true,
-            'inputType'    => 'fieldpalette',
-            'foreignKey'   => 'tl_fieldpalette.id',
-            'relation'     => ['type' => 'hasMany', 'load' => 'eager'],
-            'sql'          => "blob NULL",
-            'eval'         => ['tl_class' => 'long clr'],
-            'fieldpalette' => [
-                'config'   => [
-                    'hidePublished' => true,
-                ],
-                'list'     => [
-                    'label' => [
-                        'fields' => ['exporter_pdfFonts_fontName', 'exporter_pdfFonts_fontWeight'],
-                        'format' => '%s -> %s',
-                    ],
-                ],
-                'palettes' => [
-                    'default' => 'exporter_pdfFonts_fontName,exporter_pdfFonts_fontWeight,exporter_pdfFonts_file',
-                ],
-                'fields'   => [
-                    'exporter_pdfFonts_fontName'   => [
-                        'label'     => &$GLOBALS['TL_LANG']['tl_exporter']['exporter_pdfFonts_fontName'],
-                        'inputType' => 'text',
-                        'eval'      => ['tl_class' => 'clr', 'mandatory' => true],
-                        'sql'       => "varchar(255) NOT NULL default ''",
-                    ],
-                    'exporter_pdfFonts_fontWeight' => [
-                        'label'     => &$GLOBALS['TL_LANG']['tl_exporter']['exporter_pdfFonts_fontWeight'],
-                        'inputType' => 'select',
-                        'options'   => ['R', 'B', 'I', 'BI'],
-                        'reference' => &$GLOBALS['TL_LANG']['tl_exporter']['exporter_pdfFonts_fontWeightOptions'],
-                        'eval'      => ['tl_class' => 'clr', 'mandatory' => true, 'includeBlankOption' => true],
-                        'sql'       => "varchar(16) NOT NULL default ''",
-                    ],
-                    'exporter_pdfFonts_file'       => [
-                        'label'     => &$GLOBALS['TL_LANG']['tl_exporter']['exporter_pdfFonts_file'],
-                        'inputType' => 'fileTree',
-                        'exclude'   => true,
-                        'eval'      => [
-                            'filesOnly'  => true,
-                            'extensions' => 'ttf',
-                            'fieldType'  => 'radio',
-                            'mandatory'  => true,
-                            'tl_class'   => 'w50',
-                        ],
-                        'sql'       => "blob NULL",
-                    ],
-                ],
+        'pdfFontDirectories' => [
+            'label'     => &$GLOBALS['TL_LANG']['tl_exporter']['pdfFontDirectories'],
+            'exclude'   => true,
+            'inputType' => 'fileTree',
+            'sql'       => "blob NULL",
+            'eval'      => [
+                'tl_class' => 'long clr',
+                'multiple' => true,
+                'files'    => false,
+                'fieldType' => 'checkbox',
             ],
         ],
         'pdfMargins'                => [

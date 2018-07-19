@@ -20,19 +20,9 @@ use PhpOffice\PhpSpreadsheet\Writer\Csv;
 
 class CsvExporter extends AbstractPhpSpreadsheetExporter
 {
-    public function getName(): string
-    {
-        return 'csv-exporter';
-    }
-
     public function getSupportedFileTypes(): array
     {
         return ['csv'];
-    }
-
-    public function getSupportedExportTarget(): array
-    {
-        return [AbstractExporter::TARGET_DOWNLOAD];
     }
 
     protected function getDocumentWriter(Spreadsheet $spreadsheet): BaseWriter
@@ -40,7 +30,6 @@ class CsvExporter extends AbstractPhpSpreadsheetExporter
         $writer = new Csv($spreadsheet);
         $writer->setDelimiter($this->config->fieldDelimiter ?: ',')->setEnclosure($this->config->fieldEnclosure ?: '"')->setSheetIndex(0);
         return $writer;
-
     }
 
     protected function createHeaders($fileName)

@@ -13,7 +13,7 @@ namespace HeimrichHannot\ContaoExporterBundle\Exporter\Concrete;
 
 use HeimrichHannot\ContaoExporterBundle\Exporter\AbstractPhpSpreadsheetExporter;
 
-class XlsExporter extends AbstractPhpSpreadsheetExporter
+class XlsxExporter extends AbstractPhpSpreadsheetExporter
 {
     /**
      * Return a list of supported file types
@@ -24,14 +24,12 @@ class XlsExporter extends AbstractPhpSpreadsheetExporter
      */
     public function getSupportedFileTypes(): array
     {
-        return ['xls'];
+        return ['xlsx'];
     }
 
     protected function createHeaders($fileName)
     {
         parent::createHeaders($fileName);
-        header('Content-Type: application/vnd.ms-excel');
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
     }
-
-
 }

@@ -37,7 +37,7 @@ abstract class AbstractExporter implements ExporterInterface
     /**
      * @var string
      */
-    protected $tempFolderPath = 'system/tmp';
+    protected $tempFolderPath = 'var/tmp/huh_exporter/';
 
     /**
      * @var ExporterModel
@@ -180,7 +180,7 @@ abstract class AbstractExporter implements ExporterInterface
      * @param Model $entity
      * @return string
      */
-    protected function buildFileName($entity)
+    protected function buildFileName($entity, string $fileType = '')
     {
         $fileName = $this->config->fileName ?: 'export';
 
@@ -189,7 +189,9 @@ abstract class AbstractExporter implements ExporterInterface
             $fileName = date($this->config->fileNameAddDatimeFormat ?: 'Y-m-d') . '_' . $fileName;
         }
 
-        return $fileName . '.' . $this->config->fileType;
+        $fileType = empty($fileType) ? $this->config->fileType : $fileType;
+
+        return $fileName . '.' . $fileType;
     }
 
     /**
@@ -335,6 +337,18 @@ abstract class AbstractExporter implements ExporterInterface
     public function setTempFolderPath(string $tempFolderPath): void
     {
         $this->tempFolderPath = $tempFolderPath;
+    }
+
+    /**
+     * Returns path to a unique folder within tempPath.
+     *
+     * @param string $prefix
+     * @param bool $moreEntropy
+     * @return string
+     */
+    public function getUniqueTempFolderPath(string $prefix = '', bool $moreEntropy = false): string
+    {
+        return $this->tempFolderPath.uniqid($prefix, $moreEntropy).'/';
     }
 
     protected function beforeExport($fileDir, $fileName)

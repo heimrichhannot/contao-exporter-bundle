@@ -12,7 +12,9 @@
 namespace HeimrichHannot\ContaoExporterBundle\ContaoManager;
 
 
+use Contao\System;
 use HeimrichHannot\ContaoExporterBundle\Exporter\ExporterInterface;
+use Psr\Container\ContainerInterface;
 use Symfony\Component\Cache\Simple\FilesystemCache;
 
 class ExporterManager
@@ -23,6 +25,15 @@ class ExporterManager
     protected $exporter = [];
     protected $exporterFileTypes = [];
     protected $exporterClassesFileTypes = [];
+    /**
+     * @var ContainerInterface
+     */
+    private $container;
+
+    public function __construct(ContainerInterface $container)
+    {
+        $this->container = $container;
+    }
 
     /**
      * Add an exporter to the registry.
@@ -62,16 +73,20 @@ class ExporterManager
 
     /**
      * @param bool $useCache
-     * @return string
      */
     protected function initializeFileTypeLists(bool $useCache)
     {
         $cacheKey = 'exporter.filetypes';
+
+        if ($this->container->get('kernel')->isDebug())
+        {
+            $useCache = false;
+        }
         if (empty($this->exporterFileTypes))
         {
             if ($useCache)
             {
-                $cache = new FilesystemCache('huh.exporter');
+                $cache = new FilesystemCache('huh.exporter', 3600);
             }
 
             if ($useCache && $cache->has($cacheKey))

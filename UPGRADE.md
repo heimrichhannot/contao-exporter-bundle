@@ -1,6 +1,6 @@
 # UPGRADE GUIDE
 
-## From Exporter Module
+## Module to 1.0
 
 ### config.php
 
@@ -19,3 +19,21 @@ The hooks `exporter_modifyFileDir` and `exporter_modifyFilename` were replaced w
 The hook `exporter_modifyFieldValue` was replaced with `huh.exporter.event.modifyfieldvalue` event.
 
 The hook `exporter_modifyHeaderFields` was replaced with `huh.exporter.event.modifyheaderfields` event.
+
+### PDF Export
+
+The pdf export was migrated to [mPDF 7][1] and [Contao Utils Bundle][2] PDF Writer. Also the template handling is changed.
+
+#### Fonts 
+
+Instead of set the font configuration in the exporter config, there is now a field to select font folders. These folders must container a `mpdf-config.php` file. Please check the corresponding chapters in [Utils Bundle docs][3] and the [mPDF Docs][4].
+
+#### Templates
+
+We moved from the contao template engine to twig. Templates should be stored withing `src/Resources/view` folder and file name should end `.html.twig`. Following variables are available: `raw` (all fields), `fields` (all fields filtered by skipped fields and skipped labels), `skipFields` and `skipLabels`
+
+
+[1]: https://mpdf.github.io
+[2]: https://github.com/heimrichhannot/contao-utils-bundle
+[3]: https://github.com/heimrichhannot/contao-utils-bundle/blob/master/docs/utils/pdf/pdf_writer.md#use-custom-fonts
+[4]: https://mpdf.github.io/fonts-languages/fonts-in-mpdf-7-x.html

@@ -6,10 +6,6 @@ use Contao\BackendTemplate;
 use Contao\Module;
 use Contao\System;
 use HeimrichHannot\ContaoExporterBundle\Model\ExporterModel;
-use HeimrichHannot\Exporter\Concrete\CsvExporter;
-use HeimrichHannot\Exporter\Concrete\MediaExporter;
-use HeimrichHannot\Exporter\Concrete\PdfExporter;
-use HeimrichHannot\Exporter\Concrete\XlsExporter;
 
 class ModuleFrontendExporter extends Module
 {
@@ -67,11 +63,10 @@ class ModuleFrontendExporter extends Module
         {
             return;
         }
-        
-        $exporter = new $this->config->exporterClass($this->config);
-        
-        
-        if(null === $exporter)
+
+        $exporter = System::getContainer()->get('huh.exporter.manager.exporter')->getExporterByClassName($this->config->exporterClass);
+
+        if(!$exporter)
         {
             return;
         }

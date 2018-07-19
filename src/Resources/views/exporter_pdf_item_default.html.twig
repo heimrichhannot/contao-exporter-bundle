@@ -1,0 +1,14 @@
+<table width="100%">
+    {% if fields|default %}
+        {% for value in fields %}
+            <tr nobr="true">
+                <td>
+                    <br><br><strong>{{ value.label|default('') }}</strong>
+                    <br>{{ value.formatted|default('-') }}
+                </td>
+            </tr>
+        {% endfor %}
+    {% else %}
+        <p>Please pass a field array to `export()` function of `huh.exporter.action.export` service or copy the template exporter_pdf_item_default and adjust it to your needs.</p>
+    {% endif %}
+</table>

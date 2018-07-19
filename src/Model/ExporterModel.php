@@ -53,7 +53,7 @@ use Contao\Model;
  * @property string $pdfBackground
  * @property string $pdfTemplate
  * @property string $pdfCss
- * @property string $pdfFonts
+ * @property string $pdfFontDirectories
  * @property string $pdfMargins
  * @property string $pdfTitle
  * @property string $pdfSubject

@@ -16,7 +16,9 @@ use HeimrichHannot\ContaoExporterBundle\Event\ModifyFieldValueEvent;
 use HeimrichHannot\UtilsBundle\Driver\DC_Table_Utils;
 use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Settings;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use Symfony\Component\Cache\Simple\FilesystemCache;
 
 abstract class AbstractPhpSpreadsheetExporter extends AbstractTableExporter implements ExportTargetDownloadInterface, ExportTargetFileInterface
 {
@@ -38,6 +40,7 @@ abstract class AbstractPhpSpreadsheetExporter extends AbstractTableExporter impl
      */
     public function exportList($databaseResult)
     {
+        Settings::setCache(new FilesystemCache('huh.exporter.phpstreadsheet'));
         $table = $this->config->linkedTable;
         $arrDca         = $GLOBALS['TL_DCA'][$table];
         $spreadsheet    = new Spreadsheet();
@@ -153,7 +156,7 @@ abstract class AbstractPhpSpreadsheetExporter extends AbstractTableExporter impl
      * @return \PhpOffice\PhpSpreadsheet\Writer\IWriter
      */
     protected function getDocumentWriter(Spreadsheet $spreadsheet) {
-        return IOFactory::createWriter($spreadsheet, $this->config->fileType);
+        return IOFactory::createWriter($spreadsheet, ucfirst($this->config->fileType));
     }
 
     protected function createHeaders($fileName)
@@ -161,7 +164,7 @@ abstract class AbstractPhpSpreadsheetExporter extends AbstractTableExporter impl
         header("Content-Type: text/plain");
         header('Content-Disposition: attachment;filename="'.$fileName.'"');
         header('Cache-Control: max-age=0');
-// If you're serving to IE 9, then the following may be needed
+        // If you're serving to IE 9, then the following may be needed
         header('Cache-Control: max-age=1');
         // If you're serving to IE over SSL, then the following may be needed
         header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past

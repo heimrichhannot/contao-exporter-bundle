@@ -25,12 +25,12 @@ class ModifyHeaderFieldsEvent extends Event
     /**
      * @var AbstractTableExporter
      */
-    private $context;
+    private $exporter;
 
-    public function __construct(array $headerFields, AbstractTableExporter $context)
+    public function __construct(array $headerFields, AbstractTableExporter $exporter)
     {
         $this->headerFields = $headerFields;
-        $this->context = $context;
+        $this->exporter     = $exporter;
     }
 
     /**
@@ -52,17 +52,17 @@ class ModifyHeaderFieldsEvent extends Event
     /**
      * @return AbstractTableExporter
      */
-    public function getContext(): AbstractTableExporter
+    public function getExporter(): AbstractTableExporter
     {
-        return $this->context;
+        return $this->exporter;
     }
 
     /**
-     * @param AbstractTableExporter $context
+     * @param AbstractTableExporter $exporter
      */
-    public function setContext(AbstractTableExporter $context): void
+    public function setExporter(AbstractTableExporter $exporter): void
     {
-        $this->context = $context;
+        $this->exporter = $exporter;
     }
 
 

@@ -33,3 +33,6 @@ services:
 # Exporter
 
   HeimrichHannot\ContaoExporterBundle\Exporter\Concrete\CsvExporter: ~
+  HeimrichHannot\ContaoExporterBundle\Exporter\Concrete\XlsExporter: ~
+  HeimrichHannot\ContaoExporterBundle\Exporter\Concrete\XlsxExporter: ~
+  HeimrichHannot\ContaoExporterBundle\Exporter\Concrete\PdfExporter: ~
