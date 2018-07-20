@@ -19,11 +19,13 @@ use HeimrichHannot\ContaoExporterBundle\Exporter\ExportTargetFileInterface;
 use HeimrichHannot\ContaoExporterBundle\Exporter\ExportTypeItemInterface;
 use HeimrichHannot\UtilsBundle\Pdf\PdfWriter;
 
-class PdfExporter extends AbstractExporter implements ExportTypeItemInterface, ExportTargetFileInterface, ExportTargetDownloadInterface
+class PdfExporter extends AbstractExporter implements ExportTypeItemInterface
 {
     protected function doExport($entity = null, array $fields = [])
     {
-        $this->exportItem($entity, $fields);
+        $entity = $this->getEntity($entity);
+        $fields = $this->prepareItemFields($fields, $entity);
+        return $this->exportItem($entity, $fields);
     }
 
     /**
@@ -90,56 +92,78 @@ class PdfExporter extends AbstractExporter implements ExportTypeItemInterface, E
             'orientation' => 'P',
         ];
 
-        $arrMargins = deserialize($this->config->pdfMargins, true);
+        $pdfConfig = $this->setPdfMargins($pdfConfig);
+
+        if (!empty($fields))
+        {
+            $rawFields = $fields;
+
+            list($skipFields, $fields, $skipLabels) = $this->setPdfFields($fields);
+
+            $pdfTemplate = $this->config->pdfTemplate ?: 'exporter_pdf_item_default';
+            $pdfTemplate = $this->container->get('huh.utils.template')->getTemplate($pdfTemplate);
+            $htmlContent = $this->container->get('twig')->render($pdfTemplate, [
+                'raw' => $rawFields,
+                'fields' => $fields,
+                'skipFields' => $skipFields,
+                'skipLabels' => $skipLabels,
+            ]);
+        }
+        else {
+            $htmlContent = '';
+        }
+
+        $htmlContent = $this->setPdfCssStyles($htmlContent);
+
+
+        $pdfWriter = $this->container->get('huh.utils.pdf.writer')->mergeConfig($pdfConfig);
+        // PDF Template
+        if ($this->config->pdfBackground)
+        {
+            $pdfWriter->setTemplate($templatePath = $this->container->get('huh.utils.file')->getPathFromUuid($this->config->pdfBackground));
+        }
+        $this->setPdfFonts($pdfWriter);
+        $pdfWriter->setHtml($htmlContent);
+
+        return $pdfWriter;
+    }
+
+    /**
+     * @param $pdfConfig
+     * @return mixed
+     */
+    protected function setPdfMargins($pdfConfig)
+    {
+        $arrMargins = StringUtil::deserialize($this->config->pdfMargins, true);
 
         if (count($arrMargins) > 0)
         {
-            $pdfConfig['margin_left']   = $arrMargins['left'];
-            $pdfConfig['margin_right']  = $arrMargins['right'];
-            $pdfConfig['margin_top']    = $arrMargins['top'];
-            $pdfConfig['margin_bottom'] = $arrMargins['bottom'];
+            if (!empty($arrMargins['left']))
+            {
+                $pdfConfig['margin_left'] = $arrMargins['left'];
+            }
+            if (!empty($arrMargins['right']))
+            {
+                $pdfConfig['margin_right'] = $arrMargins['right'];
+            }
+            if (!empty($arrMargins['top']))
+            {
+                $pdfConfig['margin_top'] = $arrMargins['top'];
+            }
+            if (!empty($arrMargins['bottom']))
+            {
+                $pdfConfig['margin_bottom'] = $arrMargins['bottom'];
+            }
         }
+        return $pdfConfig;
+    }
 
-        $pdfTemplate = $this->config->pdfTemplate ?: 'exporter_pdf_item_default';
-        $pdfTemplate = $this->container->get('huh.utils.template')->getTemplate($pdfTemplate);
-
-
-
-        $fields = $entity->row();
-
-        $skipFields = array_map(
-            function ($val) {
-                list($strTable, $field) = explode('.', $val);
-
-                return $field;
-            }, StringUtil::deserialize($this->config->skipFields, true)
-        );
-
-        foreach ($skipFields as $name)
-        {
-            unset($fields[$name]);
-        }
-
-        // skip labels
-        $skipLabels = array_map(function($val) {
-            list($strTable, $field) = explode('.', $val);
-
-            return $field;
-        }, StringUtil::deserialize($this->config->skipLabels, true));
-
-        foreach ($skipLabels as $name)
-        {
-            unset($fields[$name]['label']);
-        }
-
-        $htmlContent = $this->container->get('twig')->render($pdfTemplate, [
-            'raw' => $entity->row(),
-            'fields' => $fields,
-            'skipFields' => $skipFields,
-            'skipLabels' => $skipLabels,
-        ]);
-
-        // css
+    /**
+     * @param $htmlContent
+     * @return string
+     */
+    protected function setPdfCssStyles($htmlContent): string
+    {
         $cssStyles = '';
         if ($this->config->pdfCss)
         {
@@ -155,13 +179,14 @@ class PdfExporter extends AbstractExporter implements ExportTypeItemInterface, E
                 $htmlContent = '<style>' . $cssStyles . '</style>' . $htmlContent;
             }
         }
+        return $htmlContent;
+    }
 
-        $pdfWriter = $this->container->get('huh.utils.pdf.writer')->mergeConfig($pdfConfig);
-        // PDF Template
-        if ($this->config->pdfBackground)
-        {
-            $pdfWriter->setTemplate($templatePath = $this->container->get('huh.utils.file')->getPathFromUuid($this->config->pdfBackground));
-        }
+    /**
+     * @param $pdfWriter
+     */
+    protected function setPdfFonts($pdfWriter): void
+    {
         if ($this->config->pdfFontDirectories)
         {
             $fontPathUUids = StringUtil::deserialize($this->config->pdfFontDirectories);
@@ -179,8 +204,38 @@ class PdfExporter extends AbstractExporter implements ExportTypeItemInterface, E
                 $pdfWriter->addFontDirectories($fontPaths);
             }
         }
-        $pdfWriter->setHtml($htmlContent);
+    }
 
-        return $pdfWriter;
+    /**
+     * @param array $fields
+     * @return array
+     */
+    protected function setPdfFields(array $fields): array
+    {
+        $skipFields = array_map(
+            function ($val) {
+                list($strTable, $field) = explode('.', $val);
+
+                return $field;
+            }, StringUtil::deserialize($this->config->skipFields, true)
+        );
+
+        foreach ($skipFields as $name)
+        {
+            unset($fields[$name]);
+        }
+
+        // skip labels
+        $skipLabels = array_map(function ($val) {
+            list($strTable, $field) = explode('.', $val);
+
+            return $field;
+        }, StringUtil::deserialize($this->config->skipLabels, true));
+
+        foreach ($skipLabels as $name)
+        {
+            unset($fields[$name]['label']);
+        }
+        return [$skipFields, $fields, $skipLabels];
     }
 }

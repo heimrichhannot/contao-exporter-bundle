@@ -1,19 +1,30 @@
 <?php
 
-namespace HeimrichHannot\ContaoExporterBundle\Module;
+namespace HeimrichHannot\ContaoExporterBundle\FrontendModule;
 
 use Contao\BackendTemplate;
+use Contao\Message;
 use Contao\Module;
+use Contao\ModuleModel;
+use Contao\StringUtil;
 use Contao\System;
 use HeimrichHannot\ContaoExporterBundle\Model\ExporterModel;
 
 class ModuleFrontendExporter extends Module
 {
+    const NAME = 'frontendExporter';
+
 	protected $strTemplate = 'mod_frontend_export';
     /**
      * @var ExporterModel
      */
 	protected $config;
+
+    public function __construct(ModuleModel $objModule, string $strColumn = 'main')
+    {
+        parent::__construct($objModule, $strColumn);
+        $this->container = System::getContainer();
+    }
 
 
     public function generate()
@@ -34,48 +45,54 @@ class ModuleFrontendExporter extends Module
 		return parent::generate();
 	}
 
+    /**
+     * @throws \Exception
+     */
 	protected function compile()
 	{
 	    /** @var ExporterModel config */
 		$this->config = ExporterModel::findByPk($this->exporterConfig);
-		
+
 		if(null === $this->config)
         {
             return;
         }
-	    
+
 	    $entity = $this->getEntity();
-        
+
         $this->Template->action = '';
         $this->Template->method = 'POST';
         $this->Template->type = $this->getExporterType();
-        
         $this->Template->btnLabel = $this->exporterBtnLabel;
 
 
-
-        if(null === ($exportType = System::getContainer()->get("huh.request")->getPost('export')))
+        if (null === ($exportType = $this->container->get("huh.request")->getPost('export')))
         {
             return;
         }
 
-        if(!class_exists($this->config->exporterClass))
+        try
         {
-            return;
-        }
-
-        $exporter = System::getContainer()->get('huh.exporter.manager.exporter')->getExporterByClassName($this->config->exporterClass);
-
-        if(!$exporter)
+            $this->container->get('huh.exporter.action.export')->export($this->config, $entity, []);
+        } catch (\Exception $e)
         {
-            return;
+            if ($this->container->get('kernel')->isDebug())
+            {
+                throw $e;
+            } else
+            {
+                Message::addError($GLOBALS['TL_LANG']['MSC']['exporter']['exporterNotPossible']);
+                return;
+            }
         }
-        
-        $exporter->export($entity, deserialize($this->config->tableFieldsForExport,true));
 	}
 
     protected function getEntity()
     {
+        if ($id = $this->container->get('huh.request')->getGet('id'))
+        {
+            return $id;
+        }
         return $this->config->linkedTable;
 	}
 

@@ -18,8 +18,6 @@ class XlsExporter extends AbstractPhpSpreadsheetExporter
     /**
      * Return a list of supported file types
      *
-     * Example: ['csv','xslt']
-     *
      * @return array
      */
     public function getSupportedFileTypes(): array
@@ -32,6 +30,4 @@ class XlsExporter extends AbstractPhpSpreadsheetExporter
         parent::createHeaders($fileName);
         header('Content-Type: application/vnd.ms-excel');
     }
-
-
 }

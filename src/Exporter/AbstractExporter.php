@@ -18,9 +18,11 @@ use Contao\FilesModel;
 use Contao\FrontendUser;
 use Contao\Input;
 use Contao\Model;
+use Contao\System;
 use HeimrichHannot\ContaoExporterBundle\Event\BeforeExportEvent;
 use HeimrichHannot\ContaoExporterBundle\Event\BeforeBuildQueryEvent;
 use HeimrichHannot\ContaoExporterBundle\Model\ExporterModel;
+use HeimrichHannot\UtilsBundle\Driver\DC_Table_Utils;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
@@ -185,6 +187,19 @@ abstract class AbstractExporter implements ExporterInterface
     }
 
     /**
+     * @param $id
+     * @return Model
+     */
+    public function getEntity($id): Model
+    {
+        if ($id instanceof Model)
+        {
+            return $id;
+        }
+        return $this->container->get('huh.utils.model')->findModelInstanceByIdOrAlias($this->config->linkedTable, $id);
+    }
+
+    /**
      * Returns the entites for list export
      *
      * @return Database\Result
@@ -271,6 +286,70 @@ abstract class AbstractExporter implements ExporterInterface
         }
 
         return $this->framework->createInstance(Database::class)->prepare($query)->execute();
+    }
+
+    public function prepareItemFields(array $fields = [], Model $entity): array
+    {
+        if (!empty($fields) && is_array(reset($fields)))
+        {
+            return $fields;
+        }
+
+        $exporterFields = [];
+        try {
+            $dataContainer = $this->createDataContainer($this->config->linkedTable, $entity, $entity->id, true);
+        } catch (\Exception $e) {
+            return [];
+        }
+
+        $fields = $this->container->get('huh.utils.dca')->getFields($this->config->linkedTable, ['localizeLabels' => false]);
+
+        foreach ($fields as $fieldName)
+        {
+
+            $fieldData = $GLOBALS['TL_DCA'][$this->config->linkedTable]['fields'][$fieldName];
+
+            if ($fieldData['type'] == 'submit')
+            {
+                continue;
+            }
+
+            $exporterFields[$fieldName] = [
+                'raw'       => $entity->{$fieldName},
+                'inputType' => $fieldData['inputType'],
+                'formatted' => $this->container->get('huh.utils.form')->prepareSpecialValueForOutput($fieldName, $entity->{$fieldName}, $dataContainer),
+            ];
+
+            if ($fieldData['inputType'] != 'explanation')
+            {
+                $exporterFields[$fieldName]['label'] = $fieldData['label'][0] ?: $fieldName;
+            }
+        }
+
+        return $exporterFields;
+    }
+
+    protected function createDataContainer (string $table, $activeRecord, int $id, bool $triggerOnLoad = true)
+    {
+        $dcTable               = new DC_Table_Utils($table);
+        $dcTable->activeRecord = $activeRecord;
+        $dcTable->id           = $id;
+
+        if ($triggerOnLoad) {
+            if (is_array($GLOBALS['TL_DCA'][$table]['config']['onload_callback'])) {
+                foreach ($GLOBALS['TL_DCA'][$table]['config']['onload_callback'] as $callback) {
+                    if (is_array($callback)) {
+                        if (!isset($arrOnload[implode(',', $callback)])) {
+                            $arrOnload[implode(',', $callback)] = 0;
+                        }
+                        System::importStatic($callback[0])->{$callback[1]}($dcTable);
+                    } elseif (is_callable($callback)) {
+                        $callback($dcTable);
+                    }
+                }
+            }
+        }
+        return $dcTable;
     }
 
     /**

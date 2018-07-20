@@ -4,7 +4,8 @@
  * Frontend
  */
 $GLOBALS['TL_LANG']['FMD']['exporter'] = 'Exporter';
-$GLOBALS['TL_LANG']['FMD']['frontendExporter'] = ['Frontend Exporter', 'Erlaubt die Benutzung von Exportkonfigurationen im Frontend'];
+$GLOBALS['TL_LANG']['FMD'][\HeimrichHannot\ContaoExporterBundle\FrontendModule\ModuleFrontendExporter::NAME] =
+    ['Frontend Exporter', 'Erlaubt die Benutzung von Exportkonfigurationen im Frontend'];
 
 
 /**

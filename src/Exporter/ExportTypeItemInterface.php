@@ -12,6 +12,8 @@
 namespace HeimrichHannot\ContaoExporterBundle\Exporter;
 
 
+use Contao\Model;
+
 interface ExportTypeItemInterface
 {
     /**
@@ -22,4 +24,21 @@ interface ExportTypeItemInterface
      * @return mixed
      */
     public function exportItem($entity, array $fields = []);
+
+    /**
+     * Return the entity to export
+     *
+     * @param Model|int|string $id Id, alias, or instance of the item
+     * @return Model
+     */
+    public function getEntity($id): Model;
+
+    /**
+     * Prepare field values for output, if fielddata not set from external
+     *
+     * @param array $fields
+     * @param Model $entity
+     * @return array
+     */
+    public function prepareItemFields(array $fields = [], Model $entity): array;
 }

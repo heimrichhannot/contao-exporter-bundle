@@ -21,6 +21,7 @@ use PhpOffice\PhpSpreadsheet\Settings;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Symfony\Component\Cache\Simple\FilesystemCache;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\MimeType\FileinfoMimeTypeGuesser;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
@@ -141,31 +142,10 @@ abstract class AbstractPhpSpreadsheetExporter extends AbstractTableExporter
      */
     public function exportToDownload($spreadsheet, string $fileDir, string $fileName)
     {
-        $projectDir = $this->container->getParameter('kernel.project_dir').'/';
-        $tempDir = $this->getUniqueTempFolderPath('phpspreadsheetexporter');
-        $tempFilePath = $tempDir.$fileName;
-
         // send file to browser
         $writer = $this->getDocumentWriter($spreadsheet);
-//        $this->createHeaders($fileName);
-        $folder = new Folder($tempDir);
-        $writer->save($tempFilePath);
-
-        $response = new BinaryFileResponse($tempFilePath);
-        $response->setContentDisposition(
-            ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-            $fileName
-        );
-
-        if (FileinfoMimeTypeGuesser::isSupported())
-        {
-            $mimeTypeGuesser = new FileinfoMimeTypeGuesser();
-            $response->headers->set('Content-Type', $mimeTypeGuesser->guess($tempFilePath));
-        }
-        $response->headers->set('Content-Type', 'text/plain');
-        $this->beforeResponce($response);
-
-        $response->send();
+        $this->createHeaders($fileName);
+        $writer->save('php://output');
         exit();
     }
 

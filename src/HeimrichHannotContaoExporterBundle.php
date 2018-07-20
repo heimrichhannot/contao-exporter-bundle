@@ -19,6 +19,8 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class HeimrichHannotContaoExporterBundle extends Bundle
 {
+    const MESSAGE_SCOPE = 'huh_exporter_bundle';
+
     public function getContainerExtension()
     {
         return new ExporterExtension();
