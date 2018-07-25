@@ -76,7 +76,17 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
 
     // Palettes
     'palettes'    => [
-        '__selector__'                               => [
+        'default' => '{title_legend},title,type;',
+        \HeimrichHannot\ContaoExporterBundle\Exporter\AbstractExporter::TYPE_LIST
+                  => '{title_legend},title,type;'
+            . '{export_legend},target,fileType;'
+            . '{table_legend},linkedTable,globalOperationKey,addJoinTables,addUnformattedFields,tableFieldsForExport,restrictToPids,whereClause,orderBy;',
+        \HeimrichHannot\ContaoExporterBundle\Exporter\AbstractExporter::TYPE_ITEM
+                  => '{title_legend},title,type;'
+            . '{export_legend},target,fileType;'
+            . '{table_legend}},linkedTable,entitySelector,addJoinTables,skipFields,skipLabels,whereClause,orderBy;',
+
+        '__selector__' => [
             'fileType',
             'addHeaderToExportTable',
             'overrideHeaderFieldLabels',
@@ -84,38 +94,38 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
             'type',
             'target',
             'fileNameAddDatime',
+            'entitySelector'
         ],
-        'default'                                    => '{title_legend},title,type;',
-        \HeimrichHannot\ContaoExporterBundle\Exporter\AbstractExporter::TYPE_LIST => '{title_legend},title,type;' . '{export_legend},target,fileType;'
-                                                        . '{table_legend},globalOperationKey,linkedTable,addJoinTables,addUnformattedFields,tableFieldsForExport,restrictToPids,whereClause,orderBy;',
-        \HeimrichHannot\ContaoExporterBundle\Exporter\AbstractExporter::TYPE_ITEM => '{title_legend},title,type;' . '{export_legend},target,fileType;'
-                                                        . '{table_legend},linkedTable,addJoinTables,skipFields,skipLabels,whereClause,orderBy;',
     ],
 
     // Subpalettes
     'subpalettes' => [
-        'fileType_csv'              => 'exporterClass,fieldDelimiter,fieldEnclosure,localizeFields,addHeaderToExportTable',
-        'fileType_pdf'              => 'exporterClass;{pdf_config_legend},pdfBackground,pdfFontDirectories,pdfMargins,pdfTitle,pdfSubject,pdfCreator;localizeFields,pdfCss,pdfTemplate',
-        'fileType_xls'              => 'exporterClass,localizeFields,addHeaderToExportTable',
-        'fileType_xlsx'              => 'exporterClass,localizeFields,addHeaderToExportTable',
-        'fileType_media'            => 'exporterClass,compressionType',
-        'addHeaderToExportTable'    => 'localizeHeader,overrideHeaderFieldLabels',
-        'overrideHeaderFieldLabels' => 'headerFieldLabels',
-        'addJoinTables'             => 'joinTables',
-        'target_' . \HeimrichHannot\ContaoExporterBundle\Exporter\AbstractExporter::TARGET_DOWNLOAD => 'fileName,fileNameAddDatime',
-        'target_' . \HeimrichHannot\ContaoExporterBundle\Exporter\AbstractExporter::TARGET_FILE     => 'fileDir,useHomeDir,fileSubDirName,fileName,fileNameAddDatime',
-        'fileNameAddDatime'                                            => 'fileNameAddDatimeFormat',
+        'fileType_csv'                => 'exporterClass,fieldDelimiter,fieldEnclosure,localizeFields,addHeaderToExportTable',
+        'fileType_pdf'                => 'exporterClass;{pdf_config_legend},pdfBackground,pdfFontDirectories,pdfMargins,pdfTitle,pdfSubject,pdfCreator;localizeFields,pdfCss,pdfTemplate;',
+        'fileType_xls'                => 'exporterClass,localizeFields,addHeaderToExportTable',
+        'fileType_xlsx'               => 'exporterClass,localizeFields,addHeaderToExportTable',
+        'fileType_media'              => 'exporterClass,compressionType',
+        'addHeaderToExportTable'      => 'localizeHeader,overrideHeaderFieldLabels',
+        'overrideHeaderFieldLabels'   => 'headerFieldLabels',
+        'addJoinTables'               => 'joinTables',
+        'target_' . \HeimrichHannot\ContaoExporterBundle\Exporter\AbstractExporter::TARGET_DOWNLOAD
+                                      => 'fileName,fileNameAddDatime',
+        'target_' . \HeimrichHannot\ContaoExporterBundle\Exporter\AbstractExporter::TARGET_FILE
+                                      => 'fileDir,useHomeDir,fileSubDirName,fileName,fileNameAddDatime',
+        'fileNameAddDatime'           => 'fileNameAddDatimeFormat',
+        'entitySelector_urlParameter' => 'entityUrlParameter',
+        'entitySelector_static'       => 'entityStaticValue',
     ],
 
     // Fields
     'fields'      => [
-        'id'                        => [
+        'id'                 => [
             'sql' => "int(10) unsigned NOT NULL auto_increment",
         ],
-        'tstamp'                    => [
+        'tstamp'             => [
             'sql' => "int(10) unsigned NOT NULL default '0'",
         ],
-        'title'                     => [
+        'title'              => [
             'label'     => &$GLOBALS['TL_LANG']['tl_exporter']['title'],
             'exclude'   => true,
             'search'    => true,
@@ -129,7 +139,7 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
             ],
             'sql'       => "varchar(196) NOT NULL default ''",
         ],
-        'type'                      => [
+        'type'               => [
             'label'     => &$GLOBALS['TL_LANG']['tl_exporter']['type'],
             'inputType' => 'select',
             'options'   => [
@@ -146,7 +156,7 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
         ],
 
         // table legend
-        'linkedTable'               => [
+        'linkedTable'        => [
             'label'            => &$GLOBALS['TL_LANG']['tl_exporter']['linkedTable'],
             'exclude'          => true,
             'inputType'        => 'select',
@@ -160,7 +170,7 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
             ],
             'sql'              => "varchar(64) NOT NULL default ''",
         ],
-        'globalOperationKey'        => [
+        'globalOperationKey' => [
             'label'            => &$GLOBALS['TL_LANG']['tl_exporter']['globalOperationKey'],
             'exclude'          => true,
             'inputType'        => 'select',
@@ -173,7 +183,38 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
             ],
             'sql'              => "varchar(32) NOT NULL default ''",
         ],
-        'restrictToPids'            => [
+        'entitySelector'     => [
+            'label'     => &$GLOBALS['TL_LANG']['tl_exporter']['entitySelector'],
+            'exclude'   => true,
+            'inputType' => 'select',
+            'options'   => ['auto_item', 'urlParameter', 'static'],
+            'eval'      => [
+                'mandatory'          => true,
+                'submitOnChange'     => true,
+                'includeBlankOption' => true,
+                'tl_class'           => 'w50',
+                'multiple' => false,
+            ],
+            'sql'       => "varchar(32) NOT NULL default ''",
+
+        ],
+        'entityUrlParameter' => [
+            'label'     => &$GLOBALS['TL_LANG']['tl_exporter']['entityUrlParameter'],
+            'exclude'   => true,
+            'search'    => true,
+            'inputType' => 'text',
+            'eval'      => ['maxlength' => 32, 'tl_class' => 'w50'],
+            'sql'       => "varchar(32) NOT NULL default ''",
+        ],
+        'entityStaticValue'  => [
+            'label'     => &$GLOBALS['TL_LANG']['tl_exporter']['entityStaticValue'],
+            'exclude'   => true,
+            'search'    => true,
+            'inputType' => 'text',
+            'eval'      => ['maxlength' => 128, 'tl_class' => 'w50'],
+            'sql'       => "varchar(128) NOT NULL default ''",
+        ],
+        'restrictToPids'     => [
             'label'            => &$GLOBALS['TL_LANG']['tl_exporter']['restrictToPids'],
             'exclude'          => true,
             'filter'           => true,

@@ -9,6 +9,9 @@ $arrLang['title'] = ['Titel', 'Geben Sie hier den Titel für die Export-Konfigur
 $arrLang['type'] = ['Typ', 'Wählen Sie hier, welcher Typ verwendet werden soll.'];
 
 // table legend
+$arrLang['entitySelector'] = ['Entität-Auswahl', 'Legen Sie fest, wie die zu exportierende Entität ermittelt werden soll, wenn kein Context vorgegeben wurde (zum Beispiel im Frontendmodul.'];
+$arrLang['entityUrlParameter'] = ['Entität-URL-Parameter', 'Geben Sie den URL-Parameter an, welcher für die Entität-Auswahl genutzt werden soll (bspw. id).'];
+$arrLang['entityStaticValue'] = ['Vorgegebene Entität', 'Geben Sie hier die ID oder den Alias einer Entität ein, welche immer genutzt werden soll.'];
 $arrLang['globalOperationKey'] = ['Globale Operation', 'Wählen Sie hier die Operation aus, die den Export auslösen soll.'];
 $arrLang['restrictToPids'] = ['Auf bestimmte Archive beschränken', 'Wählen Sie hier die Archive aus, für die dieser Exporter greifen soll.'];
 $arrLang['linkedTable'] = ['Verknüpfte Tabelle', 'Wählen Sie hier die Tabelle aus, die exportiert werden soll.'];

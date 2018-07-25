@@ -1,6 +1,13 @@
-<?php $this->extend('block_unsearchable'); ?>
+<?php
 
-<?php $this->block('content'); ?>
+$this->extend('block_unsearchable');
+$this->block('content');
+
+if (!empty($this->messages))
+{
+    echo '<div class="tl_message">'.$this->messages.'</div>';
+}
+?>
 
 <div class="exporter">
     <form action="<?= $this->action ?>" method="<?= $this->method ?>">

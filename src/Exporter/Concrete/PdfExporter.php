@@ -13,14 +13,22 @@ namespace HeimrichHannot\ContaoExporterBundle\Exporter\Concrete;
 
 use Contao\Model;
 use Contao\StringUtil;
+use HeimrichHannot\ContaoExporterBundle\Exception\EntityNotExistException;
 use HeimrichHannot\ContaoExporterBundle\Exporter\AbstractExporter;
 use HeimrichHannot\ContaoExporterBundle\Exporter\ExportTargetDownloadInterface;
 use HeimrichHannot\ContaoExporterBundle\Exporter\ExportTargetFileInterface;
 use HeimrichHannot\ContaoExporterBundle\Exporter\ExportTypeItemInterface;
 use HeimrichHannot\UtilsBundle\Pdf\PdfWriter;
+use Symfony\Component\Debug\Exception\FatalThrowableError;
 
 class PdfExporter extends AbstractExporter implements ExportTypeItemInterface
 {
+    /**
+     * @param null $entity
+     * @param array $fields
+     * @return mixed
+     * @throws EntityNotExistException
+     */
     protected function doExport($entity = null, array $fields = [])
     {
         $entity = $this->getEntity($entity);
@@ -49,21 +57,15 @@ class PdfExporter extends AbstractExporter implements ExportTypeItemInterface
     public function exportToFile($pdfWriter, string $fileDir, string $fileName)
     {
         $this->createPdf($pdfWriter, $fileName, false);
-
-//        if (!empty($fileDir) && !empty($fileName))
-//        {
-//            $pdfWriter->saveToFile($fileDir, $fileName);
-//        }
-//        else
-//        {
-//            throw new \Exception('No valid path for exporter!');
-//        }
     }
 
     public function createPdf(PdfWriter $pdfWriter, string $fileName, bool $download)
     {
         $pdfWriter->setFileName($fileName);
         $pdfWriter->generate($download);
+        if ($download) {
+            exit;
+        }
     }
 
     /**

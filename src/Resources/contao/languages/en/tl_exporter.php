@@ -6,8 +6,12 @@ $arrLang = &$GLOBALS['TL_LANG']['tl_exporter'];
  * Fields
  */
 $arrLang['title'] = ['Title', 'Please type in the title for the exporter config.'];
+$arrLang['type'] = ['Type', 'Choose the export config type.'];
 
 // table legend
+$arrLang['entitySelector'] = ['Entity selector', 'Choose how to determine the entity to export, if no context given (for example in frontend module).'];
+$arrLang['entityUrlParameter'] = ['Entity url parameter', 'Specify the url parameter containing an identifier for the entity (for example id or alias).'];
+$arrLang['entityStaticValue'] = ['Given entity', 'Specify the id or alias of an entity, which should be used.'];
 $arrLang['globalOperationKey'] = ['Global operation', 'Choose the operation the exporter should invoke.'];
 $arrLang['linkedTable'] = ['Linked table', 'Choose the table, that should be exported.'];
 $arrLang['tableFieldsForExport'] = ['Fields', 'Choose the fields to be exported.'];

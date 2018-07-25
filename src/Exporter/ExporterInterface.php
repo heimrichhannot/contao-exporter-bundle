@@ -12,6 +12,7 @@
 namespace HeimrichHannot\ContaoExporterBundle\Exporter;
 
 
+use HeimrichHannot\ContaoExporterBundle\Exception\ExportNotPossibleException;
 use HeimrichHannot\ContaoExporterBundle\Model\ExporterModel;
 
 interface ExporterInterface
@@ -32,6 +33,7 @@ interface ExporterInterface
      * @param null $entity
      * @param array $fields
      * @return bool
+     * @throws ExportNotPossibleException
      */
     public function export(ExporterModel $config = null, $entity = null, array $fields = []): bool;
 }

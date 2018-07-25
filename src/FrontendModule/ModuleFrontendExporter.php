@@ -3,11 +3,12 @@
 namespace HeimrichHannot\ContaoExporterBundle\FrontendModule;
 
 use Contao\BackendTemplate;
+use Contao\Input;
 use Contao\Message;
 use Contao\Module;
 use Contao\ModuleModel;
-use Contao\StringUtil;
 use Contao\System;
+use HeimrichHannot\ContaoExporterBundle\Action\FrontendExportAction;
 use HeimrichHannot\ContaoExporterBundle\Model\ExporterModel;
 
 class ModuleFrontendExporter extends Module
@@ -58,13 +59,10 @@ class ModuleFrontendExporter extends Module
             return;
         }
 
-	    $entity = $this->getEntity();
-
         $this->Template->action = '';
         $this->Template->method = 'POST';
         $this->Template->type = $this->getExporterType();
         $this->Template->btnLabel = $this->exporterBtnLabel;
-
 
         if (null === ($exportType = $this->container->get("huh.request")->getPost('export')))
         {
@@ -73,22 +71,23 @@ class ModuleFrontendExporter extends Module
 
         try
         {
-            $this->container->get('huh.exporter.action.export')->export($this->config, $entity, []);
+            $frontendAction = new FrontendExportAction($this->container);
+            $frontendAction->export($this->config);
         } catch (\Exception $e)
         {
-            if ($this->container->get('kernel')->isDebug())
-            {
-                throw $e;
-            } else
-            {
-                Message::addError($GLOBALS['TL_LANG']['MSC']['exporter']['exporterNotPossible']);
-                return;
-            }
+            Message::addError($GLOBALS['TL_LANG']['MSC']['exporter']['exporterNotPossible'], 'huh_exporter.frontend');
         }
+
+        $this->Template->messages = Message::generateUnwrapped('huh_exporter.frontend');
 	}
 
     protected function getEntity()
     {
+        $autoItem = Input::get('auto_item');
+        if ($autoItem)
+        {
+            return $autoItem;
+        }
         if ($id = $this->container->get('huh.request')->getGet('id'))
         {
             return $id;

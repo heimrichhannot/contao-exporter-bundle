@@ -21,6 +21,8 @@ use Contao\Model;
 use Contao\System;
 use HeimrichHannot\ContaoExporterBundle\Event\BeforeExportEvent;
 use HeimrichHannot\ContaoExporterBundle\Event\BeforeBuildQueryEvent;
+use HeimrichHannot\ContaoExporterBundle\Exception\EntityNotExistException;
+use HeimrichHannot\ContaoExporterBundle\Exception\ExportNotPossibleException;
 use HeimrichHannot\ContaoExporterBundle\Model\ExporterModel;
 use HeimrichHannot\UtilsBundle\Driver\DC_Table_Utils;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -104,7 +106,15 @@ abstract class AbstractExporter implements ExporterInterface
 
         $event = $this->dispatcher->dispatch(BeforeExportEvent::NAME, new BeforeExportEvent($entity, $fields, $fileDir, $fileName, $this));
 
-        $result = $this->doExport($event->getEntity(), $event->getFields());
+        try {
+            $result = $this->doExport($event->getEntity(), $event->getFields());
+        } catch (\Exception $e) {
+            $this->container->get('monolog.logger')->addError($e->getMessage(), ['file' => $e->getFile(), 'line' => $e->getLine(), 'trace' => $e->getTraceAsString()]);
+            throw new ExportNotPossibleException("Export not possible with current configuration.");
+        }
+        if (false === $result) {
+            throw new ExportNotPossibleException("Export not possible with current configuration.");
+        }
 
         switch ($this->config->target)
         {
@@ -189,6 +199,7 @@ abstract class AbstractExporter implements ExporterInterface
     /**
      * @param $id
      * @return Model
+     * @throws EntityNotExistException
      */
     public function getEntity($id): Model
     {
@@ -196,7 +207,12 @@ abstract class AbstractExporter implements ExporterInterface
         {
             return $id;
         }
-        return $this->container->get('huh.utils.model')->findModelInstanceByIdOrAlias($this->config->linkedTable, $id);
+
+        $model = $this->container->get('huh.utils.model')->findModelInstanceByIdOrAlias($this->config->linkedTable, $id);
+        if (!$model) {
+            throw new EntityNotExistException("No entity found for given id or alias.");
+        }
+        return $model;
     }
 
     /**
@@ -288,6 +304,11 @@ abstract class AbstractExporter implements ExporterInterface
         return $this->framework->createInstance(Database::class)->prepare($query)->execute();
     }
 
+    /**
+     * @param array $fields
+     * @param Model $entity
+     * @return array
+     */
     public function prepareItemFields(array $fields = [], Model $entity): array
     {
         if (!empty($fields) && is_array(reset($fields)))
@@ -317,8 +338,19 @@ abstract class AbstractExporter implements ExporterInterface
             $exporterFields[$fieldName] = [
                 'raw'       => $entity->{$fieldName},
                 'inputType' => $fieldData['inputType'],
-                'formatted' => $this->container->get('huh.utils.form')->prepareSpecialValueForOutput($fieldName, $entity->{$fieldName}, $dataContainer),
+                'value' => $entity->{$fieldName},
             ];
+
+            if ($this->config->localizeFields)
+            {
+                $formatted = $this->container->get('huh.utils.form')->prepareSpecialValueForOutput(
+                    $fieldName,
+                    $entity->{$fieldName},
+                    $dataContainer
+                );
+                $exporterFields[$fieldName]['formatted'] = $formatted;
+                $exporterFields[$fieldName]['value'] = $formatted;
+            }
 
             if ($fieldData['inputType'] != 'explanation')
             {
@@ -377,7 +409,8 @@ abstract class AbstractExporter implements ExporterInterface
             case static::TYPE_ITEM:
                 return $this instanceof ExportTypeItemInterface;
         }
-        return false;
+        // Workaround for custom types (formhybrid)
+        return true;
     }
 
     /**

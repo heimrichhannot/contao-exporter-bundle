@@ -12,6 +12,7 @@
 namespace HeimrichHannot\ContaoExporterBundle\Action;
 
 
+use HeimrichHannot\ContaoExporterBundle\Exception\ExportNotPossibleException;
 use HeimrichHannot\ContaoExporterBundle\Manager\ExporterManager;
 use HeimrichHannot\ContaoExporterBundle\Model\ExporterModel;
 
@@ -46,6 +47,12 @@ class ExportAction
         if (!$exporter) {
             throw new \Exception('Exporter class for exporter configuration '.$config->id.' not found');
         }
-        return $exporter->export($config, $entity, $arrFields);
+        try {
+            $result = $exporter->export($config, $entity, $arrFields);
+        } catch (ExportNotPossibleException $exception) {
+            return false;
+        }
+
+        return $result;
     }
 }

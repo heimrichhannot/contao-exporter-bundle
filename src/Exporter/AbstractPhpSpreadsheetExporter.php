@@ -49,7 +49,7 @@ abstract class AbstractPhpSpreadsheetExporter extends AbstractTableExporter
     {
         Settings::setCache(new FilesystemCache('huh.exporter.phpspreadsheet'));
         $table = $this->config->linkedTable;
-        $arrDca         = $GLOBALS['TL_DCA'][$table];
+        $arrDca         = &$GLOBALS['TL_DCA'][$table];
         $spreadsheet    = new Spreadsheet();
 
         $columnIndex = 1;
@@ -90,9 +90,6 @@ abstract class AbstractPhpSpreadsheetExporter extends AbstractTableExporter
                             $callback($dcTable);
                         }
                     }
-
-                    // refresh
-                    $arrDca = $GLOBALS['TL_DCA'][$table];
                 }
 
                 foreach ($row as $key => $value)

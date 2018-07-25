@@ -1,10 +1,10 @@
 <table width="100%">
     {% if fields|default %}
-        {% for value in fields %}
+        {% for field in fields %}
             <tr nobr="true">
                 <td>
-                    <br><br><strong>{{ value.label|default('') }}</strong>
-                    <br>{{ value.formatted|default('-') }}
+                    <br><br><strong>{{ field.label|default('') }}</strong>
+                    <br>{{ field.value|default('-') }}
                 </td>
             </tr>
         {% endfor %}

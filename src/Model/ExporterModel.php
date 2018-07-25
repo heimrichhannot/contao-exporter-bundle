@@ -24,6 +24,9 @@ use Contao\Model;
  * @property string $type
  * @property string $linkedTable
  * @property string $globalOperationKey
+ * @property string $entitySelector
+ * @property string $entityUrlParameter
+ * @property string $entityStaticValue
  * @property string $restrictToPids
  * @property string $skipFields
  * @property string $skipLabels
