@@ -25,6 +25,8 @@ class BackendExportAction
      */
     private $exporterManager;
 
+    protected $names = [];
+
     public function __construct(ExporterManager $exporterManager)
     {
         $this->exporterManager = $exporterManager;

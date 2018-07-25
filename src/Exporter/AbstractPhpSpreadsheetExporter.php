@@ -11,7 +11,6 @@
 
 namespace HeimrichHannot\ContaoExporterBundle\Exporter;
 
-use Contao\Folder;
 use Contao\System;
 use HeimrichHannot\ContaoExporterBundle\Event\ModifyFieldValueEvent;
 use HeimrichHannot\UtilsBundle\Driver\DC_Table_Utils;
@@ -21,9 +20,6 @@ use PhpOffice\PhpSpreadsheet\Settings;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Symfony\Component\Cache\Simple\FilesystemCache;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
-use Symfony\Component\HttpFoundation\File\File;
-use Symfony\Component\HttpFoundation\File\MimeType\FileinfoMimeTypeGuesser;
-use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 abstract class AbstractPhpSpreadsheetExporter extends AbstractTableExporter
 {
@@ -175,7 +171,7 @@ abstract class AbstractPhpSpreadsheetExporter extends AbstractTableExporter
         return IOFactory::createWriter($spreadsheet, ucfirst($this->config->fileType));
     }
 
-    protected function createHeaders($fileName)
+    protected function createHeaders(string $fileName)
     {
         header("Content-Type: text/plain");
         header('Content-Disposition: attachment;filename="'.$fileName.'"');

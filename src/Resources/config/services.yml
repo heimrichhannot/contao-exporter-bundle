@@ -27,11 +27,13 @@ services:
     class: HeimrichHannot\ContaoExporterBundle\Action\ExportAction
   huh.exporter.action.backendexport:
     class: HeimrichHannot\ContaoExporterBundle\Action\BackendExportAction
+  huh.exporter.action.frontendexport:
+    class: HeimrichHannot\ContaoExporterBundle\Action\FrontendExportAction
 
 # Exporter
 
   HeimrichHannot\ContaoExporterBundle\Exporter\Concrete\CsvExporter: ~
-  HeimrichHannot\ContaoExporterBundle\Exporter\Concrete\XlsExporter: ~
+  HeimrichHannot\ContaoExporterBundle\Exporter\Concrete\ExcelExporter: ~
   HeimrichHannot\ContaoExporterBundle\Exporter\Concrete\XlsxExporter: ~
   HeimrichHannot\ContaoExporterBundle\Exporter\Concrete\PdfExporter: ~
   HeimrichHannot\ContaoExporterBundle\Exporter\Concrete\MediaExporter: ~

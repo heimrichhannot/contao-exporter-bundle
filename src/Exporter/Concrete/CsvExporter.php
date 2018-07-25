@@ -32,7 +32,7 @@ class CsvExporter extends AbstractPhpSpreadsheetExporter
         return $writer;
     }
 
-    protected function createHeaders($fileName)
+    protected function createHeaders(string $fileName)
     {
         parent::createHeaders($fileName);
         header("Content-Type: application/csv");

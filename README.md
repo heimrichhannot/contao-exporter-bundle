@@ -1,8 +1,6 @@
 # Contao Exporter Bundle 
 
-> This bundle is currently in development and not ready for usage!
-
-A backend module for exporting any contao entity to file.
+A module for exporting any contao entity to file.
 
 ![Contao Exporter Bundle Backend Config Preview](docs/img/screenshot.png)
 
@@ -10,24 +8,29 @@ A backend module for exporting any contao entity to file.
 
 ## Features
 
-- export an entity list in the backend
-- export of entities in the frontend
-- currently supported file types:
+- export entities and list of entities
+- easily add backend modules to your application/extension or use the frontendmodule
+- expandable exporter architecture
+- included exporter:
     - csv
-    - xls
+    - Excel (xlsx, xls)
     - pdf
-    - zip (media file export as zip)
-
-### Classes
-
-Name | Description
----- | -----------
-CsvExporter | An exporter for writing entity instances into a CSV file
-XlsExporter | An exporter for writing entity instances into an excel file (XLS)
-MediaExporter | An exporter that combines all files referenced by the selected properties of an entity in one archive file (e.g. zip) preserving the folder structure
-PdfExporter | An exporter for creating a pdf out of an entity
+    - Media files (export media files assoziated with an entity as archive(zip))
+    
+Csv and Excel export are archived by [PhpSpreadsheet library](https://github.com/PHPOffice/PhpSpreadsheet). 
+PDF export is archived by [mPDF library](https://github.com/mpdf/mpdf). This library comes not as dependency and therefore must be added to your bundle/project dependencies to archvie pdf export functionality.
 
 ## Technical instruction
+
+### Install 
+
+Install with composer:
+
+```
+composer require heimrichhannot/contao-exporter-bundle
+```
+
+If you want to use the pdf exporter, add `"mpdf/mpdf":"^7.0"` to your composer dependencies.
 
 ### Backend export
 
@@ -56,22 +59,28 @@ $GLOBALS['BE_MOD']['mygroup'] = [
 Create a configuration for your export by using the exporter's backend module (group devtools).
 
 ## Frontend
+You can use the included frontend module to add an easy export functionality. 
 
-You can use [frontendedit](https://github.com/heimrichhannot/contao-frontendedit) or [formhybrid_list](https://github.com/heimrichhannot/contao-formhybrid_list) in order to easily create a module for manipulating your entities in the frontend. It already contains a function to export entities after submission!
+You can also use [frontendedit](https://github.com/heimrichhannot/contao-frontendedit) or [formhybrid_list](https://github.com/heimrichhannot/contao-formhybrid_list) in order to easily create a module for manipulating your entities in the frontend. It already contains a function to export entities after submission!
 
-### Step 1
-Create a configuration for your export by using the exporter's backend module (group devtools).
+You can also create an custom implementation for your extension:
 
-### Step 2
-Call `export()` of `huh.exporter.action.export` service in your module:
+1) Create a configuration for your export by using the exporter's backend module (group devtools).
+2) Call `export()` of `huh.exporter.action.export` service in your module:
 
 ```php
-$container->get('huh.exporter.action.export')->export($config, $entity, $fields);
+$container->get('huh.exporter.action.export')->export($config: ExporterModel, $entity: int|string, $fields = []: array);
 ```
 
-If you add ```$fields```, this array will be iteratd automatically in your template. Alternatively you can print every entity's property using $this in the template.
-
 ## Developers
+
+### Upgrade from exporter module
+
+Please see [Upgrade Instructions](UPGRADE.md).
+
+### Templates
+
+You can overwrite the pdf output template. Templates are written in Twig and name should start with `exporter_pdf_`. See `exporter_pdf_item_default.html.twig` for a working example.
 
 ### Events
 
@@ -82,3 +91,9 @@ Before Build Query        | huh.exporter.event.before_build_query | Fired before
 Modify Table Header field | huh.exporter.event.modifyheaderfields | Modify header field values in tables.
 Modify Table field value  | huh.exporter.event.modifyfieldvalue   | Fired before writing a table value to the table object (e.g. spreadsheet).
 Modify Media File Name    | huh.exporter.event.modifymediafilename| Modify media file before adding to archive (filename and file object). 
+
+### Add custom exporter
+
+You can add custom exporter to add additional file types or functionality. 
+
+Your exporter class must implement `ExporterInterface` and must be registered in the container with the `huh_exporter.exporter` service tag. We recommend to extend `AbstractExporter`, because it already has most of the mechanics implemented. 
