@@ -34,7 +34,7 @@ If you want to use the pdf exporter, add `"mpdf/mpdf":"^7.0"` to your composer d
 
 ### Backend export
 
-### Step 1
+#### Step 1
 Define your global operation in your entity's dca as follows:
 
 ```php
@@ -46,7 +46,7 @@ Define your global operation in your entity's dca as follows:
 ),
 ```
 
-### Step 2
+#### Step 2
 Add your backend module in your entity's config.php as follows:
 
 ```php
@@ -55,10 +55,10 @@ $GLOBALS['BE_MOD']['mygroup'] = [
 ]
 ```
 
-### Step 3
+#### Step 3
 Create a configuration for your export by using the exporter's backend module (group devtools).
 
-## Frontend
+### Frontend
 You can use the included frontend module to add an easy export functionality. 
 
 You can also use [frontendedit](https://github.com/heimrichhannot/contao-frontendedit) or [formhybrid_list](https://github.com/heimrichhannot/contao-formhybrid_list) in order to easily create a module for manipulating your entities in the frontend. It already contains a function to export entities after submission!
@@ -83,6 +83,8 @@ Please see [Upgrade Instructions](UPGRADE.md).
 You can overwrite the pdf output template. Templates are written in Twig and name should start with `exporter_pdf_`. See `exporter_pdf_item_default.html.twig` for a working example.
 
 ### Events
+
+You can hook into the export with given event. Please check [Symfony Event Documentation](https://symfony.com/doc/3.4/event_dispatcher.html) if you don't know how. 
 
 Eventname                 | Event-ID                              | Description
 --------------------------|---------------------------------------|------------
