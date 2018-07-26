@@ -2,6 +2,15 @@
 
 ## Module to 1.0
 
+### Database
+First you must call the contao database upgrade tool due changed database fields
+
+Afterward you should call the migration command `huh:exporter:migration`, it updates the exporterClass fields, changes the formhybrid type and gives the option to change file type from xls to xlsx.
+
+### Export types
+
+Custom export types like formhybrid are no longer supported. Formhybrid type is addressed in the migration command.
+
 ### config.php
 
 Replace `\HeimrichHannot\Exporter\ModuleExporter::getBackendModule()` with  `['huh.exporter.action.backendexport', 'export']`

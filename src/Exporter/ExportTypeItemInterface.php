@@ -40,5 +40,5 @@ interface ExportTypeItemInterface
      * @param Model $entity
      * @return array
      */
-    public function prepareItemFields(array $fields = [], Model $entity): array;
+    public function prepareItemFields(Model $entity, array $fields = []): array;
 }

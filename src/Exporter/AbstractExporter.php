@@ -305,11 +305,11 @@ abstract class AbstractExporter implements ExporterInterface
     }
 
     /**
-     * @param array $fields
      * @param Model $entity
+     * @param array $fields
      * @return array
      */
-    public function prepareItemFields(array $fields = [], Model $entity): array
+    public function prepareItemFields(Model $entity, array $fields = []): array
     {
         if (!empty($fields) && is_array(reset($fields)))
         {
@@ -323,11 +323,17 @@ abstract class AbstractExporter implements ExporterInterface
             return [];
         }
 
-        $fields = $this->container->get('huh.utils.dca')->getFields($this->config->linkedTable, ['localizeLabels' => false]);
+        if (empty($fields))
+        {
+            $fields = $this->container->get('huh.utils.dca')->getFields($this->config->linkedTable, ['localizeLabels' => false]);
+        }
 
         foreach ($fields as $fieldName)
         {
-
+            if (!isset($GLOBALS['TL_DCA'][$this->config->linkedTable]['fields'][$fieldName]))
+            {
+                continue;
+            }
             $fieldData = $GLOBALS['TL_DCA'][$this->config->linkedTable]['fields'][$fieldName];
 
             if ($fieldData['type'] == 'submit')
@@ -409,8 +415,7 @@ abstract class AbstractExporter implements ExporterInterface
             case static::TYPE_ITEM:
                 return $this instanceof ExportTypeItemInterface;
         }
-        // Workaround for custom types (formhybrid)
-        return true;
+        return false;
     }
 
     /**

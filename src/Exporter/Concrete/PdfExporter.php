@@ -32,7 +32,7 @@ class PdfExporter extends AbstractExporter implements ExportTypeItemInterface
     protected function doExport($entity = null, array $fields = [])
     {
         $entity = $this->getEntity($entity);
-        $fields = $this->prepareItemFields($fields, $entity);
+        $fields = $this->prepareItemFields($entity, $fields);
         return $this->exportItem($entity, $fields);
     }
 

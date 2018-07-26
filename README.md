@@ -78,10 +78,6 @@ $container->get('huh.exporter.action.export')->export($config: ExporterModel, $e
 
 Please see [Upgrade Instructions](UPGRADE.md).
 
-### Templates
-
-You can overwrite the pdf output template. Templates are written in Twig and name should start with `exporter_pdf_`. See `exporter_pdf_item_default.html.twig` for a working example.
-
 ### Events
 
 You can hook into the export with given event. Please check [Symfony Event Documentation](https://symfony.com/doc/3.4/event_dispatcher.html) if you don't know how. 
@@ -99,3 +95,42 @@ Modify Media File Name    | huh.exporter.event.modifymediafilename| Modify media
 You can add custom exporter to add additional file types or functionality. 
 
 Your exporter class must implement `ExporterInterface` and must be registered in the container with the `huh_exporter.exporter` service tag. We recommend to extend `AbstractExporter`, because it already has most of the mechanics implemented. 
+
+### Custom field selection
+
+You can pass an array of fields to `export()` of an exporter. Those fields will be used, when exporting an item.
+
+There are two options:
+1) A list of field names. Example: `['firstname','lastname','age']`
+2) A field list with labels and values. Should be structured as shown:
+
+```php
+<?php 
+$fields = [
+    'field1' => [
+        'raw' => '', // raw field value
+        'inputType' => '', // field input type 
+        'value' => '', // formatted field value
+        'formatted' => '', // formatted field value
+        'label' => '', // formatted field value
+    ],
+    // ...
+];
+
+```
+
+### Pdf
+
+To use Pdf export, you first need to install [mPDF][1].
+
+#### Templates
+
+You can overwrite the pdf output template. Templates are written in Twig and name should start with `exporter_pdf_`. See `exporter_pdf_item_default.html.twig` for a working example.
+
+#### Fonts
+
+To add custom Pdf font, please see the corresponding chapters in [Utils Bundle docs][3] and the [mPDF Docs][4]. Afterwards you can add the folders in the exporter config.
+
+[1]: https://mpdf.github.io
+[3]: https://github.com/heimrichhannot/contao-utils-bundle/blob/master/docs/utils/pdf/pdf_writer.md#use-custom-fonts
+[4]: https://mpdf.github.io/fonts-languages/fonts-in-mpdf-7-x.html

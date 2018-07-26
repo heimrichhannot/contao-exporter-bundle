@@ -30,6 +30,13 @@ services:
   huh.exporter.action.frontendexport:
     class: HeimrichHannot\ContaoExporterBundle\Action\FrontendExportAction
 
+# Commands
+
+  huh.exporter.command.migration:
+    class: HeimrichHannot\ContaoExporterBundle\Command\MigrationCommand
+    tags:
+      - { name: 'console.command'}
+
 # Exporter
 
   HeimrichHannot\ContaoExporterBundle\Exporter\Concrete\CsvExporter: ~
