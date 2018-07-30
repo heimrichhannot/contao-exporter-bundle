@@ -1,0 +1,6 @@
+huh.exporter:
+  error:
+    message: "Fehlermeldung: %message% "
+    configuration: "Es gibt einen Fehler in der Exporter-Konfiguration. "
+    noConfigFound: 'Für die gewählte Aktion wurde keine Exporter-Konfiguration gefunden. Legen Sie diese über den Menüpunkt "Exporter" im Backend an.'
+    exportNotPossible: "Der Exportvorgang konnte nicht durchgeführt werden. "

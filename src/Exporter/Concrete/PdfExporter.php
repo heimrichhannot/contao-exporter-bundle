@@ -13,7 +13,7 @@ namespace HeimrichHannot\ContaoExporterBundle\Exporter\Concrete;
 
 use Contao\Model;
 use Contao\StringUtil;
-use HeimrichHannot\ContaoExporterBundle\Exception\EntityNotExistException;
+use HeimrichHannot\ContaoExporterBundle\Exception\EntityNotFoundException;
 use HeimrichHannot\ContaoExporterBundle\Exporter\AbstractExporter;
 use HeimrichHannot\ContaoExporterBundle\Exporter\ExportTargetDownloadInterface;
 use HeimrichHannot\ContaoExporterBundle\Exporter\ExportTargetFileInterface;
@@ -27,7 +27,7 @@ class PdfExporter extends AbstractExporter implements ExportTypeItemInterface
      * @param null $entity
      * @param array $fields
      * @return mixed
-     * @throws EntityNotExistException
+     * @throws EntityNotFoundException
      */
     protected function doExport($entity = null, array $fields = [])
     {

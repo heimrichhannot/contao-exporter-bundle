@@ -12,7 +12,10 @@
 namespace HeimrichHannot\ContaoExporterBundle\Action;
 
 
+use HeimrichHannot\ContaoExporterBundle\Exception\ExporterClassNotFound;
+use HeimrichHannot\ContaoExporterBundle\Exception\ExporterConfigurationException;
 use HeimrichHannot\ContaoExporterBundle\Exception\ExportNotPossibleException;
+use HeimrichHannot\ContaoExporterBundle\Exception\ExportTypeNotSupportedException;
 use HeimrichHannot\ContaoExporterBundle\Manager\ExporterManager;
 use HeimrichHannot\ContaoExporterBundle\Model\ExporterModel;
 
@@ -34,24 +37,24 @@ class ExportAction
      * @param array $arrFields
      *
      * @return bool|object The exporter or false if no exporter had been found (or error happened).
-     * @throws \Exception
+     * @throws ExportNotPossibleException
+     * @throws ExporterClassNotFound
+     * @throws ExportTypeNotSupportedException
+     * @throws ExporterConfigurationException
      */
     public function export(ExporterModel $config, $entity = null, array $arrFields = [])
     {
 
         if (!$config->exporterClass)
         {
-            throw new \Exception('Missing exporter class for exporter config ID ' . $config->id);
+            throw new ExporterClassNotFound('Missing exporter class for exporter config ID ' . $config->id);
         }
         $exporter = $this->exporterManager->getExporterByClassName($config->exporterClass);
         if (!$exporter) {
-            throw new \Exception('Exporter class for exporter configuration '.$config->id.' not found');
+            throw new ExporterClassNotFound('Exporter class for exporter configuration '.$config->id.' not found');
         }
-        try {
-            $result = $exporter->export($config, $entity, $arrFields);
-        } catch (ExportNotPossibleException $exception) {
-            return false;
-        }
+
+        $result = $exporter->export($config, $entity, $arrFields);
 
         return $result;
     }

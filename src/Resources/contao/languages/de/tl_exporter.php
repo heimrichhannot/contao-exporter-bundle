@@ -43,22 +43,21 @@ $arrLang['fileSubDirName'] = ['Unterverzeichnisname', 'Geben Sie hier den Namen 
 $arrLang['fileName'] = ['Dateinamen überschreiben (Standard: "export")', 'Geben Sie hier den Namen der zu exportierenden Datei an. Komplexere Exportpfade können mit einem Hook gesetzt werden (siehe README.md).'];
 $arrLang['fileNameAddDatime'] = ['Datum & Uhrzeit dem Dateinamen voranstellen', 'Wählen Sie diese Option, wenn dem Dateinamen Datum & Uhrzeit vorangestellt werden soll.'];
 $arrLang['fileNameAddDatimeFormat'] = ['Datumsformat überschreiben', 'Geben Sie hier ein abweichendes Datumsformat für den Dateinamen ein (es werden die date()-Variablen von PHP unterstützt).'];
+
+
+// Export Config
 $arrLang['fieldDelimiter'] = ['Feld-Trennzeichen', 'Geben Sie hier das Feld-Trennzeichen ein.'];
 $arrLang['fieldEnclosure'] = ['Text-Trennzeichen', 'Geben Sie hier das Text-Trennzeichen ein.'];
 $arrLang['compressionType'] = ['Kompressionsformat', 'Wählen Sie hier aus, in welchem Format die exportierten Binärdateien zusammengefasst werden sollen.'];
 $arrLang['compressionType']['zip'] = 'ZIP';
-$arrLang['pdfBackground'] = ['Hintergrund', 'Wählen Sie hier ein PDF-Template als grafisches Grundgerüst.'];
-$arrLang['pdfTemplate'] = ['Template', 'Wählen Sie hier ein Template für die PDF.'];
+$arrLang['pdfBackground'] = ['Master-Template', 'Wählen Sie hier ein PDF-Master aus, welches als grafisches Grundgerüst (Hintergrund) verwendet werden soll.'];
+$arrLang['pdfTemplate'] = ['Inhalts-Template', 'Wählen Sie hier ein Template aus, welches die Darstellung der Daten bestimmt.'];
 $arrLang['pdfCss'] = ['CSS-Styles', 'Wählen Sie hier bei Bedarf CSS-Dateien aus, die auf den Inhalt des PDFs angewendet werden. Unterstützte CSS-Regeln siehe <a href="https://mpdf.github.io">https://mpdf.github.io</a>.'];
 $arrLang['pdfMargins'] = ['Seitenränder', 'Wählen Sie hier die Seitenabstände, die im PDF verwendet werden sollen.'];
 $arrLang['pdfTitle'] = ['Meta-Titel', 'Hier können Sie den Titel für das Dokument angeben.'];
 $arrLang['pdfSubject'] = ['Meta-Thema', 'Hier können Sie das Thema für das Dokument angeben.'];
 $arrLang['pdfCreator'] = ['Meta-Autor', 'Hier können Sie den Autoren für das Dokument angeben.'];
-$arrLang['pdfFonts'] = ['Schriften', 'Wählen Sie hier die Schriften aus, die im PDF verwendet werden sollen.'];
-$arrLang['exporter_pdfFonts_fontName'] = ['Schriftname', 'Geben Sie hier den Namen der Schrift ein, der im CSS verwendet werden soll. WICHTIG: Bitte beachten Sie, dass jedes Zeichen in Kleinbuchstaben konvertiert word und Leerzeichen entfernt werden!'];
-$arrLang['exporter_pdfFonts_fontWeight'] = ['Gewicht', 'Wählen Sie hier das Gewicht der Schrift aus. Im CSS sprechen Sie die Gewichte wie gewohnt mit bspw. "font-weight: bold" an.'];
-$arrLang['exporter_pdfFonts_file'] = ['Schriftdatei', 'Wählen Sie hier die TrueType-Schrift (*.ttf) aus, die dem Gewicht entspricht.'];
-
+$arrLang['pdfFontDirectories'] = ['Benutzerdefinierte Schriften-Ordner', 'Wählen Sie hier die Ordner aus, welche benutzerdefinierte Schriftarten enthalten. Wenn Sie Hilfe benötigen, lesen Sie bitte die README.'];
 
 // header
 $arrLang['addHeaderToExportTable'] = ['Feldnamen im Tabellenkopf anzeigen', 'Wählen Sie diese Option, wenn der Tabelle ein Tabellenkopf hinzugefügt werden soll.'];

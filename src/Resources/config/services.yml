@@ -6,13 +6,13 @@ services:
   _instanceof:
     HeimrichHannot\ContaoExporterBundle\Exporter\ExporterInterface:
       tags: ['huh_exporter.exporter']
-      autowire: true
       lazy: true
 
 # Manager
 
   huh.exporter.manager.exporter:
     class: HeimrichHannot\ContaoExporterBundle\Manager\ExporterManager
+  HeimrichHannot\ContaoExporterBundle\Manager\ExporterManager: '@huh.exporter.manager.exporter'
 
 # Listener
 
@@ -27,8 +27,10 @@ services:
     class: HeimrichHannot\ContaoExporterBundle\Action\ExportAction
   huh.exporter.action.backendexport:
     class: HeimrichHannot\ContaoExporterBundle\Action\BackendExportAction
+    public: true
   huh.exporter.action.frontendexport:
     class: HeimrichHannot\ContaoExporterBundle\Action\FrontendExportAction
+    public: true
 
 # Commands
 

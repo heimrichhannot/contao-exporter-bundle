@@ -33,13 +33,22 @@ $arrLang['fileType'][EXPORTER_FILE_TYPE_XLS] = 'XLS (Microsoft Excel before 2007
 $arrLang['fileType']['xlsx'] = 'XLSX (Microsoft Excel from 2007)';
 $arrLang['target'] = ['Target', 'Choose the file type to be exported to.'];
 $arrLang['target'][\HeimrichHannot\ContaoExporterBundle\Exporter\AbstractExporter::TARGET_DOWNLOAD] = 'Download';
+
+
+// Export Config
 $arrLang['fieldDelimiter'] = ['Field separator', 'Please type in the character separating fields.'];
 $arrLang['fieldEnclosure'] = ['Text separator', 'Please type in the character enclosing texts containing the field separator character.'];
 $arrLang['compressionType'] = ['Compression', 'Choose the format to use for compression of the archive.'];
 $arrLang['compressionType']['zip'] = 'ZIP';
-$arrLang['pdfBackground'] = ['Background', 'Choose a pdf template as a graphical base.'];
-$arrLang['pdfTemplate'] = ['Template', 'Choose ein Template for the pdf.'];
+$arrLang['pdfBackground'] = ['Master-Template', 'Choose a pdf master template as a graphical base.'];
+$arrLang['pdfTemplate'] = ['Content template', 'Choose a template for the content of the pdf.'];
 
+$arrLang['pdfCss'] = ['CSS styles', 'Choose optional css file that should add to the pdf contest. For help with supported css styles see <a href="https://mpdf.github.io">https://mpdf.github.io</a>.'];
+$arrLang['pdfMargins'] = ['Page margins', 'Set page margins that should be used in pdf. Only mm (millimeters) are supported.'];
+$arrLang['pdfTitle'] = ['Meta title', 'Set title for the document.'];
+$arrLang['pdfSubject'] = ['Meta subject', 'Set subject for the document.'];
+$arrLang['pdfCreator'] = ['Meta author', 'Set document author.'];
+$arrLang['pdfFontDirectories'] = ['Custom font folder', 'Select folders with custom fonts. See README if you need help with custom fonts.'];
 
 // header
 $arrLang['addHeaderToExportTable'] = ['Export field names in table header', 'Choose this option if you want to have the field names in the table\'s header.'];

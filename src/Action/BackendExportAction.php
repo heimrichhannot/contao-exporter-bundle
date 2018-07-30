@@ -13,10 +13,13 @@ namespace HeimrichHannot\ContaoExporterBundle\Action;
 
 
 use Contao\Controller;
-use Contao\Input;
 use Contao\Message;
+use HeimrichHannot\ContaoExporterBundle\Exception\ExporterConfigurationException;
 use HeimrichHannot\ContaoExporterBundle\Manager\ExporterManager;
 use HeimrichHannot\ContaoExporterBundle\Model\ExporterModel;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class BackendExportAction
 {
@@ -26,10 +29,25 @@ class BackendExportAction
     private $exporterManager;
 
     protected $names = [];
+    /**
+     * @var RequestStack
+     */
+    private $requestStack;
+    /**
+     * @var ContainerInterface
+     */
+    private $container;
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
 
-    public function __construct(ExporterManager $exporterManager)
+    public function __construct(ContainerInterface $container, ExporterManager $exporterManager, RequestStack $requestStack, TranslatorInterface $translator)
     {
         $this->exporterManager = $exporterManager;
+        $this->requestStack    = $requestStack;
+        $this->container       = $container;
+        $this->translator      = $translator;
     }
 
     /**
@@ -38,26 +56,51 @@ class BackendExportAction
      */
     public function export($dataContainer)
     {
-        $id             = Input::get('id');
-        $globalOperationKey = Input::get('key');
-        $table              = Input::get('table') ?: $dataContainer->table;
+        $query         = $this->requestStack->getCurrentRequest()->query;
+        $id            = $query->has('id') ? intval($query->get('id')) : null;
+        $operationKey  = $query->has('key') ? strval($query->get('key')) : null;
+        $table         = $query->has('table') ? strval($query->get('table')) : $dataContainer->table;
+        $do            = $query->has('do') ? strval($query->get('do')) : null;
+        $redirectRoute = $this->container->get('huh.utils.routing')->generateBackendRoute(['do' => $do], false, true);
 
-        if (!$globalOperationKey || !$table)
+        if (!$operationKey || !$table)
         {
             return;
         }
 
-        if (($config = ExporterModel::findByKeyAndTable($globalOperationKey, $table)) === null)
+        if (($config = ExporterModel::findByKeyAndTable($operationKey, $table)) === null)
         {
             if (empty($_SESSION['TL_ERROR']))
             {
-                Message::addError($GLOBALS['TL_LANG']['MSC']['exporter']['noConfigFound']);
-                Controller::redirect($_SERVER['HTTP_REFERER']);
+                Message::addError($this->translator->trans('huh.exporter.error.noConfigFound'));
+                Controller::redirect($redirectRoute);
             }
         } else
         {
             $exportAction = new ExportAction($this->exporterManager);
-            $exportAction->export($config, $id);
+
+            try
+            {
+                $result = $exportAction->export($config, $id);
+            } catch (ExporterConfigurationException $e)
+            {
+                Message::addError(
+                    $this->translator->trans('huh.exporter.error.configuration')
+                    . $this->translator->trans('huh.exporter.error.message', ['%message%' => $e->getMessage()])
+                );
+            } catch (\Exception $e)
+            {
+                Message::addError(
+                    $this->translator->trans('huh.exporter.error.exportNotPossible')
+                    . $this->translator->trans('huh.exporter.error.message', ['%message%' => $e->getMessage()])
+                );
+                $result = false;
+            }
+
+            if (false === $result)
+            {
+                Controller::redirect($redirectRoute);
+            }
         }
     }
 
@@ -69,7 +112,7 @@ class BackendExportAction
      * @param array $customOptions Add additional custom parameters
      * @return array
      */
-    public static function getGlobalOperation(string $name, $label = '', $icon = '', array $additionalUrlParameters = [], array $customOptions = [])
+    public function getGlobalOperation(string $name, $label = '', $icon = 'bundles/heimrichhannotcontaoexporter/img/icon_export.png', array $additionalUrlParameters = [], array $customOptions = [])
     {
         $operation = [
             'label'      => &$label,

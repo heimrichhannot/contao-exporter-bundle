@@ -80,14 +80,16 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
         \HeimrichHannot\ContaoExporterBundle\Exporter\AbstractExporter::TYPE_LIST
                   => '{title_legend},title,type;'
             . '{export_legend},target,fileType;'
+            . '{exporter_config_legend},exporterClass;'
             . '{table_legend},linkedTable,globalOperationKey,addJoinTables,addUnformattedFields,tableFieldsForExport,restrictToPids,whereClause,orderBy;',
         \HeimrichHannot\ContaoExporterBundle\Exporter\AbstractExporter::TYPE_ITEM
                   => '{title_legend},title,type;'
-            . '{export_legend},target,fileType;'
+            . '{export_legend},target,fileType,exporterClass;'
             . '{table_legend}},linkedTable,entitySelector,addJoinTables,skipFields,skipLabels,whereClause,orderBy;',
 
         '__selector__' => [
             'fileType',
+            'exporterClass',
             'addHeaderToExportTable',
             'overrideHeaderFieldLabels',
             'addJoinTables',
@@ -100,18 +102,23 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
 
     // Subpalettes
     'subpalettes' => [
-        'fileType_csv'                => 'exporterClass,fieldDelimiter,fieldEnclosure,localizeFields,addHeaderToExportTable',
-        'fileType_pdf'                => 'exporterClass;{pdf_config_legend},pdfBackground,pdfFontDirectories,pdfMargins,pdfTitle,pdfSubject,pdfCreator;localizeFields,pdfCss,pdfTemplate;',
-        'fileType_xls'                => 'exporterClass,localizeFields,addHeaderToExportTable',
-        'fileType_xlsx'               => 'exporterClass,localizeFields,addHeaderToExportTable',
-        'fileType_media'              => 'exporterClass,compressionType',
-        'addHeaderToExportTable'      => 'localizeHeader,overrideHeaderFieldLabels',
-        'overrideHeaderFieldLabels'   => 'headerFieldLabels',
-        'addJoinTables'               => 'joinTables',
         'target_' . \HeimrichHannot\ContaoExporterBundle\Exporter\AbstractExporter::TARGET_DOWNLOAD
                                       => 'fileName,fileNameAddDatime',
         'target_' . \HeimrichHannot\ContaoExporterBundle\Exporter\AbstractExporter::TARGET_FILE
                                       => 'fileDir,useHomeDir,fileSubDirName,fileName,fileNameAddDatime',
+
+        'exporterClass_' . \HeimrichHannot\ContaoExporterBundle\Exporter\Concrete\CsvExporter::class
+                                      => 'localizeFields,fieldDelimiter,fieldEnclosure,addHeaderToExportTable',
+        'exporterClass_' . \HeimrichHannot\ContaoExporterBundle\Exporter\Concrete\PdfExporter::class
+                                      => 'localizeFields,pdfTemplate,pdfBackground,pdfFontDirectories,pdfMargins,pdfCss,pdfTitle,pdfSubject,pdfCreator',
+        'exporterClass_' . \HeimrichHannot\ContaoExporterBundle\Exporter\Concrete\ExcelExporter::class
+                                      => 'localizeFields,addHeaderToExportTable',
+        'exporterClass_' . \HeimrichHannot\ContaoExporterBundle\Exporter\Concrete\MediaExporter::class
+                                      => 'compressionType',
+
+        'addHeaderToExportTable'      => 'localizeHeader,overrideHeaderFieldLabels',
+        'overrideHeaderFieldLabels'   => 'headerFieldLabels',
+        'addJoinTables'               => 'joinTables',
         'fileNameAddDatime'           => 'fileNameAddDatimeFormat',
         'entitySelector_urlParameter' => 'entityUrlParameter',
         'entitySelector_static'       => 'entityStaticValue',
@@ -288,7 +295,13 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
         'exporterClass'             => [
             'label'            => &$GLOBALS['TL_LANG']['tl_exporter']['exporterClass'],
             'inputType'        => 'select',
-            'eval'             => ['mandatory' => true, 'tl_class' => 'w50', 'decodeEntities' => true],
+            'eval'             => [
+                'mandatory'          => true,
+                'tl_class'           => 'w50',
+                'decodeEntities'     => true,
+                'includeBlankOption' => true,
+                'submitOnChange'     => true,
+            ],
             'options_callback' => ['huh.exporter.listener.dc.exporter', 'getExporterClasses'],
             'sql'              => "varchar(255) NOT NULL default ''",
         ],
@@ -393,7 +406,7 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
             'exclude'   => true,
             'inputType' => 'checkbox',
             'eval'      => [
-                'tl_class' => 'w50 clr',
+                'tl_class' => 'w50',
             ],
             'sql'       => "char(1) NOT NULL default ''",
         ],
@@ -545,7 +558,7 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
                 'filesOnly'  => true,
                 'extensions' => 'css',
                 'fieldType'  => 'checkbox',
-                'tl_class'   => 'w50',
+                'tl_class'   => 'w50 clr',
             ],
             'sql'       => "blob NULL",
         ],

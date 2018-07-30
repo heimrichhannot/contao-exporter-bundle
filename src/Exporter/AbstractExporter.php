@@ -21,12 +21,14 @@ use Contao\Model;
 use Contao\System;
 use HeimrichHannot\ContaoExporterBundle\Event\BeforeExportEvent;
 use HeimrichHannot\ContaoExporterBundle\Event\BeforeBuildQueryEvent;
-use HeimrichHannot\ContaoExporterBundle\Exception\EntityNotExistException;
+use HeimrichHannot\ContaoExporterBundle\Exception\EntityNotFoundException;
+use HeimrichHannot\ContaoExporterBundle\Exception\ExporterConfigurationException;
 use HeimrichHannot\ContaoExporterBundle\Exception\ExportNotPossibleException;
+use HeimrichHannot\ContaoExporterBundle\Exception\ExportTypeNotSupportedException;
 use HeimrichHannot\ContaoExporterBundle\Model\ExporterModel;
 use HeimrichHannot\UtilsBundle\Driver\DC_Table_Utils;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 abstract class AbstractExporter implements ExporterInterface
 {
@@ -52,7 +54,7 @@ abstract class AbstractExporter implements ExporterInterface
      */
     protected $framework;
     /**
-     * @var EventDispatcher
+     * @var EventDispatcherInterface
      */
     protected $dispatcher;
     /**
@@ -60,7 +62,7 @@ abstract class AbstractExporter implements ExporterInterface
      */
     protected $container;
 
-    public function __construct(ContainerInterface $container, ContaoFrameworkInterface $framework, EventDispatcher $dispatcher)
+    public function __construct(ContainerInterface $container, ContaoFrameworkInterface $framework, EventDispatcherInterface $dispatcher)
     {
         $this->container     = $container;
         $this->framework     = $framework;
@@ -68,11 +70,13 @@ abstract class AbstractExporter implements ExporterInterface
     }
 
     /**
-     * @param Model|null $entity
      * @param ExporterModel|null $config
+     * @param Model|null $entity
      * @param array $fields
      * @return bool
-     * @throws \Exception
+     * @throws ExportNotPossibleException
+     * @throws ExportTypeNotSupportedException
+     * @throws ExporterConfigurationException
      */
     public function export(ExporterModel $config = null, $entity = null, array $fields = []): bool
     {
@@ -82,16 +86,13 @@ abstract class AbstractExporter implements ExporterInterface
         }
         if (!$this->config)
         {
-            throw new \Exception("No configuration found for current export action.");
+            throw new ExporterConfigurationException("No configuration found for current export action.");
         }
 
         if (!$this->hasType($this->config->type))
         {
-            if ($this->container->getParameter('kernel.environment') != 'prod') {
-                throw new \Exception("Export type ".$this->config->type." is not supported by export class ".static::class
+            throw new ExportTypeNotSupportedException("Export type ".$this->config->type." is not supported by export class ".static::class
                     .' for export configuration '.$this->config->title.' (ID: '.$this->config->id.')');
-            }
-            return false;
         }
 
         $fileName = $this->buildFileName($entity);
@@ -106,23 +107,13 @@ abstract class AbstractExporter implements ExporterInterface
 
         $event = $this->dispatcher->dispatch(BeforeExportEvent::NAME, new BeforeExportEvent($entity, $fields, $fileDir, $fileName, $this));
 
-        try {
-            $result = $this->doExport($event->getEntity(), $event->getFields());
-        } catch (\Exception $e) {
-            $this->container->get('monolog.logger')->addError($e->getMessage(), ['file' => $e->getFile(), 'line' => $e->getLine(), 'trace' => $e->getTraceAsString()]);
-            throw new ExportNotPossibleException("Export not possible with current configuration.");
-        }
+        $result = $this->doExport($event->getEntity(), $event->getFields());
+
         if (false === $result) {
             throw new ExportNotPossibleException("Export not possible with current configuration.");
         }
 
-        switch ($this->config->target)
-        {
-            case static::TARGET_FILE:
-                return $this->exportToFile($result, $event->getFileDir(), $event->getFileName());
-            case static::TARGET_DOWNLOAD:
-                return $this->exportToDownload($result, $event->getFileDir(), $event->getFileName());
-        }
+        return $this->finishExport($result, $event);
     }
 
     /**
@@ -143,7 +134,7 @@ abstract class AbstractExporter implements ExporterInterface
      * Return the file dir
      *
      * @return string
-     * @throws \Exception
+     * @throws ExporterConfigurationException
      */
     protected function buildFileDir($entity)
     {
@@ -173,7 +164,7 @@ abstract class AbstractExporter implements ExporterInterface
             return $strDir;
         }
 
-        throw new \Exception('No exporter fileDir defined!');
+        throw new ExporterConfigurationException('File dir not defined or does not exist!');
     }
 
     /**
@@ -199,7 +190,7 @@ abstract class AbstractExporter implements ExporterInterface
     /**
      * @param $id
      * @return Model
-     * @throws EntityNotExistException
+     * @throws EntityNotFoundException
      */
     public function getEntity($id): Model
     {
@@ -210,7 +201,7 @@ abstract class AbstractExporter implements ExporterInterface
 
         $model = $this->container->get('huh.utils.model')->findModelInstanceByIdOrAlias($this->config->linkedTable, $id);
         if (!$model) {
-            throw new EntityNotExistException("No entity found for given id or alias.");
+            throw new EntityNotFoundException("No entity found for given id or alias.");
         }
         return $model;
     }
@@ -448,5 +439,24 @@ abstract class AbstractExporter implements ExporterInterface
 
     protected function beforeExport($fileDir, $fileName)
     {
+    }
+
+    /**
+     * Get export result
+     *
+     * @param $result
+     * @param $event
+     * @return bool
+     */
+    protected function finishExport($result, $event): bool
+    {
+        switch ($this->config->target)
+        {
+            case static::TARGET_FILE:
+                return $this->exportToFile($result, $event->getFileDir(), $event->getFileName());
+            case static::TARGET_DOWNLOAD:
+                return $this->exportToDownload($result, $event->getFileDir(), $event->getFileName());
+        }
+        return false;
     }
 }

@@ -75,7 +75,7 @@ class ModuleFrontendExporter extends Module
             $frontendAction->export($this->config);
         } catch (\Exception $e)
         {
-            Message::addError($GLOBALS['TL_LANG']['MSC']['exporter']['exporterNotPossible'], 'huh_exporter.frontend');
+            Message::addError($this->container->get('translator')->trans('huh.exporter.error.exportNotPossible'), 'huh_exporter.frontend');
         }
 
         $this->Template->messages = Message::generateUnwrapped('huh_exporter.frontend');

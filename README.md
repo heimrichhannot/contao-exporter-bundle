@@ -40,7 +40,7 @@ Define your global operation in your entity's dca as follows:
 ```php
 'global_operations' => array
 (
-    'export_csv' => HeimrichHannot\ContaoExporterBundle\Action\BackendExportAction::getGlobalOperation('export_csv',
+    'export_csv' => \Contao\System::getContainer()->get('huh.exporter.action.backendexport')->getGlobalOperation('export_csv',
                  $GLOBALS['TL_LANG']['MSC']['export_csv'],
                  'system/modules/exporter/assets/img/icon_export.png')
 ),
@@ -66,9 +66,10 @@ You can also use [frontendedit](https://github.com/heimrichhannot/contao-fronten
 You can also create an custom implementation for your extension:
 
 1) Create a configuration for your export by using the exporter's backend module (group devtools).
-2) Call `export()` of `huh.exporter.action.export` service in your module:
+2) Call `export()` of `huh.exporter.action.frontendexport` service in your module:
 
 ```php
+/** @var Symfony\Component\DependencyInjection\ContainerInterface $container */
 $container->get('huh.exporter.action.export')->export($config: ExporterModel, $entity: int|string, $fields = []: array);
 ```
 

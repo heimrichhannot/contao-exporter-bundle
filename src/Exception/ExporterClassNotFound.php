@@ -12,7 +12,7 @@
 namespace HeimrichHannot\ContaoExporterBundle\Exception;
 
 
-class EntityNotExistException extends \Exception
+class ExporterClassNotFound extends \Exception
 {
 
 }
