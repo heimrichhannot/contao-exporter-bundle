@@ -11,7 +11,9 @@ All notable changes to this project will be documented in this file.
 
 #### Changed
 * made BackendExportAction::getGlobalOperation() non static and to be called from service
+* added AbstractExporter::finishExport() to be able to overwrite export target
 * changed exporter dca to class based settings
+* changed DataContainer callback class names
 * code enhancements
 
 ## [0.2.0] - 2018-07-26

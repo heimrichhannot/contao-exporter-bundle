@@ -442,7 +442,7 @@ abstract class AbstractExporter implements ExporterInterface
     }
 
     /**
-     * Get export result
+     * Return the export result
      *
      * @param $result
      * @param $event

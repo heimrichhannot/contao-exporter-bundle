@@ -15,7 +15,7 @@ namespace HeimrichHannot\ContaoExporterBundle\EventListener\DataContainer;
 use Contao\MemberGroupModel;
 use HeimrichHannot\ContaoExporterBundle\Model\ExporterModel;
 
-class Module
+class ModuleListener
 {
     public static function getExportConfigs()
     {

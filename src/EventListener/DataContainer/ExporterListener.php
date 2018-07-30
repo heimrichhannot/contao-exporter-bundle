@@ -23,7 +23,7 @@ use HeimrichHannot\ContaoExporterBundle\Exporter\AbstractExporter;
 use HeimrichHannot\ContaoExporterBundle\Model\ExporterModel;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class Exporter
+class ExporterListener
 {
     /**
      * @var ExporterManager

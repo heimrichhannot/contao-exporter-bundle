@@ -17,9 +17,9 @@ services:
 # Listener
 
   huh.exporter.listener.dc.exporter:
-    class: HeimrichHannot\ContaoExporterBundle\EventListener\DataContainer\Exporter
+    class: HeimrichHannot\ContaoExporterBundle\EventListener\DataContainer\ExporterListener
   huh.exporter.listener.dc.module:
-    class: HeimrichHannot\ContaoExporterBundle\EventListener\DataContainer\Module
+    class: HeimrichHannot\ContaoExporterBundle\EventListener\DataContainer\ModuleListener
 
 # Actions
 
