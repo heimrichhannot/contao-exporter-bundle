@@ -17,7 +17,7 @@ Replace `\HeimrichHannot\Exporter\ModuleExporter::getBackendModule()` with  `['h
 
 ### DCA 
 
-Replace `\HeimrichHannot\Exporter\ModuleExporter::getGlobalOperation` with `\HeimrichHannot\ContaoExporterBundle\Action\BackendExportAction::getGlobalOperation`.
+Replace `\HeimrichHannot\Exporter\ModuleExporter::getGlobalOperation` with `\Contao\System::getContainer()->get('huh.exporter.action.backendexport')->getGlobalOperation`.
 
 ### Hooks & Events
 

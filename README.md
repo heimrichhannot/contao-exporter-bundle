@@ -38,12 +38,10 @@ If you want to use the pdf exporter, add `"mpdf/mpdf":"^7.0"` to your composer d
 Define your global operation in your entity's dca as follows:
 
 ```php
-'global_operations' => array
-(
-    'export_csv' => \Contao\System::getContainer()->get('huh.exporter.action.backendexport')->getGlobalOperation('export_csv',
-                 $GLOBALS['TL_LANG']['MSC']['export_csv'],
-                 'system/modules/exporter/assets/img/icon_export.png')
-),
+'global_operations' => [
+    'export_csv' => \Contao\System::getContainer()->get('huh.exporter.action.backendexport')
+        ->getGlobalOperation('export_csv',$GLOBALS['TL_LANG']['MSC']['export_csv'])
+],
 ```
 
 #### Step 2
