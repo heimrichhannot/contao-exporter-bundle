@@ -5,8 +5,8 @@ All notable changes to this project will be documented in this file.
 
 #### Added
 * more Exception classes
-* better backend error messages
-* redirect to calling route if error
+* Backend: better error messages
+* Backend: redirect to calling route if error
 * enhanced english translations
 
 #### Changed
