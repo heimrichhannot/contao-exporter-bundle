@@ -13,11 +13,11 @@ A module for exporting any contao entity to file.
 - expandable exporter architecture
 - included exporter:
     - csv
-    - Excel (xlsx, xls)
+    - Excel (xlsx)
     - pdf
     - Media files (export media files assoziated with an entity as archive(zip))
     
-Csv and Excel export are archived by [PhpSpreadsheet library](https://github.com/PHPOffice/PhpSpreadsheet). 
+Csv and Excel export are archived by [Spout library](https://github.com/box/spout).
 PDF export is archived by [mPDF library](https://github.com/mpdf/mpdf). This library comes not as dependency and therefore must be added to your bundle/project dependencies to archvie pdf export functionality.
 
 ## Technical instruction
@@ -68,7 +68,8 @@ You can also create an custom implementation for your extension:
 
 ```php
 /** @var Symfony\Component\DependencyInjection\ContainerInterface $container */
-$container->get('huh.exporter.action.export')->export($config: ExporterModel, $entity: int|string, $fields = []: array);
+$container->get('huh.exporter.action.export')->export($config: E
+xporterModel, $entity: int|string, $fields = []: array);
 ```
 
 ## Developers

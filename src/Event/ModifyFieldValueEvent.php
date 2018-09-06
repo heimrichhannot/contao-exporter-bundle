@@ -17,31 +17,22 @@ use Symfony\Component\EventDispatcher\Event;
 
 class ModifyFieldValueEvent extends Event
 {
-    const NAME = "huh.exporter.event.modifyfieldvalue";
+    const NAME = 'huh.exporter.event.modifyfieldvalue';
 
     private $value;
     private $field;
     private $row;
-    /**
-     * @var int
-     */
-    private $columnIndex;
-    /**
-     * @var int
-     */
-    private $rowIndex;
+
     /**
      * @var AbstractExporter
      */
     private $context;
 
-    public function __construct($value, $field, $row, int $columnIndex, int $rowIndex, AbstractExporter $context)
+    public function __construct($value, $field, $row, AbstractExporter $context)
     {
         $this->value       = $value;
         $this->field       = $field;
         $this->row         = $row;
-        $this->columnIndex = $columnIndex;
-        $this->rowIndex    = $rowIndex;
         $this->context     = $context;
     }
 
@@ -91,38 +82,6 @@ class ModifyFieldValueEvent extends Event
     public function setRow($row): void
     {
         $this->row = $row;
-    }
-
-    /**
-     * @return int
-     */
-    public function getColumnIndex(): int
-    {
-        return $this->columnIndex;
-    }
-
-    /**
-     * @param int $columnIndex
-     */
-    public function setColumnIndex(int $columnIndex): void
-    {
-        $this->columnIndex = $columnIndex;
-    }
-
-    /**
-     * @return int
-     */
-    public function getRowIndex(): int
-    {
-        return $this->rowIndex;
-    }
-
-    /**
-     * @param int $rowIndex
-     */
-    public function setRowIndex(int $rowIndex): void
-    {
-        $this->rowIndex = $rowIndex;
     }
 
     /**

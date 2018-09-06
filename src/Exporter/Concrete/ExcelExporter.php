@@ -22,21 +22,6 @@ class ExcelExporter extends AbstractPhpSpreadsheetExporter
      */
     public function getSupportedFileTypes(): array
     {
-        return ['xls', 'xlsx'];
-    }
-
-    protected function createHeaders(string $fileName)
-    {
-        parent::createHeaders($fileName);
-        switch ($this->config->fileType)
-        {
-            case "xls":
-                header('Content-Type: application/vnd.ms-excel');
-                break;
-            case "xlsx":
-                header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-                break;
-        }
-
+        return ['xlsx'];
     }
 }

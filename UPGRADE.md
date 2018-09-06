@@ -5,7 +5,7 @@
 ### Database
 First you must call the contao database upgrade tool due changed database fields
 
-Afterward you should call the migration command `huh:exporter:migration`, it updates the exporterClass fields, changes the formhybrid type and gives the option to change file type from xls to xlsx.
+Afterward you should call the migration command `huh:exporter:migration`, it updates the exporterClass fields, changes the formhybrid type.
 
 ### Export types
 

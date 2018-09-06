@@ -12,11 +12,10 @@
 namespace HeimrichHannot\ContaoExporterBundle\Exporter\Concrete;
 
 
-use HeimrichHannot\ContaoExporterBundle\Exporter\AbstractExporter;
+use Box\Spout\Common\Type;
+use Box\Spout\Writer\CSV\Writer;
+use Box\Spout\Writer\WriterFactory;
 use HeimrichHannot\ContaoExporterBundle\Exporter\AbstractPhpSpreadsheetExporter;
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Writer\BaseWriter;
-use PhpOffice\PhpSpreadsheet\Writer\Csv;
 
 class CsvExporter extends AbstractPhpSpreadsheetExporter
 {
@@ -25,16 +24,14 @@ class CsvExporter extends AbstractPhpSpreadsheetExporter
         return ['csv'];
     }
 
-    protected function getDocumentWriter(Spreadsheet $spreadsheet): BaseWriter
+    protected function getDocumentWriter()
     {
-        $writer = new Csv($spreadsheet);
-        $writer->setDelimiter($this->config->fieldDelimiter ?: ',')->setEnclosure($this->config->fieldEnclosure ?: '"')->setSheetIndex(0);
-        return $writer;
-    }
+        /** @var Writer $writer */
+        $writer = WriterFactory::create(Type::CSV);
 
-    protected function createHeaders(string $fileName)
-    {
-        parent::createHeaders($fileName);
-        header("Content-Type: application/csv");
+        $writer->setFieldDelimiter($this->config->fieldDelimiter ?: ',');
+        $writer->setFieldEnclosure($this->config->fieldEnclosure ?: '"');
+
+        return $writer;
     }
 }

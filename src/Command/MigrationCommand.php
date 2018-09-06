@@ -32,7 +32,7 @@ class MigrationCommand extends ContainerAwareCommand
         $this->setName('huh:exporter:migration')
             ->setDescription('Migrate your existing exporter configurations from module to bundle.')
             ->addOption('dry-run', null, InputOption::VALUE_NONE, "Run command without making changes to the database.")
-            ->setHelp("This command migrates the exporter class names from the exporter module to the exporter bundle. It also changes the formhybrid export types to item type. You additionally get the option to change the xls file type to xlsx.")
+            ->setHelp("This command migrates the exporter class names from the exporter module to the exporter bundle. It also changes the formhybrid export types to item type.")
         ;
     }
 
@@ -53,8 +53,6 @@ class MigrationCommand extends ContainerAwareCommand
         $io = new SymfonyStyle($input, $output);
         $dryRun = $input->getOption('dry-run');
         $io->title('Contao Exporter Migration');
-        $question = new ConfirmationQuestion("Do you want to change file type xls to xlsx?", false);
-        $convertXls = $io->askQuestion($question);
 
         $exporters = ExporterModel::findAll();
 
@@ -128,16 +126,14 @@ class MigrationCommand extends ContainerAwareCommand
                 }
             }
 
-            if (true === $convertXls)
+            if ($exporter->fileType == "xls")
             {
-                if ($exporter->fileType == "xls")
+                $exporter->fileType = "xlsx";
+                $updated = true;
+
+                if ($output->isVerbose())
                 {
-                    $exporter->fileType = "xlsx";
-                    $updated = true;
-                    if ($output->isVerbose())
-                    {
-                        $output->writeln("Converted xls to xlsx.");
-                    }
+                    $output->writeln("Converted xls to xlsx.");
                 }
             }
 

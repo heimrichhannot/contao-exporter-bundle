@@ -17,8 +17,8 @@ define('EXPORTER_FRONTEND_FORMID', 'exporter_download');
  * Frontend modules
  */
 array_insert(
-	$GLOBALS['FE_MOD'], count($GLOBALS['FE_MOD']) - 1, [
-		'exporter' => [
+    $GLOBALS['FE_MOD'], count($GLOBALS['FE_MOD']) - 1, [
+        'exporter' => [
             \HeimrichHannot\ContaoExporterBundle\FrontendModule\ModuleFrontendExporter::NAME =>
                 \HeimrichHannot\ContaoExporterBundle\FrontendModule\ModuleFrontendExporter::class
         ]
@@ -30,12 +30,13 @@ array_insert(
  * Back end modules
  */
 array_insert(
-	$GLOBALS['BE_MOD']['devtools'],
+    $GLOBALS['BE_MOD']['system'],
     1,
     [
-		'exporter' => [
+        'exporter' => [
             'tables' => ['tl_exporter'],
-            'icon'   => 'bundles/heimrichhannotcontaoexporter/exporter/img/icon_export.png',]
+            'icon'   => 'bundles/heimrichhannotcontaoexporter/exporter/img/icon_export.png',
+        ]
     ]
 );
 
