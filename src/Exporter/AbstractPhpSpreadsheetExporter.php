@@ -121,7 +121,7 @@ abstract class AbstractPhpSpreadsheetExporter extends AbstractTableExporter
     {
         $writer = $this->getDocumentWriter();
 
-        $writer->openToFile($fileDir . '/' . $fileName);
+        $writer->openToFile(System::getContainer()->get('huh.utils.container')->getProjectDir() . '/' . $fileDir . '/' . $fileName);
         $writer->addRows($formattedRows);
 
         try {
