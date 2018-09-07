@@ -13,6 +13,7 @@ namespace HeimrichHannot\ContaoExporterBundle\Exporter;
 
 use Box\Spout\Common\Type;
 use Box\Spout\Writer\WriterFactory;
+use Contao\StringUtil;
 use Contao\System;
 use HeimrichHannot\ContaoExporterBundle\Event\ModifyFieldValueEvent;
 use HeimrichHannot\UtilsBundle\Driver\DC_Table_Utils;
@@ -53,10 +54,7 @@ abstract class AbstractPhpSpreadsheetExporter extends AbstractTableExporter
                 $formattedRow = [];
                 $row = $databaseResult->row();
 
-                $dcTable               = new DC_Table_Utils($table);
-                $dcTable->activeRecord = $databaseResult;
-                $strId                 = $table . '.id';
-                $dcTable->id           = $databaseResult->{$strId};
+                $dcTable = $this->getDCTable($table,$databaseResult);
 
                 // trigger onload_callback since these could modify the dca
                 if (is_array($arrDca['config']['onload_callback'])) {
@@ -73,6 +71,16 @@ abstract class AbstractPhpSpreadsheetExporter extends AbstractTableExporter
                 }
 
                 foreach ($row as $key => $value) {
+                    if($this->config->addJoinTables)
+                    {
+                      $table = $this->getTableOnJoin($key);
+                    }
+                    
+                    if($table != $this->config->linkedTable)
+                    {
+                        $dcTable = $this->getDCTable($table,$databaseResult);
+                    }
+                    
                     $strField = str_replace($table . '.', '', $key);
                     $value    = $this->config->localizeFields ? $this->container->get('huh.utils.form')->prepareSpecialValueForOutput(
                         $strField, $value, $dcTable
@@ -154,6 +162,46 @@ abstract class AbstractPhpSpreadsheetExporter extends AbstractTableExporter
     protected function beforeResponce(BinaryFileResponse &$response)
     {
     }
-
-
+    
+    /**
+     * get table name from joined table or return linkedTable
+     *
+     * @param string $indicator
+     *
+     * @return string
+     */
+    protected function getTableOnJoin(string $indicator): string
+    {
+        $table = $this->config->linkedTable;
+    
+        foreach(StringUtil::deserialize($this->config->joinTables,true) as $joinTable)
+        {
+            if(!strstr($indicator,$joinTable['joinTable']))
+            {
+                continue;
+            }
+        
+            return $joinTable['joinTable'];
+        }
+    
+        return $table;
+    }
+    
+    /**
+     * get dc_table to table
+     *
+     * @param string $table
+     * @param        $databaseResult
+     *
+     * @return DC_Table_Utils
+     */
+    protected function getDCTable(string $table, $databaseResult): DC_Table_Utils
+    {
+        $dcTable               = new DC_Table_Utils($table);
+        $dcTable->activeRecord = $databaseResult;
+        $strId                 = $table . '.id';
+        $dcTable->id           = $databaseResult->{$strId};
+        
+        return $dcTable;
+    }
 }

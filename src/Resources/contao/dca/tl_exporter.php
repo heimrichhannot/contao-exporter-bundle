@@ -495,6 +495,7 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
                                 'includeBlankOption' => true,
                                 'groupStyle'         => 'width: 250px',
                                 'style'              => 'width: 250px',
+                                'submitOnChange'     => true
                             ],
                         ],
                         'joinCondition' => [

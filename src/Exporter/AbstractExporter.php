@@ -251,7 +251,7 @@ abstract class AbstractExporter implements ExporterInterface
 
             if ($pid && !$strAct && is_array($dca['fields']) && $dca['config']['ptable'])
             {
-                $wheres[] = 'pid = ' . $pid;
+                $wheres[] = $this->config->linkedTable . '.pid = ' . $pid;
             }
         }
 

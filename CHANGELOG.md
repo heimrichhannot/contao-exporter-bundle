@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.4.2] - 2018-09-07
+
+#### Fixed
+- localization for fields from joined table
+- `getTableArchives` to get archives as options in exporter config
+
 ## [0.4.1] - 2018-09-06
 
 #### Fixed

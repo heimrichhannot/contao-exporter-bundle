@@ -247,10 +247,9 @@ class ExporterListener
     public function getTableArchives(DataContainer $dataContainer)
     {
         $arrOptions = [];
-
-        if ($linkedTable = $dataContainer->activeRecord->linkedTable && $GLOBALS['TL_DCA'][$linkedTable]['config']['ptable'])
+    
+        if (($linkedTable = $dataContainer->activeRecord->linkedTable) && $GLOBALS['TL_DCA'][$linkedTable]['config']['ptable'])
         {
-
             Controller::loadDataContainer($linkedTable);
             System::loadLanguageFile($linkedTable);
             if (!isset($GLOBALS['TL_DCA'][$linkedTable]['config']['ptable'])) {
