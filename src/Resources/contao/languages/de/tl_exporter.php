@@ -58,6 +58,7 @@ $arrLang['pdfTitle'] = ['Meta-Titel', 'Hier können Sie den Titel für das Dokum
 $arrLang['pdfSubject'] = ['Meta-Thema', 'Hier können Sie das Thema für das Dokument angeben.'];
 $arrLang['pdfCreator'] = ['Meta-Autor', 'Hier können Sie den Autoren für das Dokument angeben.'];
 $arrLang['pdfFontDirectories'] = ['Benutzerdefinierte Schriften-Ordner', 'Wählen Sie hier die Ordner aus, welche benutzerdefinierte Schriftarten enthalten. Wenn Sie Hilfe benötigen, lesen Sie bitte die README.'];
+$arrLang['ignoreOnloadCallbacks'] = ['Onload-Callbacks ignorieren', 'Wählen Sie diese Option, wenn die onload_callbacks der zu exportierenden Entitäten irgnoriert werden sollen.'];
 
 // header
 $arrLang['addHeaderToExportTable'] = ['Feldnamen im Tabellenkopf anzeigen', 'Wählen Sie diese Option, wenn der Tabelle ein Tabellenkopf hinzugefügt werden soll.'];

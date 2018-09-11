@@ -81,11 +81,11 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
                   => '{title_legend},title,type;'
             . '{export_legend},target,fileType;'
             . '{exporter_config_legend},exporterClass;'
-            . '{table_legend},linkedTable,globalOperationKey,addJoinTables,addUnformattedFields,tableFieldsForExport,restrictToPids,whereClause,orderBy;',
+            . '{table_legend},linkedTable,globalOperationKey,addJoinTables,ignoreOnloadCallbacks,addUnformattedFields,tableFieldsForExport,restrictToPids,whereClause,orderBy;',
         \HeimrichHannot\ContaoExporterBundle\Exporter\AbstractExporter::TYPE_ITEM
                   => '{title_legend},title,type;'
             . '{export_legend},target,fileType,exporterClass;'
-            . '{table_legend}},linkedTable,entitySelector,addJoinTables,skipFields,skipLabels,whereClause,orderBy;',
+            . '{table_legend}},linkedTable,entitySelector,addJoinTables,ignoreOnloadCallbacks,skipFields,skipLabels,whereClause,orderBy;',
 
         '__selector__' => [
             'fileType',
@@ -606,6 +606,15 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
             'inputType' => 'text',
             'eval'      => ['maxlength' => 64, 'tl_class' => 'w50'],
             'sql'       => "varchar(64) NOT NULL default ''",
+        ],
+        'ignoreOnloadCallbacks'     => [
+            'label'     => &$GLOBALS['TL_LANG']['tl_exporter']['ignoreOnloadCallbacks'],
+            'exclude'   => true,
+            'inputType' => 'checkbox',
+            'eval'      => [
+                'tl_class' => 'w50 clr',
+            ],
+            'sql'       => "char(1) NOT NULL default ''",
         ],
     ],
 ];

@@ -1,2 +1,5 @@
 /composer.lock
 /vendor
+.idea
+Thumbs.db
+.DS_Store

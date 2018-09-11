@@ -57,7 +57,7 @@ abstract class AbstractPhpSpreadsheetExporter extends AbstractTableExporter
                 $dcTable = $this->getDCTable($table,$databaseResult);
 
                 // trigger onload_callback since these could modify the dca
-                if (is_array($arrDca['config']['onload_callback'])) {
+                if (!$this->config->ignoreOnloadCallbacks && is_array($arrDca['config']['onload_callback'])) {
                     foreach ($arrDca['config']['onload_callback'] as $callback) {
                         if (is_array($callback)) {
                             if (!isset($arrOnload[implode(',', $callback)])) {

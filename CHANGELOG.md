@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.4.3] - 2018-09-11
+
+#### Added
+- optional ignore of onload_callbacks of the exported entities
+
 ## [0.4.2] - 2018-09-07
 
 #### Fixed
