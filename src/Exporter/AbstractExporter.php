@@ -68,6 +68,10 @@ abstract class AbstractExporter implements ExporterInterface
         $this->framework     = $framework;
         $this->dispatcher    = $dispatcher;
     }
+    
+    public static function getAlias() {
+        return str_replace('\\', '_', static::class);
+    }
 
     /**
      * @param ExporterModel|null $config
@@ -218,6 +222,11 @@ abstract class AbstractExporter implements ExporterInterface
 
         foreach (deserialize($this->config->tableFieldsForExport, true) as $field)
         {
+            if(!$field)
+            {
+                continue;
+            }
+            
             if (strpos($field, static::EXPORTER_RAW_FIELD_SUFFIX) !== false)
             {
                 $exportFields[] = str_replace(EXPORTER_RAW_FIELD_SUFFIX, '', $field) . ' AS "' . $field . '"';

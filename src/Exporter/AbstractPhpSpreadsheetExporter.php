@@ -71,6 +71,9 @@ abstract class AbstractPhpSpreadsheetExporter extends AbstractTableExporter
                 }
 
                 foreach ($row as $key => $value) {
+                    $table = $this->config->linkedTable;
+                    $dcTable = $this->getDCTable($table,$databaseResult);
+    
                     if($this->config->addJoinTables)
                     {
                       $table = $this->getTableOnJoin($key);

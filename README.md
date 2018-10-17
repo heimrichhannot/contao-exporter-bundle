@@ -96,6 +96,19 @@ You can add custom exporter to add additional file types or functionality.
 
 Your exporter class must implement `ExporterInterface` and must be registered in the container with the `huh_exporter.exporter` service tag. We recommend to extend `AbstractExporter`, because it already has most of the mechanics implemented. 
 
+```
+services:
+  _defaults:
+    autowire: true
+
+  _instanceof:
+    HeimrichHannot\ContaoExporterBundle\Exporter\ExporterInterface:
+      tags: ['huh_exporter.exporter']
+      lazy: true
+      
+  Your\Exporter\Class: ~
+```
+
 ### Custom field selection
 
 You can pass an array of fields to `export()` of an exporter. Those fields will be used, when exporting an item.

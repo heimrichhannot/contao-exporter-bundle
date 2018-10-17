@@ -44,7 +44,8 @@ class ExportAction
      */
     public function export(ExporterModel $config, $entity = null, array $arrFields = [])
     {
-
+        $config->exporterClass = str_replace('_','\\',$config->exporterClass);
+        
         if (!$config->exporterClass)
         {
             throw new ExporterClassNotFound('Missing exporter class for exporter config ID ' . $config->id);

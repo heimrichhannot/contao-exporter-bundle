@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.5.0] - 2018-10-17
+
+#### Changed
+- declaration of subpalettes for each exporterClass in correct syntax (removed slashes by underscore)
+
 ## [0.4.3] - 2018-09-11
 
 #### Added

@@ -107,13 +107,13 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
         'target_' . \HeimrichHannot\ContaoExporterBundle\Exporter\AbstractExporter::TARGET_FILE
                                       => 'fileDir,useHomeDir,fileSubDirName,fileName,fileNameAddDatime',
 
-        'exporterClass_' . \HeimrichHannot\ContaoExporterBundle\Exporter\Concrete\CsvExporter::class
+        'exporterClass_' . \HeimrichHannot\ContaoExporterBundle\Exporter\Concrete\CsvExporter::getAlias()
                                       => 'localizeFields,fieldDelimiter,fieldEnclosure,addHeaderToExportTable',
-        'exporterClass_' . \HeimrichHannot\ContaoExporterBundle\Exporter\Concrete\PdfExporter::class
+        'exporterClass_' . \HeimrichHannot\ContaoExporterBundle\Exporter\Concrete\PdfExporter::getAlias()
                                       => 'localizeFields,pdfTemplate,pdfBackground,pdfFontDirectories,pdfMargins,pdfCss,pdfTitle,pdfSubject,pdfCreator',
-        'exporterClass_' . \HeimrichHannot\ContaoExporterBundle\Exporter\Concrete\ExcelExporter::class
+        'exporterClass_' . \HeimrichHannot\ContaoExporterBundle\Exporter\Concrete\ExcelExporter::getAlias()
                                       => 'localizeFields,addHeaderToExportTable',
-        'exporterClass_' . \HeimrichHannot\ContaoExporterBundle\Exporter\Concrete\MediaExporter::class
+        'exporterClass_' . \HeimrichHannot\ContaoExporterBundle\Exporter\Concrete\MediaExporter::getAlias()
                                       => 'compressionType',
 
         'addHeaderToExportTable'      => 'localizeHeader,overrideHeaderFieldLabels',
