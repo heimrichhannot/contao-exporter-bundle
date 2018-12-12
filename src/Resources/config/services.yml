@@ -12,19 +12,23 @@ services:
 
   huh.exporter.manager.exporter:
     class: HeimrichHannot\ContaoExporterBundle\Manager\ExporterManager
+    public: true
   HeimrichHannot\ContaoExporterBundle\Manager\ExporterManager: '@huh.exporter.manager.exporter'
 
 # Listener
 
   huh.exporter.listener.dc.exporter:
     class: HeimrichHannot\ContaoExporterBundle\EventListener\DataContainer\ExporterListener
+    public: true
   huh.exporter.listener.dc.module:
     class: HeimrichHannot\ContaoExporterBundle\EventListener\DataContainer\ModuleListener
+    public: true
 
 # Actions
 
   huh.exporter.action.export:
     class: HeimrichHannot\ContaoExporterBundle\Action\ExportAction
+    public: true
   huh.exporter.action.backendexport:
     class: HeimrichHannot\ContaoExporterBundle\Action\BackendExportAction
     public: true
@@ -43,6 +47,5 @@ services:
 
   HeimrichHannot\ContaoExporterBundle\Exporter\Concrete\CsvExporter: ~
   HeimrichHannot\ContaoExporterBundle\Exporter\Concrete\ExcelExporter: ~
-  HeimrichHannot\ContaoExporterBundle\Exporter\Concrete\XlsxExporter: ~
   HeimrichHannot\ContaoExporterBundle\Exporter\Concrete\PdfExporter: ~
   HeimrichHannot\ContaoExporterBundle\Exporter\Concrete\MediaExporter: ~
