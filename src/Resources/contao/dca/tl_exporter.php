@@ -81,7 +81,7 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
                   => '{title_legend},title,type;'
             . '{export_legend},target,fileType;'
             . '{exporter_config_legend},exporterClass;'
-            . '{table_legend},linkedTable,globalOperationKey,addJoinTables,ignoreOnloadCallbacks,addUnformattedFields,tableFieldsForExport,restrictToPids,whereClause,orderBy;',
+            . '{table_legend},globalOperationKey,linkedTable,addJoinTables,ignoreOnloadCallbacks,addUnformattedFields,tableFieldsForExport,restrictToPids,whereClause,orderBy;',
         \HeimrichHannot\ContaoExporterBundle\Exporter\AbstractExporter::TYPE_ITEM
                   => '{title_legend},title,type;'
             . '{export_legend},target,fileType,exporterClass;'

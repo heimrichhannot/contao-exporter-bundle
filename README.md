@@ -48,7 +48,7 @@ Define your global operation in your entity's dca as follows:
 Add your backend module in your entity's config.php as follows:
 
 ```php
-$GLOBALS['BE_MOD']['mygroup'] = [
+$GLOBALS['BE_MOD']['mygroup']['name'] = [
     'export_csv' => ['huh.exporter.action.backendexport', 'export']
 ]
 ```
