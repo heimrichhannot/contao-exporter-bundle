@@ -81,7 +81,7 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
                   => '{title_legend},title,type;'
             . '{export_legend},target,fileType;'
             . '{exporter_config_legend},exporterClass;'
-            . '{table_legend},globalOperationKey,linkedTable,addJoinTables,ignoreOnloadCallbacks,addUnformattedFields,tableFieldsForExport,restrictToPids,whereClause,orderBy;',
+            . '{table_legend},globalOperationKey,linkedTable,addJoinTables,ignoreOnloadCallbacks,addUnformattedFields,tableFieldsForExportCopier,tableFieldsForExport,restrictToPids,whereClause,orderBy;',
         \HeimrichHannot\ContaoExporterBundle\Exporter\AbstractExporter::TYPE_ITEM
                   => '{title_legend},title,type;'
             . '{export_legend},target,fileType,exporterClass;'
@@ -103,18 +103,18 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
     // Subpalettes
     'subpalettes' => [
         'target_' . \HeimrichHannot\ContaoExporterBundle\Exporter\AbstractExporter::TARGET_DOWNLOAD
-                                      => 'fileName,fileNameAddDatime',
+        => 'fileName,fileNameAddDatime',
         'target_' . \HeimrichHannot\ContaoExporterBundle\Exporter\AbstractExporter::TARGET_FILE
-                                      => 'fileDir,useHomeDir,fileSubDirName,fileName,fileNameAddDatime',
+        => 'fileDir,useHomeDir,fileSubDirName,fileName,fileNameAddDatime',
 
         'exporterClass_' . \HeimrichHannot\ContaoExporterBundle\Exporter\Concrete\CsvExporter::getAlias()
-                                      => 'localizeFields,fieldDelimiter,fieldEnclosure,addHeaderToExportTable',
+        => 'localizeFields,fieldDelimiter,fieldEnclosure,addHeaderToExportTable',
         'exporterClass_' . \HeimrichHannot\ContaoExporterBundle\Exporter\Concrete\PdfExporter::getAlias()
-                                      => 'localizeFields,pdfTemplate,pdfBackground,pdfFontDirectories,pdfMargins,pdfCss,pdfTitle,pdfSubject,pdfCreator',
+        => 'localizeFields,pdfTemplate,pdfBackground,pdfFontDirectories,pdfMargins,pdfCss,pdfTitle,pdfSubject,pdfCreator',
         'exporterClass_' . \HeimrichHannot\ContaoExporterBundle\Exporter\Concrete\ExcelExporter::getAlias()
-                                      => 'localizeFields,addHeaderToExportTable',
+        => 'localizeFields,addHeaderToExportTable',
         'exporterClass_' . \HeimrichHannot\ContaoExporterBundle\Exporter\Concrete\MediaExporter::getAlias()
-                                      => 'compressionType',
+        => 'compressionType',
 
         'addHeaderToExportTable'      => 'localizeHeader,overrideHeaderFieldLabels',
         'overrideHeaderFieldLabels'   => 'headerFieldLabels',
@@ -126,13 +126,13 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
 
     // Fields
     'fields'      => [
-        'id'                 => [
+        'id'                         => [
             'sql' => "int(10) unsigned NOT NULL auto_increment",
         ],
-        'tstamp'             => [
+        'tstamp'                     => [
             'sql' => "int(10) unsigned NOT NULL default '0'",
         ],
-        'title'              => [
+        'title'                      => [
             'label'     => &$GLOBALS['TL_LANG']['tl_exporter']['title'],
             'exclude'   => true,
             'search'    => true,
@@ -146,7 +146,7 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
             ],
             'sql'       => "varchar(196) NOT NULL default ''",
         ],
-        'type'               => [
+        'type'                       => [
             'label'     => &$GLOBALS['TL_LANG']['tl_exporter']['type'],
             'inputType' => 'select',
             'options'   => [
@@ -163,7 +163,7 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
         ],
 
         // table legend
-        'linkedTable'        => [
+        'linkedTable'                => [
             'label'            => &$GLOBALS['TL_LANG']['tl_exporter']['linkedTable'],
             'exclude'          => true,
             'inputType'        => 'select',
@@ -177,7 +177,7 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
             ],
             'sql'              => "varchar(64) NOT NULL default ''",
         ],
-        'globalOperationKey' => [
+        'globalOperationKey'         => [
             'label'            => &$GLOBALS['TL_LANG']['tl_exporter']['globalOperationKey'],
             'exclude'          => true,
             'inputType'        => 'select',
@@ -190,7 +190,7 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
             ],
             'sql'              => "varchar(32) NOT NULL default ''",
         ],
-        'entitySelector'     => [
+        'entitySelector'             => [
             'label'     => &$GLOBALS['TL_LANG']['tl_exporter']['entitySelector'],
             'exclude'   => true,
             'inputType' => 'select',
@@ -200,12 +200,12 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
                 'submitOnChange'     => true,
                 'includeBlankOption' => true,
                 'tl_class'           => 'w50',
-                'multiple' => false,
+                'multiple'           => false,
             ],
             'sql'       => "varchar(32) NOT NULL default ''",
 
         ],
-        'entityUrlParameter' => [
+        'entityUrlParameter'         => [
             'label'     => &$GLOBALS['TL_LANG']['tl_exporter']['entityUrlParameter'],
             'exclude'   => true,
             'search'    => true,
@@ -213,7 +213,7 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
             'eval'      => ['maxlength' => 32, 'tl_class' => 'w50'],
             'sql'       => "varchar(32) NOT NULL default ''",
         ],
-        'entityStaticValue'  => [
+        'entityStaticValue'          => [
             'label'     => &$GLOBALS['TL_LANG']['tl_exporter']['entityStaticValue'],
             'exclude'   => true,
             'search'    => true,
@@ -221,7 +221,7 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
             'eval'      => ['maxlength' => 128, 'tl_class' => 'w50'],
             'sql'       => "varchar(128) NOT NULL default ''",
         ],
-        'restrictToPids'     => [
+        'restrictToPids'             => [
             'label'            => &$GLOBALS['TL_LANG']['tl_exporter']['restrictToPids'],
             'exclude'          => true,
             'filter'           => true,
@@ -236,7 +236,7 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
             ],
             'sql'              => "blob NULL",
         ],
-        'skipFields'                => [
+        'skipFields'                 => [
             'label'            => &$GLOBALS['TL_LANG']['tl_exporter']['skipFields'],
             'exclude'          => true,
             'filter'           => true,
@@ -245,7 +245,7 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
             'eval'             => ['multiple' => true, 'chosen' => true, 'tl_class' => 'long', 'style' => 'width: 97%'],
             'sql'              => "blob NULL",
         ],
-        'skipLabels'                => [
+        'skipLabels'                 => [
             'label'            => &$GLOBALS['TL_LANG']['tl_exporter']['skipLabels'],
             'exclude'          => true,
             'filter'           => true,
@@ -254,7 +254,7 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
             'eval'             => ['multiple' => true, 'chosen' => true, 'tl_class' => 'long', 'style' => 'width: 97%'],
             'sql'              => "blob NULL",
         ],
-        'addUnformattedFields'      => [
+        'addUnformattedFields'       => [
             'label'     => &$GLOBALS['TL_LANG']['tl_exporter']['addUnformattedFields'],
             'exclude'   => true,
             'inputType' => 'checkbox',
@@ -264,7 +264,20 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
             ],
             'sql'       => "char(1) NOT NULL default ''",
         ],
-        'tableFieldsForExport'      => [
+        'tableFieldsForExportCopier' => [
+            'inputType' => 'fieldValueCopier',
+            'eval'      => [
+                'fieldValueCopier' => [
+                    'table'            => 'tl_exporter',
+                    'field'            => 'tableFieldsForExport',
+                    'config' => [
+                        'labelPattern' => '%title% (%fileType%, ID %id%)'
+                    ],
+                    'options_callback' => ['huh.field_value_copier.util.field_value_copier_util', 'getOptions']
+                ]
+            ]
+        ],
+        'tableFieldsForExport'       => [
             'inputType'        => 'checkboxWizard',
             'label'            => &$GLOBALS['TL_LANG']['tl_exporter']['tableFieldsForExport'],
             'options_callback' => ['huh.exporter.listener.dc.exporter', 'getTableFields'],
@@ -278,21 +291,21 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
         ],
 
         // export legend
-        'fileType'                  => [
-            'label'     => &$GLOBALS['TL_LANG']['tl_exporter']['fileType'],
-            'exclude'   => true,
-            'inputType' => 'select',
+        'fileType'                   => [
+            'label'            => &$GLOBALS['TL_LANG']['tl_exporter']['fileType'],
+            'exclude'          => true,
+            'inputType'        => 'select',
             'options_callback' => ['huh.exporter.listener.dc.exporter', 'getFileType'],
-            'reference' => &$GLOBALS['TL_LANG']['tl_exporter']['fileType'],
-            'eval'      => [
+            'reference'        => &$GLOBALS['TL_LANG']['tl_exporter']['fileType'],
+            'eval'             => [
                 'mandatory'          => true,
                 'includeBlankOption' => true,
                 'submitOnChange'     => true,
                 'tl_class'           => 'w50 clr',
             ],
-            'sql'       => "varchar(10) NOT NULL default ''",
+            'sql'              => "varchar(10) NOT NULL default ''",
         ],
-        'exporterClass'             => [
+        'exporterClass'              => [
             'label'            => &$GLOBALS['TL_LANG']['tl_exporter']['exporterClass'],
             'inputType'        => 'select',
             'eval'             => [
@@ -305,7 +318,7 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
             'options_callback' => ['huh.exporter.listener.dc.exporter', 'getExporterClasses'],
             'sql'              => "varchar(255) NOT NULL default ''",
         ],
-        'fieldDelimiter'            => [
+        'fieldDelimiter'             => [
             'label'     => &$GLOBALS['TL_LANG']['tl_exporter']['fieldDelimiter'],
             'exclude'   => true,
             'search'    => true,
@@ -320,7 +333,7 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
             ],
             'sql'       => "char(1) NOT NULL default ''",
         ],
-        'fieldEnclosure'            => [
+        'fieldEnclosure'             => [
             'label'     => &$GLOBALS['TL_LANG']['tl_exporter']['fieldEnclosure'],
             'exclude'   => true,
             'search'    => true,
@@ -335,7 +348,7 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
             ],
             'sql'       => "char(1) NOT NULL default ''",
         ],
-        'addHeaderToExportTable'    => [
+        'addHeaderToExportTable'     => [
             'label'     => &$GLOBALS['TL_LANG']['tl_exporter']['addHeaderToExportTable'],
             'exclude'   => true,
             'inputType' => 'checkbox',
@@ -345,7 +358,7 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
             ],
             'sql'       => "char(1) NOT NULL default ''",
         ],
-        'overrideHeaderFieldLabels' => [
+        'overrideHeaderFieldLabels'  => [
             'label'     => &$GLOBALS['TL_LANG']['tl_exporter']['overrideHeaderFieldLabels'],
             'exclude'   => true,
             'inputType' => 'checkbox',
@@ -355,7 +368,7 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
             ],
             'sql'       => "char(1) NOT NULL default ''",
         ],
-        'headerFieldLabels'         => [
+        'headerFieldLabels'          => [
             'label'     => &$GLOBALS['TL_LANG']['tl_exporter']['headerFieldLabels'],
             'exclude'   => true,
             'inputType' => 'multiColumnEditor',
@@ -380,7 +393,7 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
             ],
             'sql'       => "blob NULL",
         ],
-        'compressionType'           => [
+        'compressionType'            => [
             'label'     => &$GLOBALS['TL_LANG']['tl_exporter']['compressionType'],
             'exclude'   => true,
             'inputType' => 'select',
@@ -392,7 +405,7 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
             ],
             'sql'       => "varchar(255) NOT NULL default ''",
         ],
-        'localizeHeader'            => [
+        'localizeHeader'             => [
             'label'     => &$GLOBALS['TL_LANG']['tl_exporter']['localizeHeader'],
             'exclude'   => true,
             'inputType' => 'checkbox',
@@ -401,7 +414,7 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
             ],
             'sql'       => "char(1) NOT NULL default ''",
         ],
-        'localizeFields'            => [
+        'localizeFields'             => [
             'label'     => &$GLOBALS['TL_LANG']['tl_exporter']['localizeFields'],
             'exclude'   => true,
             'inputType' => 'checkbox',
@@ -410,7 +423,7 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
             ],
             'sql'       => "char(1) NOT NULL default ''",
         ],
-        'target'                    => [
+        'target'                     => [
             'label'     => &$GLOBALS['TL_LANG']['tl_exporter']['target'],
             'exclude'   => true,
             'inputType' => 'select',
@@ -427,21 +440,21 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
             ],
             'sql'       => "varchar(255) NOT NULL default '" . \HeimrichHannot\ContaoExporterBundle\Exporter\AbstractExporter::TARGET_DOWNLOAD . "'",
         ],
-        'fileDir'                   => [
+        'fileDir'                    => [
             'label'     => &$GLOBALS['TL_LANG']['tl_exporter']['fileDir'],
             'exclude'   => true,
             'inputType' => 'fileTree',
             'eval'      => ['fieldType' => 'radio', 'mandatory' => true, 'tl_class' => 'w50 clr'],
             'sql'       => "binary(16) NULL",
         ],
-        'useHomeDir'                => [
+        'useHomeDir'                 => [
             'label'     => &$GLOBALS['TL_LANG']['tl_exporter']['useHomeDir'],
             'exclude'   => true,
             'inputType' => 'checkbox',
             'eval'      => ['tl_class' => 'w50'],
             'sql'       => "char(1) NOT NULL default ''",
         ],
-        'fileSubDirName'            => [
+        'fileSubDirName'             => [
             'label'     => &$GLOBALS['TL_LANG']['tl_exporter']['fileSubDirName'],
             'exclude'   => true,
             'search'    => true,
@@ -449,7 +462,7 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
             'eval'      => ['maxlength' => 255, 'tl_class' => 'w50'],
             'sql'       => "varchar(255) NOT NULL default ''",
         ],
-        'fileName'                  => [
+        'fileName'                   => [
             'label'     => &$GLOBALS['TL_LANG']['tl_exporter']['fileName'],
             'exclude'   => true,
             'search'    => true,
@@ -457,14 +470,14 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
             'eval'      => ['maxlength' => 64, 'tl_class' => 'w50'],
             'sql'       => "varchar(64) NOT NULL default ''",
         ],
-        'fileNameAddDatime'         => [
+        'fileNameAddDatime'          => [
             'label'     => &$GLOBALS['TL_LANG']['tl_exporter']['fileNameAddDatime'],
             'exclude'   => true,
             'inputType' => 'checkbox',
             'eval'      => ['submitOnChange' => true, 'tl_class' => 'w50 clr'],
             'sql'       => "char(1) NOT NULL default ''",
         ],
-        'fileNameAddDatimeFormat'   => [
+        'fileNameAddDatimeFormat'    => [
             'label'     => &$GLOBALS['TL_LANG']['tl_exporter']['fileNameAddDatimeFormat'],
             'exclude'   => true,
             'search'    => true,
@@ -472,14 +485,14 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
             'eval'      => ['maxlength' => 32, 'tl_class' => 'w50'],
             'sql'       => "varchar(32) NOT NULL default ''",
         ],
-        'addJoinTables'             => [
+        'addJoinTables'              => [
             'label'     => &$GLOBALS['TL_LANG']['tl_exporter']['addJoinTables'],
             'exclude'   => true,
             'inputType' => 'checkbox',
             'eval'      => ['submitOnChange' => true, 'tl_class' => 'clr'],
             'sql'       => "char(1) NOT NULL default ''",
         ],
-        'joinTables'                => [
+        'joinTables'                 => [
             'label'     => &$GLOBALS['TL_LANG']['tl_exporter']['joinTables'],
             'inputType' => 'multiColumnEditor',
             'eval'      => [
@@ -514,21 +527,21 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
             ],
             'sql'       => "blob NULL",
         ],
-        'whereClause'               => [
+        'whereClause'                => [
             'label'     => &$GLOBALS['TL_LANG']['tl_exporter']['whereClause'],
             'exclude'   => true,
             'inputType' => 'text',
             'eval'      => ['tl_class' => 'w50 clr', 'decodeEntities' => true],
             'sql'       => "varchar(255) NOT NULL default ''",
         ],
-        'orderBy'                   => [
+        'orderBy'                    => [
             'label'     => &$GLOBALS['TL_LANG']['tl_exporter']['orderBy'],
             'exclude'   => true,
             'inputType' => 'text',
             'eval'      => ['tl_class' => 'w50 clr', 'decodeEntities' => true],
             'sql'       => "varchar(255) NOT NULL default ''",
         ],
-        'pdfBackground'             => [
+        'pdfBackground'              => [
             'label'     => &$GLOBALS['TL_LANG']['tl_exporter']['pdfBackground'],
             'inputType' => 'fileTree',
             'exclude'   => true,
@@ -540,7 +553,7 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
             ],
             'sql'       => "binary(16) NULL",
         ],
-        'pdfTemplate'        => [
+        'pdfTemplate'                => [
             'label'            => &$GLOBALS['TL_LANG']['tl_exporter']['pdfTemplate'],
             'exclude'          => true,
             'inputType'        => 'select',
@@ -551,7 +564,7 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
             ],
             'sql'              => "varchar(128) NOT NULL default ''",
         ],
-        'pdfCss'             => [
+        'pdfCss'                     => [
             'label'     => &$GLOBALS['TL_LANG']['tl_exporter']['pdfCss'],
             'inputType' => 'fileTree',
             'exclude'   => true,
@@ -563,19 +576,19 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
             ],
             'sql'       => "blob NULL",
         ],
-        'pdfFontDirectories' => [
+        'pdfFontDirectories'         => [
             'label'     => &$GLOBALS['TL_LANG']['tl_exporter']['pdfFontDirectories'],
             'exclude'   => true,
             'inputType' => 'fileTree',
             'sql'       => "blob NULL",
             'eval'      => [
-                'tl_class' => 'long clr',
-                'multiple' => true,
-                'files'    => false,
+                'tl_class'  => 'long clr',
+                'multiple'  => true,
+                'files'     => false,
                 'fieldType' => 'checkbox',
             ],
         ],
-        'pdfMargins'                => [
+        'pdfMargins'                 => [
             'label'     => &$GLOBALS['TL_LANG']['tl_exporter']['pdfMargins'],
             'exclude'   => true,
             'inputType' => 'trbl',
@@ -583,7 +596,7 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
             'eval'      => ['includeBlankOption' => true, 'tl_class' => 'w50'],
             'sql'       => "varchar(128) NOT NULL default ''",
         ],
-        'pdfTitle'                  => [
+        'pdfTitle'                   => [
             'label'     => &$GLOBALS['TL_LANG']['tl_exporter']['pdfTitle'],
             'exclude'   => true,
             'search'    => true,
@@ -591,7 +604,7 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
             'eval'      => ['maxlength' => 64, 'tl_class' => 'w50 clr'],
             'sql'       => "varchar(64) NOT NULL default ''",
         ],
-        'pdfSubject'                => [
+        'pdfSubject'                 => [
             'label'     => &$GLOBALS['TL_LANG']['tl_exporter']['pdfSubject'],
             'exclude'   => true,
             'search'    => true,
@@ -599,7 +612,7 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
             'eval'      => ['maxlength' => 128, 'tl_class' => 'w50'],
             'sql'       => "varchar(128) NOT NULL default ''",
         ],
-        'pdfCreator'                => [
+        'pdfCreator'                 => [
             'label'     => &$GLOBALS['TL_LANG']['tl_exporter']['pdfCreator'],
             'exclude'   => true,
             'search'    => true,
@@ -607,7 +620,7 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
             'eval'      => ['maxlength' => 64, 'tl_class' => 'w50'],
             'sql'       => "varchar(64) NOT NULL default ''",
         ],
-        'ignoreOnloadCallbacks'     => [
+        'ignoreOnloadCallbacks'      => [
             'label'     => &$GLOBALS['TL_LANG']['tl_exporter']['ignoreOnloadCallbacks'],
             'exclude'   => true,
             'inputType' => 'checkbox',
@@ -621,8 +634,7 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
 
 $arrDca = &$GLOBALS['TL_DCA']['tl_exporter'];
 
-if (in_array('protected_homedirs', \ModuleLoader::getActive()))
-{
+if (in_array('protected_homedirs', \ModuleLoader::getActive())) {
     $arrDca['subpalettes']['target_' . \HeimrichHannot\ContaoExporterBundle\Exporter\AbstractExporter::TARGET_FILE] = str_replace(
         'useHomeDir',
         'useHomeDir,useProtectedHomeDir',

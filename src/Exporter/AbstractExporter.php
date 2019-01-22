@@ -260,7 +260,18 @@ abstract class AbstractExporter implements ExporterInterface
 
             if ($pid && !$strAct && is_array($dca['fields']) && $dca['config']['ptable'])
             {
-                $wheres[] = $this->config->linkedTable . '.pid = ' . $pid;
+                $statement = $this->config->linkedTable;
+
+                if (is_array($pid))
+                {
+                    $statement .= '.pid IN (' . implode(',', $pid) . ')';
+                }
+                else
+                {
+                    $statement .= '.pid = ' . $pid;
+                }
+
+                $wheres[] = $statement;
             }
         }
 

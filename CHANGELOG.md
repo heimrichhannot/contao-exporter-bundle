@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.6.0] - 2019-01-21
+
+#### Added
+- php cs fixer
+- command for exporting on the command line
+- field_value_copier for copying selected fields from one exporter config to another
+
 ## [0.5.2] - 2018-12-12
 
 #### Fixed
