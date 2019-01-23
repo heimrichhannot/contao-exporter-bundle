@@ -1,7 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.6.0] - 2019-01-21
+## [0.6.1] - 2019-01-23
+
+#### Added
+- language support for command export
+
+## [0.6.0] - 2019-01-22
 
 #### Added
 - php cs fixer

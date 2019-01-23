@@ -79,7 +79,19 @@ class ExportCommand extends AbstractLockedCommand implements FrameworkAwareInter
             return false;
         }
 
+        if ($exporterConfig->language)
+        {
+            $language = $GLOBALS['TL_LANGUAGE'];
+
+            $GLOBALS['TL_LANGUAGE'] = $exporterConfig->language;
+        }
+
         System::getContainer()->get('huh.exporter.action.export')->export($exporterConfig);
+
+        if ($exporterConfig->language)
+        {
+            $GLOBALS['TL_LANGUAGE'] = $language;
+        }
 
         return true;
     }

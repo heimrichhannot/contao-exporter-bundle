@@ -68,6 +68,8 @@ $arrLang['headerFieldLabels'] = ['Tabellenkopffelder', 'Geben Sie her die gewün
 $arrLang['headerFieldLabels']['field'] = ['Feld', ''];
 $arrLang['headerFieldLabels']['label'] = ['Name', ''];
 
+// command
+$arrLang['language'] = ['Sprache', 'Wählen Sie hier die Sprache, in der exportiert werden soll.'];
 
 /**
  * Legends
@@ -75,6 +77,7 @@ $arrLang['headerFieldLabels']['label'] = ['Name', ''];
 $arrLang['title_legend'] = 'Allgemeines';
 $arrLang['export_legend'] = 'Exporteinstellungen';
 $arrLang['table_legend'] = 'Operation, Tabelle & Felder';
+$arrLang['command_legend'] = 'Symfony-Commands';
 
 
 /**

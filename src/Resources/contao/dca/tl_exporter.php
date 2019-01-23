@@ -81,7 +81,8 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
                   => '{title_legend},title,type;'
             . '{export_legend},target,fileType;'
             . '{exporter_config_legend},exporterClass;'
-            . '{table_legend},globalOperationKey,linkedTable,addJoinTables,ignoreOnloadCallbacks,addUnformattedFields,tableFieldsForExportCopier,tableFieldsForExport,restrictToPids,whereClause,orderBy;',
+            . '{table_legend},globalOperationKey,linkedTable,addJoinTables,ignoreOnloadCallbacks,addUnformattedFields,tableFieldsForExportCopier,tableFieldsForExport,restrictToPids,whereClause,orderBy;'
+            . '{command_legend},language;',
         \HeimrichHannot\ContaoExporterBundle\Exporter\AbstractExporter::TYPE_ITEM
                   => '{title_legend},title,type;'
             . '{export_legend},target,fileType,exporterClass;'
@@ -628,6 +629,15 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
                 'tl_class' => 'w50 clr',
             ],
             'sql'       => "char(1) NOT NULL default ''",
+        ],
+        'language' => [
+            'label'                   => &$GLOBALS['TL_LANG']['tl_exporter']['language'],
+            'exclude'                 => true,
+            'filter'                  => true,
+            'inputType'               => 'select',
+            'options' => \Contao\System::getLanguages(),
+            'eval'                    => ['tl_class' => 'w50', 'includeBlankOption' => true, 'chosen' => true],
+            'sql'                     => "varchar(64) NOT NULL default ''"
         ],
     ],
 ];
