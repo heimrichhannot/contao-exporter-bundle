@@ -268,6 +268,7 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
         'tableFieldsForExportCopier' => [
             'inputType' => 'fieldValueCopier',
             'eval'      => [
+                'tl_class' => 'clr',
                 'fieldValueCopier' => [
                     'table'            => 'tl_exporter',
                     'field'            => 'tableFieldsForExport',

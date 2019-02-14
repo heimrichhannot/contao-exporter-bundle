@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.6.2] - 2019-02-14
+
+#### Fixed
+- missing `clr` style class
+
 ## [0.6.1] - 2019-01-23
 
 #### Added
