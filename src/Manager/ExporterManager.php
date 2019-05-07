@@ -28,6 +28,7 @@ class ExporterManager
      * @var ContainerInterface
      */
     private $container;
+    private $isFileTypesInitialized = false;
 
     public function __construct(ContainerInterface $container)
     {
@@ -39,8 +40,9 @@ class ExporterManager
      *
      * @param ExporterInterface $exporter
      */
-    public function addExporter(ExporterInterface $exporter) {
-        $this->exporter[get_class($exporter)] = $exporter;
+    public function addExporter(ExporterInterface $exporter, string $className)
+    {
+        $this->exporter[$className] = $exporter;
     }
 
     /**
@@ -75,37 +77,19 @@ class ExporterManager
      */
     protected function initializeFileTypeLists(bool $useCache)
     {
-        $cacheKey = 'exporter.filetypes';
-
-        if ($this->container->get('kernel')->isDebug())
+        if ($this->isFileTypesInitialized)
         {
-            $useCache = false;
+            return;
         }
-        if (empty($this->exporterFileTypes))
-        {
-            if ($useCache)
-            {
-                $cache = new FilesystemCache('huh.exporter', 3600);
-            }
 
-            if ($useCache && $cache->has($cacheKey))
+        foreach ($this->exporter as $exporterName => $exporter)
+        {
+            foreach ($exporter->getSupportedFileTypes() as $fileType)
             {
-                $this->exporterFileTypes = $cache->get($cacheKey);
-            } else
-            {
-                foreach ($this->exporter as $exporter)
-                {
-                    foreach ($exporter->getSupportedFileTypes() as $fileType)
-                    {
-                        $this->exporterFileTypes[$fileType][] = get_class($exporter);
-                    }
-                }
-                if ($useCache)
-                {
-                    $cache->set($cacheKey, $this->exporterFileTypes);
-                }
+                $this->exporterFileTypes[$fileType][] = $exporterName;
             }
         }
+        $this->isFileTypesInitialized = true;
     }
 
     /**

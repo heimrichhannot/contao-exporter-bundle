@@ -1,6 +1,21 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.7.0] - 2019-05-07
+
+This release fixes a serious bug with symfony 4, which handles class caching different that symfony 3. If you used this bundle with symfony 4, please be aware that exporter class names may be saved wrong. To resolve this, you need to save every exporter configuration with the correct exporter class again.
+
+#### Changed
+* updated dependencies
+* updated translations
+* removed file type exporter mapping caching 
+
+#### Fixed
+* bug with symfony 4 class caching
+* class names instead of class aliases were used in migration command
+* removed a deprecation warning
+* removed a unused method
+
 ## [0.6.2] - 2019-02-14
 
 #### Fixed

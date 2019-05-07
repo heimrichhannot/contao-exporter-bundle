@@ -82,7 +82,7 @@ class MigrationCommand extends ContainerAwareCommand
             $updated = false;
             if ($exporter->exporterClass == 'HeimrichHannot\Exporter\Concrete\XlsExporter')
             {
-                $exporter->exporterClass = ExcelExporter::class;
+                $exporter->exporterClass = ExcelExporter::getAlias();
                 $updated = true;
                 if ($output->isVerbose())
                 {
@@ -91,7 +91,7 @@ class MigrationCommand extends ContainerAwareCommand
             }
             if ($exporter->exporterClass == 'HeimrichHannot\Exporter\Concrete\CsvExporter')
             {
-                $exporter->exporterClass = CsvExporter::class;
+                $exporter->exporterClass = CsvExporter::getAlias();
                 $updated = true;
                 if ($output->isVerbose())
                 {
@@ -100,7 +100,7 @@ class MigrationCommand extends ContainerAwareCommand
             }
             if ($exporter->exporterClass == 'HeimrichHannot\Exporter\Concrete\MediaExporter')
             {
-                $exporter->exporterClass = MediaExporter::class;
+                $exporter->exporterClass = MediaExporter::getAlias();
                 $updated = true;
                 if ($output->isVerbose())
                 {
@@ -109,7 +109,7 @@ class MigrationCommand extends ContainerAwareCommand
             }
             if ($exporter->exporterClass == 'HeimrichHannot\Exporter\Concrete\PdfExporter')
             {
-                $exporter->exporterClass = PdfExporter::class;
+                $exporter->exporterClass = PdfExporter::getAlias();
                 $updated = true;
                 if ($output->isVerbose())
                 {

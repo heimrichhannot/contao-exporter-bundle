@@ -17,6 +17,7 @@ use Contao\Controller;
 use Contao\Database;
 use Contao\DataContainer;
 use Contao\DC_Table;
+use Contao\StringUtil;
 use Contao\System;
 use HeimrichHannot\ContaoExporterBundle\Manager\ExporterManager;
 use HeimrichHannot\ContaoExporterBundle\Exporter\AbstractExporter;
@@ -58,9 +59,10 @@ class ExporterListener
     public function getExporterClasses(DC_Table $dc)
     {
         return array_combine(
-            array_map(function ($className) {
-                return str_replace('\\', '_', $className);
-            }, $this->exporterManager->getExporterByFileType($dc->activeRecord->fileType)),
+            array_map(
+                function ($className) { return str_replace('\\', '_', $className ); },
+                $this->exporterManager->getExporterByFileType($dc->activeRecord->fileType)
+            ),
             $this->exporterManager->getExporterByFileType($dc->activeRecord->fileType)
         );
     }
@@ -141,7 +143,7 @@ class ExporterListener
     public function getJoinTables($exporterConfig)
     {
         $arrResult = [];
-        foreach (deserialize($exporterConfig->joinTables, true) as $arrRow) {
+        foreach (StringUtil::deserialize($exporterConfig->joinTables, true) as $arrRow) {
             if (isset($arrRow['joinTable'])) {
                 $arrResult[] = $arrRow['joinTable'];
             }

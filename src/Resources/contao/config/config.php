@@ -16,14 +16,7 @@ define('EXPORTER_FRONTEND_FORMID', 'exporter_download');
 /**
  * Frontend modules
  */
-array_insert(
-    $GLOBALS['FE_MOD'], count($GLOBALS['FE_MOD']) - 1, [
-        'exporter' => [
-            \HeimrichHannot\ContaoExporterBundle\FrontendModule\ModuleFrontendExporter::NAME =>
-                \HeimrichHannot\ContaoExporterBundle\FrontendModule\ModuleFrontendExporter::class
-        ]
-    ]
-);
+$GLOBALS['FE_MOD']['exporter'][\HeimrichHannot\ContaoExporterBundle\FrontendModule\ModuleFrontendExporter::NAME] = \HeimrichHannot\ContaoExporterBundle\FrontendModule\ModuleFrontendExporter::class;
 
 
 /**

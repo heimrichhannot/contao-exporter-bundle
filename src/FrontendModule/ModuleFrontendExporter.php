@@ -121,10 +121,4 @@ class ModuleFrontendExporter extends Module
 
 		return $arrOperation;
 	}
-
-	public static function getBackendModule()
-	{
-		return ['HeimrichHannot\Exporter\ModuleExporter', 'export'];
-	}
-
 }

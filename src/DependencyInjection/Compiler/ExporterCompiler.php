@@ -33,7 +33,7 @@ class ExporterCompiler implements CompilerPassInterface
         $taggedServices = $container->findTaggedServiceIds('huh_exporter.exporter');
 
         foreach ($taggedServices as $id => $tags) {
-            $definition->addMethodCall('addExporter', array(new Reference($id)));
+            $definition->addMethodCall('addExporter', array(new Reference($id), $id));
         }
     }
 }

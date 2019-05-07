@@ -31,6 +31,7 @@ $arrLang['fileType'][EXPORTER_FILE_TYPE_MEDIA] = 'Linked files as archive';
 $arrLang['fileType'][EXPORTER_FILE_TYPE_PDF] = 'PDF';
 $arrLang['fileType'][EXPORTER_FILE_TYPE_XLS] = 'XLS (Microsoft Excel before 2007)';
 $arrLang['fileType']['xlsx'] = 'XLSX (Microsoft Excel from 2007)';
+$arrLang['exporterClass'] = ['Exporter class', 'Choose an concrete exporter class.'];
 $arrLang['target'] = ['Target', 'Choose the file type to be exported to.'];
 $arrLang['target'][\HeimrichHannot\ContaoExporterBundle\Exporter\AbstractExporter::TARGET_DOWNLOAD] = 'Download';
 
@@ -63,8 +64,10 @@ $arrLang['headerFieldLabels']['label'] = 'Name';
  * Legends
  */
 $arrLang['title_legend'] = 'General settings';
-$arrLang['export_legend'] = 'Exporter settings';
+$arrLang['export_legend'] = 'Export settings';
+$arrLang['exporter_config_legend'] = 'Exporter configuration';
 $arrLang['table_legend'] = 'Operations, tables & fields';
+$arrLang['command_legend'] = 'Symfony commands';
 
 
 /**

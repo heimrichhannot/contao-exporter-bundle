@@ -34,7 +34,7 @@ $arrLang['fileType'][EXPORTER_FILE_TYPE_MEDIA] = 'Verknüpfte Dateien als Archiv
 $arrLang['fileType'][EXPORTER_FILE_TYPE_PDF] = 'PDF';
 $arrLang['fileType'][EXPORTER_FILE_TYPE_XLS] = 'XLS (Microsoft Excel bis 2007)';
 $arrLang['fileType']['xlsx'] = 'XLSX (Microsoft Excel ab 2007)';
-$arrLang['exporterClass'] = ['Exporterklasse', 'Wählen Sie hier die PHP-Klasse, die als Exporter fungieren soll. Die Klasse muss eine konkrete Klasse im Namespace "HeimrichHannot\\Exporter\\Concrete" sein.'];
+$arrLang['exporterClass'] = ['Exporterklasse', 'Wählen Sie hier die PHP-Klasse, die als Exporter fungieren soll.'];
 $arrLang['target'] = ['Ziel', 'Wählen Sie hier das Dateiformat, in das exportiert werden soll.'];
 $arrLang['fileDir'] = ['Verzeichnis', 'Wählen Sie hier das Verzeichnis aus, in das exportiert werden soll. Komplexere Exportpfade können mit einem Hook gesetzt werden (siehe README.md).'];
 $arrLang['useHomeDir'] = ['Benutzerverzeichnisse verwenden', 'Wählen Sie diese Option, wenn die exportierten Dateien vorrangig dem Benutzerverzeichnis hinzugefügt werden sollen. Hat das aktuell eingeloggte Mitglied kein Benutzerverzeichnis, wird das Verzeichnis im vorigen Feld genutzt.'];
@@ -76,6 +76,7 @@ $arrLang['language'] = ['Sprache', 'Wählen Sie hier die Sprache, in der exporti
  */
 $arrLang['title_legend'] = 'Allgemeines';
 $arrLang['export_legend'] = 'Exporteinstellungen';
+$arrLang['exporter_config_legend'] = 'Exporter-Konfiguration';
 $arrLang['table_legend'] = 'Operation, Tabelle & Felder';
 $arrLang['command_legend'] = 'Symfony-Commands';
 
