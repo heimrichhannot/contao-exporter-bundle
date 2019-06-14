@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.7.1] - 2019-06-14
+
+* [FIXED] handle "Cannot perform I/O operation outside of the base folder:" and set temp dir to system/tmp in order to handle get_temp_dir() permission restrictions 
+
 ## [0.7.0] - 2019-05-07
 
 This release fixes a serious bug with symfony 4, which handles class caching different that symfony 3. If you used this bundle with symfony 4, please be aware that exporter class names may be saved wrong. To resolve this, you need to save every exporter configuration with the correct exporter class again.

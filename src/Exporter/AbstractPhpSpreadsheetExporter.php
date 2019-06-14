@@ -13,6 +13,7 @@ namespace HeimrichHannot\ContaoExporterBundle\Exporter;
 
 use Box\Spout\Common\Type;
 use Box\Spout\Writer\WriterFactory;
+use Box\Spout\Writer\XLSX\Writer;
 use Contao\StringUtil;
 use Contao\System;
 use HeimrichHannot\ContaoExporterBundle\Event\ModifyFieldValueEvent;
@@ -146,7 +147,15 @@ abstract class AbstractPhpSpreadsheetExporter extends AbstractTableExporter
     }
 
     protected function getDocumentWriter() {
-        return WriterFactory::create($this->config->fileType === 'xlsx' ? Type::XLSX : Type::CSV);
+        $writer = WriterFactory::create($this->config->fileType === 'xlsx' ? Type::XLSX : Type::CSV);
+
+        // handle "Cannot perform I/O operation outside of the base folder:" and set temp dir to system/tmp in order to handle get_temp_dir() permission restrictions
+        if($writer instanceof Writer)
+        {
+            $writer->setTempFolder(System::getContainer()->get('huh.utils.container')->getProjectDir() . '/system/tmp');
+        }
+        
+        return $writer;
     }
 
     public function processHeaderRow(int $col)
