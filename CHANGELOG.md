@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.7.2] - 2020-01-10
+- added missing multi-column-editor dependency (#5, thx to @fritzmg)
+
 ## [0.7.1] - 2019-06-14
 
 * [FIXED] handle "Cannot perform I/O operation outside of the base folder:" and set temp dir to system/tmp in order to handle get_temp_dir() permission restrictions 

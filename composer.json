@@ -30,7 +30,7 @@
     "box/spout": "^2.7",
     "heimrichhannot/contao-field-value-copier-bundle": "^1.1",
     "heimrichhannot/contao-request-bundle": "^1.0",
-    "heimrichhannot/contao-multi-column-editor-bundle": "^2.0"
+    "heimrichhannot/contao-multi-column-editor-bundle": "^1.2 | ^2.0"
   },
   "autoload": {
     "psr-4": {
