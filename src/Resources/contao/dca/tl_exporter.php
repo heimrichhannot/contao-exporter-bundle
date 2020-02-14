@@ -26,7 +26,6 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
                 'id' => 'primary',
             ],
         ],
-
     ],
 
     // List
@@ -243,7 +242,7 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
             'filter'           => true,
             'inputType'        => 'select',
             'options_callback' => ['huh.exporter.listener.dc.exporter', 'getTableFields'],
-            'eval'             => ['multiple' => true, 'chosen' => true, 'tl_class' => 'long', 'style' => 'width: 97%'],
+            'eval'             => ['multiple' => true, 'chosen' => true, 'tl_class' => 'long clr', 'style' => 'width: 97%'],
             'sql'              => "blob NULL",
         ],
         'skipLabels'                 => [
@@ -252,7 +251,7 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
             'filter'           => true,
             'inputType'        => 'select',
             'options_callback' => ['huh.exporter.listener.dc.exporter', 'getTableFields'],
-            'eval'             => ['multiple' => true, 'chosen' => true, 'tl_class' => 'long', 'style' => 'width: 97%'],
+            'eval'             => ['multiple' => true, 'chosen' => true, 'tl_class' => 'long clr', 'style' => 'width: 97%'],
             'sql'              => "blob NULL",
         ],
         'addUnformattedFields'       => [

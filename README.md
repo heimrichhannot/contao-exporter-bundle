@@ -68,8 +68,7 @@ You can also create an custom implementation for your extension:
 
 ```php
 /** @var Symfony\Component\DependencyInjection\ContainerInterface $container */
-$container->get('huh.exporter.action.export')->export($config: E
-xporterModel, $entity: int|string, $fields = []: array);
+$container->get('huh.exporter.action.export')->export($config: ExporterModel, $entity: int|string, $fields = []: array);
 ```
 
 ## Developers

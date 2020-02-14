@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.7.3] - 2020-02-14
+- fixed dcas
+
 ## [0.7.2] - 2020-01-10
 - added missing multi-column-editor dependency (#5, thx to @fritzmg)
 
