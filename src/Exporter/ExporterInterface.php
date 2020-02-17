@@ -40,5 +40,5 @@ interface ExporterInterface
      * @throws ExportTypeNotSupportedException
      * @throws ExporterConfigurationException
      */
-    public function export(ExporterModel $config = null, $entity = null, array $fields = []): bool;
+    public function export(ExporterModel $config = null, $entity = null, array $fields = []);
 }

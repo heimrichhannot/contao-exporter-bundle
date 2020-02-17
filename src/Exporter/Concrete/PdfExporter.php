@@ -11,6 +11,7 @@
 
 namespace HeimrichHannot\ContaoExporterBundle\Exporter\Concrete;
 
+use Contao\Folder;
 use Contao\Model;
 use Contao\StringUtil;
 use HeimrichHannot\ContaoExporterBundle\Exception\EntityNotFoundException;
@@ -18,6 +19,7 @@ use HeimrichHannot\ContaoExporterBundle\Exporter\AbstractExporter;
 use HeimrichHannot\ContaoExporterBundle\Exporter\ExportTargetDownloadInterface;
 use HeimrichHannot\ContaoExporterBundle\Exporter\ExportTargetFileInterface;
 use HeimrichHannot\ContaoExporterBundle\Exporter\ExportTypeItemInterface;
+use HeimrichHannot\UtilsBundle\Pdf\AbstractPdfWriter;
 use HeimrichHannot\UtilsBundle\Pdf\PdfWriter;
 use Symfony\Component\Debug\Exception\FatalThrowableError;
 
@@ -44,7 +46,7 @@ class PdfExporter extends AbstractExporter implements ExportTypeItemInterface
      */
     public function exportToDownload($pdfWriter, string $fileDir, string $fileName)
     {
-        $this->createPdf($pdfWriter, $fileName, true);
+        $this->createPdf($pdfWriter, $fileName, $fileDir, true);
     }
 
     /**
@@ -56,16 +58,34 @@ class PdfExporter extends AbstractExporter implements ExportTypeItemInterface
      */
     public function exportToFile($pdfWriter, string $fileDir, string $fileName)
     {
-        $this->createPdf($pdfWriter, $fileName, false);
+        // create if not already existing
+        new Folder($fileDir);
+
+        return $this->createPdf($pdfWriter, $fileName, $fileDir, false);
     }
 
-    public function createPdf(PdfWriter $pdfWriter, string $fileName, bool $download)
+    public function createPdf(PdfWriter $pdfWriter, string $fileName, string $fileDir, bool $download)
     {
         $pdfWriter->setFileName($fileName);
-        $pdfWriter->generate($download);
+        $pdfWriter->setFolder($fileDir);
+        $pdfWriter->generate($download ? AbstractPdfWriter::OUTPUT_MODE_DOWNLOAD : AbstractPdfWriter::OUTPUT_MODE_FILE);
         if ($download) {
             exit;
         }
+
+        return $pdfWriter;
+    }
+
+    protected function finishExport($result, $event)
+    {
+        switch ($this->config->target)
+        {
+            case static::TARGET_FILE:
+                return $this->exportToFile($result, $event->getFileDir(), $event->getFileName());
+            case static::TARGET_DOWNLOAD:
+                return $this->exportToDownload($result, $event->getFileDir(), $event->getFileName());
+        }
+        return false;
     }
 
     /**
@@ -100,7 +120,7 @@ class PdfExporter extends AbstractExporter implements ExportTypeItemInterface
         {
             $rawFields = $fields;
 
-            list($skipFields, $fields, $skipLabels) = $this->setPdfFields($fields);
+            [$skipFields, $fields, $skipLabels] = $this->setPdfFields($fields);
 
             $pdfTemplate = $this->config->pdfTemplate ?: 'exporter_pdf_item_default';
             $pdfTemplate = $this->container->get('huh.utils.template')->getTemplate($pdfTemplate);
@@ -216,7 +236,7 @@ class PdfExporter extends AbstractExporter implements ExportTypeItemInterface
     {
         $skipFields = array_map(
             function ($val) {
-                list($strTable, $field) = explode('.', $val);
+                [$strTable, $field] = explode('.', $val);
 
                 return $field;
             }, StringUtil::deserialize($this->config->skipFields, true)
@@ -229,7 +249,7 @@ class PdfExporter extends AbstractExporter implements ExportTypeItemInterface
 
         // skip labels
         $skipLabels = array_map(function ($val) {
-            list($strTable, $field) = explode('.', $val);
+            [$strTable, $field] = explode('.', $val);
 
             return $field;
         }, StringUtil::deserialize($this->config->skipLabels, true));

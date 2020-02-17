@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.8.0] - 2020-02-17
+- fixed return values
+- fixed contao 3 support for pdf export
+
 ## [0.7.3] - 2020-02-14
 - fixed dcas
 

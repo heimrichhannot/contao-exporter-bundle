@@ -46,6 +46,16 @@ abstract class AbstractExporter implements ExporterInterface
     protected $tempFolderPath = 'files/tmp/huh_exporter/';
 
     /**
+     * @var string
+     */
+    protected $fileDir;
+
+    /**
+     * @var string
+     */
+    protected $filename;
+
+    /**
      * @var ExporterModel
      */
     protected $config;
@@ -82,7 +92,7 @@ abstract class AbstractExporter implements ExporterInterface
      * @throws ExportTypeNotSupportedException
      * @throws ExporterConfigurationException
      */
-    public function export(ExporterModel $config = null, $entity = null, array $fields = []): bool
+    public function export(ExporterModel $config = null, $entity = null, array $fields = [])
     {
         if ($config)
         {
@@ -100,11 +110,14 @@ abstract class AbstractExporter implements ExporterInterface
         }
 
         $fileName = $this->buildFileName($entity);
+        $this->filename = $fileName;
         $fileDir = '';
 
         if ($this->config->target == static::TARGET_FILE)
         {
             $fileDir = $this->buildFileDir($entity);
+
+            $this->fileDir = $fileDir;
         }
 
         $this->beforeExport($fileDir, $fileName);
@@ -468,7 +481,7 @@ abstract class AbstractExporter implements ExporterInterface
      * @param $event
      * @return bool
      */
-    protected function finishExport($result, $event): bool
+    protected function finishExport($result, $event)
     {
         switch ($this->config->target)
         {
@@ -478,5 +491,37 @@ abstract class AbstractExporter implements ExporterInterface
                 return $this->exportToDownload($result, $event->getFileDir(), $event->getFileName());
         }
         return false;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFileDir(): string
+    {
+        return $this->fileDir;
+    }
+
+    /**
+     * @param string $fileDir
+     */
+    public function setFileDir(string $fileDir): void
+    {
+        $this->fileDir = $fileDir;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFilename(): string
+    {
+        return $this->filename;
+    }
+
+    /**
+     * @param string $filename
+     */
+    public function setFilename(string $filename): void
+    {
+        $this->filename = $filename;
     }
 }

@@ -56,6 +56,7 @@ class ExportAction
         }
 
         $result = $exporter->export($config, $entity, $arrFields);
+        $result->exporter = $exporter;
 
         return $result;
     }

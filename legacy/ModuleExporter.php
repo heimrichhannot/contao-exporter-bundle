@@ -37,7 +37,9 @@ class ModuleExporter
      */
     public static function export($objConfig, $objEntity = null, array $arrFields = [])
     {
-        return System::getContainer()->get('huh.exporter.action.export')->export($objConfig, $objEntity, $arrFields);
+        $result = System::getContainer()->get('huh.exporter.action.export')->export($objConfig, $objEntity, $arrFields);
+
+        return $result->exporter;
     }
 
     /**
