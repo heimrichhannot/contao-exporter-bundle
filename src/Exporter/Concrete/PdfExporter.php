@@ -16,8 +16,8 @@ use Contao\Model;
 use Contao\StringUtil;
 use HeimrichHannot\ContaoExporterBundle\Exception\EntityNotFoundException;
 use HeimrichHannot\ContaoExporterBundle\Exporter\AbstractExporter;
-use HeimrichHannot\ContaoExporterBundle\Exporter\ExportTargetDownloadInterface;
-use HeimrichHannot\ContaoExporterBundle\Exporter\ExportTargetFileInterface;
+//use HeimrichHannot\ContaoExporterBundle\Exporter\ExportTargetDownloadInterface;
+//use HeimrichHannot\ContaoExporterBundle\Exporter\ExportTargetFileInterface;
 use HeimrichHannot\ContaoExporterBundle\Exporter\ExportTypeItemInterface;
 use HeimrichHannot\UtilsBundle\Pdf\AbstractPdfWriter;
 use HeimrichHannot\UtilsBundle\Pdf\PdfWriter;
@@ -67,6 +67,9 @@ class PdfExporter extends AbstractExporter implements ExportTypeItemInterface
     public function createPdf(PdfWriter $pdfWriter, string $fileName, string $fileDir, bool $download)
     {
         $pdfWriter->setFileName($fileName);
+
+        $this->setFilename($pdfWriter->getFileName());
+
         $pdfWriter->setFolder($fileDir);
         $pdfWriter->generate($download ? AbstractPdfWriter::OUTPUT_MODE_DOWNLOAD : AbstractPdfWriter::OUTPUT_MODE_FILE);
         if ($download) {
