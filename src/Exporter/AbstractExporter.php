@@ -300,7 +300,13 @@ abstract class AbstractExporter implements ExporterInterface
         {
             foreach ($joinTables as $joinT)
             {
-                $query .= ' ' . $joinT['joinType'] . ' ' . $joinT['joinTable'] . ' ON ' . $joinT['joinCondition'];
+                if (!$joinT['joinType']) {
+                    $joinType = 'JOIN';
+                } else {
+                    $joinType = $joinT['joinType'];
+                }
+
+                $query .= ' ' . $joinType . ' ' . $joinT['joinTable'] . ' ON ' . $joinT['joinCondition'];
             }
         }
 
