@@ -194,7 +194,17 @@ class ExporterListener
     {
         return Database::getInstance()->listTables();
     }
-    
+
+    /**
+     * Get available join options
+     *
+     * @return array
+     */
+    public function getAllJoinTypes()
+    {
+        return array('INNER JOIN', 'LEFT OUTER JOIN', 'RIGHT OUTER JOIN');
+    }
+
     /**
      * Searches through all backend modules to find global operation keys and returns a filtered list
      *

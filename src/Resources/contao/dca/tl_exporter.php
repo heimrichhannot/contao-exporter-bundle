@@ -512,6 +512,18 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
                                 'submitOnChange'     => true
                             ],
                         ],
+                        'joinType'     => [
+                            'label'            => &$GLOBALS['TL_LANG']['tl_exporter']['joinType'],
+                            'inputType'        => 'select',
+                            'options_callback' => ['huh.exporter.listener.dc.exporter', 'getAllJoinTypes'],
+                            'eval'             => [
+                                'chosen'             => true,
+                                'mandatory'          => true,
+                                'includeBlankOption' => false,
+                                'groupStyle'         => 'width: 250px',
+                                'style'              => 'width: 250px'
+                            ],
+                        ],
                         'joinCondition' => [
                             'label'     => &$GLOBALS['TL_LANG']['tl_exporter']['joinCondition'],
                             'inputType' => 'text',

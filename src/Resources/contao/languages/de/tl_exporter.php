@@ -20,6 +20,7 @@ $arrLang['localizeFields'] = ['Feldwerte lokalisieren', 'Wählen Sie diese Optio
 $arrLang['addJoinTables'] = ['Join hinzufügen', 'Wählen Sie diese Option, wenn die verknüpfte Tabelle mit einer oder mehreren anderen Tabellen vereint werden soll.'];
 $arrLang['joinTables'] = ['Join-Elemente (ACHTUNG: Felder der gejointen Tabellen werden erst nach dem Speichern auswählbar)', ''];
 $arrLang['joinTable'] = ['Tabelle', 'Wählen Sie die Tabelle aus, die mit der verknüpften Tabelle vereint werden soll. '];
+$arrLang['joinType'] = ['JOIN-Typ', 'Wählen Sie den Typ des auszuführenden Joins aus.'];
 $arrLang['joinCondition'] = ['ON-Bedingung', 'Geben Sie hier Bedingungen für die ON-Klausel in der Form "Verknüpfte-Tabelle.Wert = Join-Tabelle.Wert" ein.'];
 $arrLang['addUnformattedFields'] = ['Unformatierte Felder nutzen', 'Wählen Sie diese Option, wenn Felder in unformatierter Form exportierbar sein sollen.'];
 $arrLang['whereClause'] = ['WHERE-Bedingung', 'Geben Sie hier eine WHERE-Bedingung in der Form column=X an. Bei Join-Abfragen muss die Eingabe in der Form table.column=X erweitert werden. Zeit-Bedingungen müssen als timestamp angegeben werden.'];

@@ -19,6 +19,7 @@ $arrLang['localizeFields'] = ['Localize field values', 'Choose this option if fi
 $arrLang['addJoinTables'] = ['Add join', 'Choose this option if the linked table should be joined with some other table.'];
 $arrLang['joinTables'] = ['Join elements', ''];
 $arrLang['joinTable'] = ['Join table', 'Choose the table to be joined with the linked table.'];
+$arrLang['joinType'] = ['Join type', 'Choose the type of the join.'];
 $arrLang['joinCondition'] = ['ON condition', 'Please type in conditions for the ON clause in the form "linked_table.field = jin_table.field".'];
 $arrLang['addUnformattedFields'] = ['Use unformatted fields', 'Choose this option if you want to have unformatted fields in your export.'];
 $arrLang['whereClause'] = ['WHERE condition', 'Please type in a WHERE condition in the form column=X. In case of join the input needs to be extended in the form table.column=X. Temporal conditions need to be defined as timestamps.'];
