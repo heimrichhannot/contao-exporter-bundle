@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.9.0] - 2020-04-21
+- added join-type option to join-tables option (#6, thx to @JTS22)
+
 ## [0.8.1] - 2020-03-13
 - fixed filesanitizing for filename with pdf export
 
