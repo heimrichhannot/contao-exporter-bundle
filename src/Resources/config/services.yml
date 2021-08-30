@@ -37,6 +37,10 @@ services:
     public: true
 
 # Commands
+  huh.exporter.command.export:
+    class: HeimrichHannot\ContaoExporterBundle\Command\ExportCommand
+    tags:
+      - { name: 'console.command'}
 
   huh.exporter.command.migration:
     class: HeimrichHannot\ContaoExporterBundle\Command\MigrationCommand
