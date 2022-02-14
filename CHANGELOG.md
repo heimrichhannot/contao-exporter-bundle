@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.10.0] - 2022-02-14
+
+- Fixed: config for symfony 5+
+- Added: support for contao 4.13
+- Changed: minimum contao version is now contao 4.9
+- Fixed: events and dispatcher calls for symfony 5+
+- Fixed: translator calls for symfony 5+
+
 ## [0.9.1] - 2021-08-30
 
 - Added: php8 support

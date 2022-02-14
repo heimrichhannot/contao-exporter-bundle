@@ -13,7 +13,7 @@ namespace HeimrichHannot\ContaoExporterBundle\Event;
 
 
 use HeimrichHannot\ContaoExporterBundle\Exporter\AbstractTableExporter;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 class ModifyHeaderFieldsEvent extends Event
 {

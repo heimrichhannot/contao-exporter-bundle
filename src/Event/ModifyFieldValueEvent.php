@@ -13,7 +13,7 @@ namespace HeimrichHannot\ContaoExporterBundle\Event;
 
 
 use HeimrichHannot\ContaoExporterBundle\Exporter\AbstractExporter;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 class ModifyFieldValueEvent extends Event
 {

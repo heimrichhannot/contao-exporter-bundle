@@ -95,8 +95,8 @@ class MediaExporter extends AbstractExporter implements ExportTypeListInterface
                     if ($path && ($file = new File(str_replace(Environment::get('url'), '', $path), true)) !== null && $file->exists())
                     {
                         $event = $this->dispatcher->dispatch(
-                            ModifyMediaFile::NAME,
-                            new ModifyMediaFile('', $file, $field, $path, $this)
+                            new ModifyMediaFile('', $file, $field, $path, $this),
+                            ModifyMediaFile::NAME
                         );
 
                         if (!empty($event->getNewFileName()))

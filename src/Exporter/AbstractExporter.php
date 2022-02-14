@@ -122,7 +122,7 @@ abstract class AbstractExporter implements ExporterInterface
 
         $this->beforeExport($fileDir, $fileName);
 
-        $event = $this->dispatcher->dispatch(BeforeExportEvent::NAME, new BeforeExportEvent($entity, $fields, $fileDir, $fileName, $this));
+        $event = $this->dispatcher->dispatch(new BeforeExportEvent($entity, $fields, $fileDir, $fileName, $this), BeforeExportEvent::NAME);
 
         $result = $this->doExport($event->getEntity(), $event->getFields());
 
@@ -289,8 +289,8 @@ abstract class AbstractExporter implements ExporterInterface
         }
 
         $event = $this->dispatcher->dispatch(
-            BeforeBuildQueryEvent::NAME,
-            new BeforeBuildQueryEvent($this->config, $exportFields, $joinTables, $wheres, $this->config->orderBy, $this)
+            new BeforeBuildQueryEvent($this->config, $exportFields, $joinTables, $wheres, $this->config->orderBy, $this),
+            BeforeBuildQueryEvent::NAME
         );
 
         $query = 'SELECT ' . implode(',', $event->getExportFields()) . ' FROM ' . $this->config->linkedTable;

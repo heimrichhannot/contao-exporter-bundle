@@ -14,7 +14,7 @@ namespace HeimrichHannot\ContaoExporterBundle\Event;
 
 use Contao\File;
 use HeimrichHannot\ContaoExporterBundle\Exporter\AbstractExporter;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 class ModifyMediaFile extends Event
 {

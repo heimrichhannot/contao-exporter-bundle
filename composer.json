@@ -26,11 +26,21 @@
   },
   "require": {
     "php": "~7.1|^8.0",
-    "contao/core-bundle": "^4.1",
+    "contao/core-bundle": "^4.9",
     "box/spout": "^2.7",
     "heimrichhannot/contao-field-value-copier-bundle": "^1.1",
     "heimrichhannot/contao-request-bundle": "^1.0",
-    "heimrichhannot/contao-multi-column-editor-bundle": "^1.2 | ^2.0"
+    "heimrichhannot/contao-multi-column-editor-bundle": "^1.2 | ^2.0",
+    "symfony/cache": "^4.4 || ^5.2",
+    "symfony/config": "^4.4||^5.4",
+    "symfony/console": "^4.4||^5.4",
+    "symfony/dependency-injection": "^4.4||^5.4",
+    "symfony/event-dispatcher": "^4.4||^5.4",
+    "symfony/event-dispatcher-contracts": "^1||^2||^3",
+    "symfony/http-kernel": "^4.4||^5.4",
+    "symfony/http-foundation": "^4.4||^5.4",
+    "symfony/translation": "^4.4||^5.4",
+    "symfony/translation-contracts": "^1.1.6||^2||^3"
   },
   "autoload": {
     "psr-4": {

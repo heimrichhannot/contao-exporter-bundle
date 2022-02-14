@@ -16,12 +16,9 @@ use Contao\Model;
 use Contao\StringUtil;
 use HeimrichHannot\ContaoExporterBundle\Exception\EntityNotFoundException;
 use HeimrichHannot\ContaoExporterBundle\Exporter\AbstractExporter;
-//use HeimrichHannot\ContaoExporterBundle\Exporter\ExportTargetDownloadInterface;
-//use HeimrichHannot\ContaoExporterBundle\Exporter\ExportTargetFileInterface;
 use HeimrichHannot\ContaoExporterBundle\Exporter\ExportTypeItemInterface;
 use HeimrichHannot\UtilsBundle\Pdf\AbstractPdfWriter;
 use HeimrichHannot\UtilsBundle\Pdf\PdfWriter;
-use Symfony\Component\Debug\Exception\FatalThrowableError;
 
 class PdfExporter extends AbstractExporter implements ExportTypeItemInterface
 {

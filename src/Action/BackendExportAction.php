@@ -19,7 +19,7 @@ use HeimrichHannot\ContaoExporterBundle\Manager\ExporterManager;
 use HeimrichHannot\ContaoExporterBundle\Model\ExporterModel;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class BackendExportAction
 {

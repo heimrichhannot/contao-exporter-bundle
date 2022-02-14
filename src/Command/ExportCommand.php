@@ -2,19 +2,10 @@
 
 namespace HeimrichHannot\ContaoExporterBundle\Command;
 
-use Contao\Config;
 use Contao\CoreBundle\Command\AbstractLockedCommand;
 use Contao\CoreBundle\Framework\FrameworkAwareInterface;
 use Contao\CoreBundle\Framework\FrameworkAwareTrait;
-use Contao\Database;
-use Contao\Model;
-use Contao\StringUtil;
 use Contao\System;
-use HeimrichHannot\ContaoExporterBundle\Exporter\AbstractExporter;
-use HeimrichHannot\GoogleMapsBundle\Backend\GoogleMap;
-use HeimrichHannot\GoogleMapsBundle\Backend\Overlay;
-use HeimrichHannot\GoogleMapsBundle\Model\GoogleMapModel;
-use HeimrichHannot\GoogleMapsBundle\Model\OverlayModel;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;

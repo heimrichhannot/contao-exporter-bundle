@@ -15,7 +15,7 @@ namespace HeimrichHannot\ContaoExporterBundle\Event;
 use Contao\Model;
 use HeimrichHannot\ContaoExporterBundle\Exporter\AbstractExporter;
 use HeimrichHannot\ContaoExporterBundle\Model\ExporterModel;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 class BeforeExportEvent extends Event
 {

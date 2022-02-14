@@ -14,7 +14,7 @@ namespace HeimrichHannot\ContaoExporterBundle\Event;
 
 use HeimrichHannot\ContaoExporterBundle\Exporter\AbstractExporter;
 use HeimrichHannot\ContaoExporterBundle\Model\ExporterModel;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 class BeforeBuildQueryEvent extends Event
 {

@@ -12,20 +12,20 @@
 namespace HeimrichHannot\ContaoExporterBundle\Command;
 
 
+use Contao\CoreBundle\Command\AbstractLockedCommand;
+use Contao\System;
 use HeimrichHannot\ContaoExporterBundle\Exporter\AbstractExporter;
 use HeimrichHannot\ContaoExporterBundle\Exporter\Concrete\CsvExporter;
 use HeimrichHannot\ContaoExporterBundle\Exporter\Concrete\ExcelExporter;
 use HeimrichHannot\ContaoExporterBundle\Exporter\Concrete\MediaExporter;
 use HeimrichHannot\ContaoExporterBundle\Exporter\Concrete\PdfExporter;
 use HeimrichHannot\ContaoExporterBundle\Model\ExporterModel;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-class MigrationCommand extends ContainerAwareCommand
+class MigrationCommand extends AbstractLockedCommand
 {
     protected function configure()
     {
@@ -44,9 +44,9 @@ class MigrationCommand extends ContainerAwareCommand
      *
      * @return int
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function executeLocked(InputInterface $input, OutputInterface $output)
     {
-        $framework = $this->getContainer()->get('contao.framework');
+        $framework = System::getContainer()->get('contao.framework');
         if (!$framework->isInitialized()) {
             $framework->initialize();
         }

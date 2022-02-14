@@ -65,7 +65,7 @@ abstract class AbstractTableExporter extends AbstractExporter implements ExportT
             $headerFields[] = strip_tags(html_entity_decode($strLabel)) . ($blnRawField ? $GLOBALS['TL_LANG']['MSC']['exporter']['unformatted'] : '');
         }
 
-        $event = $this->dispatcher->dispatch(ModifyHeaderFieldsEvent::NAME, new ModifyHeaderFieldsEvent($headerFields, $this));
+        $event = $this->dispatcher->dispatch(new ModifyHeaderFieldsEvent($headerFields, $this), ModifyHeaderFieldsEvent::NAME);
 
         $this->headerFields = $event->getHeaderFields();
     }

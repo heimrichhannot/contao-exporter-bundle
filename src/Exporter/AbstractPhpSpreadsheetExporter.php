@@ -94,7 +94,7 @@ abstract class AbstractPhpSpreadsheetExporter extends AbstractTableExporter
                         $value = $this->container->get('huh.utils.array')->flattenArray($value);
                     }
 
-                    $event = $this->dispatcher->dispatch(ModifyFieldValueEvent::NAME, new ModifyFieldValueEvent($value, $strField, $row, $this));
+                    $event = $this->dispatcher->dispatch(new ModifyFieldValueEvent($value, $strField, $row, $this), ModifyFieldValueEvent::NAME);
 
                     $formattedRow[] = html_entity_decode($event->getValue());
                 }
