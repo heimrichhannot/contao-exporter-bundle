@@ -249,7 +249,8 @@ class ExporterListener
     {
         $arrOptions = [];
         
-        if (($linkedTable = $dataContainer->activeRecord->linkedTable) && $GLOBALS['TL_DCA'][$linkedTable]['config']['ptable']) {
+        if ($dataContainer->activeRecord && ($linkedTable = $dataContainer->activeRecord->linkedTable) &&
+            isset($GLOBALS['TL_DCA'][$linkedTable]['config']['ptable'])) {
             Controller::loadDataContainer($linkedTable);
             System::loadLanguageFile($linkedTable);
             if (!isset($GLOBALS['TL_DCA'][$linkedTable]['config']['ptable'])) {

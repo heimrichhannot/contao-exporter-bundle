@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.10.1] - 2022-02-14
+
+- Fixed: array index issues in php 8+
+
 ## [0.10.0] - 2022-02-14
 
 - Fixed: config for symfony 5+

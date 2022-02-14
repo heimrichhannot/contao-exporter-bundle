@@ -63,7 +63,7 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
                 'label'      => &$GLOBALS['TL_LANG']['tl_exporter']['delete'],
                 'href'       => 'act=delete',
                 'icon'       => 'delete.gif',
-                'attributes' => 'onclick="if(!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\'))return false;Backend.getScrollOffset()"',
+                'attributes' => 'onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null) . '\'))return false;Backend.getScrollOffset()"',
             ],
             'show'   => [
                 'label' => &$GLOBALS['TL_LANG']['tl_exporter']['show'],
@@ -331,6 +331,7 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
                 'mandatory' => true,
                 'maxlength' => 1,
                 'tl_class'  => 'w50 clr',
+                'decodeEntities' => true
             ],
             'sql'       => "char(1) NOT NULL default ''",
         ],
@@ -346,6 +347,7 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
                 'mandatory' => true,
                 'maxlength' => 1,
                 'tl_class'  => 'w50',
+                'decodeEntities' => true
             ],
             'sql'       => "char(1) NOT NULL default ''",
         ],

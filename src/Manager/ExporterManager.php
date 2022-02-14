@@ -55,7 +55,7 @@ class ExporterManager
     public function getExporterByFileType(string $fileType, bool $useCache = true)
     {
         $this->initializeFileTypeLists($useCache);
-        return $this->exporterFileTypes[$fileType] ?: [];
+        return $this->exporterFileTypes[$fileType] ?? [];
     }
 
     /**
