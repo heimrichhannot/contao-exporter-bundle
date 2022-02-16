@@ -3,53 +3,57 @@
 namespace HeimrichHannot\ContaoExporterBundle\Command;
 
 use Contao\CoreBundle\Command\AbstractLockedCommand;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Framework\FrameworkAwareInterface;
 use Contao\CoreBundle\Framework\FrameworkAwareTrait;
 use Contao\System;
+use HeimrichHannot\ContaoExporterBundle\Action\ExportAction;
+use HeimrichHannot\ContaoExporterBundle\Model\ExporterModel;
+use HeimrichHannot\UtilsBundle\Util\Utils;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-class ExportCommand extends AbstractLockedCommand implements FrameworkAwareInterface
+class ExportCommand extends Command
 {
-    use FrameworkAwareTrait;
+    protected static $defaultName = 'huh:exporter:export';
 
     /**
      * @var SymfonyStyle
      */
     private $io;
 
-    /**
-     * @var string
-     */
-    private $rootDir;
+    private InputInterface  $input;
+    private ContaoFramework $contaoFramework;
+    private Utils           $utils;
+    private ExportAction    $exportAction;
 
-    /**
-     * @var InputInterface
-     */
-    private $input;
+    public function __construct(ContaoFramework $contaoFramework, Utils $utils, ExportAction $exportAction)
+    {
+        parent::__construct();
+        $this->contaoFramework = $contaoFramework;
+        $this->utils = $utils;
+        $this->exportAction = $exportAction;
+    }
+
 
     /**
      * {@inheritdoc}
      */
     protected function configure()
     {
-        $this->setName('huh:exporter:export')
+        $this
             ->setDescription('Runs a given exporter config on the command line.')
             ->addArgument('exporterConfig', InputArgument::REQUIRED, 'The exporter config id');
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function executeLocked(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $this->contaoFramework->initialize();
         $this->input = $input;
         $this->io      = new SymfonyStyle($input, $output);
-        $this->rootDir = $this->getContainer()->getParameter('kernel.project_dir');
-        $this->framework = $this->getContainer()->get('contao.framework');
-        $this->framework->initialize();
 
         if ($this->export())
         {
@@ -59,11 +63,12 @@ class ExportCommand extends AbstractLockedCommand implements FrameworkAwareInter
         return 0;
     }
 
-    protected function export()
+    protected function export(): bool
     {
         $exporterConfigId = $this->input->getArgument('exporterConfig');
 
-        if (null === ($exporterConfig = System::getContainer()->get('huh.utils.model')->findModelInstanceByPk(
+        /** @var ExporterModel $exporterConfig */
+        if (null === ($exporterConfig = $this->utils->model()->findModelInstanceByPk(
             'tl_exporter', $exporterConfigId)))
         {
             $this->io->error('Exporter config with id ' . $exporterConfigId . ' not found.');
@@ -77,7 +82,7 @@ class ExportCommand extends AbstractLockedCommand implements FrameworkAwareInter
             $GLOBALS['TL_LANGUAGE'] = $exporterConfig->language;
         }
 
-        System::getContainer()->get('huh.exporter.action.export')->export($exporterConfig);
+        $this->exportAction->export($exporterConfig);
 
         if ($exporterConfig->language)
         {
