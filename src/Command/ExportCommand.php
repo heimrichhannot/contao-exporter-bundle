@@ -2,11 +2,7 @@
 
 namespace HeimrichHannot\ContaoExporterBundle\Command;
 
-use Contao\CoreBundle\Command\AbstractLockedCommand;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\Framework\FrameworkAwareInterface;
-use Contao\CoreBundle\Framework\FrameworkAwareTrait;
-use Contao\System;
 use HeimrichHannot\ContaoExporterBundle\Action\ExportAction;
 use HeimrichHannot\ContaoExporterBundle\Model\ExporterModel;
 use HeimrichHannot\UtilsBundle\Util\Utils;
