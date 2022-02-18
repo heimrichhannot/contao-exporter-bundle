@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Copyright (c) 2022 Heimrich & Hannot GmbH
+ *
+ * @license LGPL-3.0-or-later
+ */
+
 namespace HeimrichHannot\ContaoExporterBundle\Migration;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
@@ -36,6 +42,14 @@ class ModuleMigration implements MigrationInterface
             }
         }
 
+        if (ExporterModel::findByType('formhybrid')) {
+            return true;
+        }
+
+        if (ExporterModel::findByFileType('xls')) {
+            return true;
+        }
+
         return false;
     }
 
@@ -46,7 +60,7 @@ class ModuleMigration implements MigrationInterface
         foreach (static::legacyClassMapping() as $legacyClass => $newClass) {
             if ($exporter = ExporterModel::findByExporterClass($legacyClass)) {
                 $exporter->exporterClass = $newClass;
-                $updatedClasses++;
+                ++$updatedClasses;
                 $exporter->save();
             }
         }
@@ -65,7 +79,7 @@ class ModuleMigration implements MigrationInterface
             }
         }
 
-        return new MigrationResult(true, "Exporter Module Migration executed successfully");
+        return new MigrationResult(true, 'Exporter Module Migration executed successfully');
     }
 
     public static function legacyClassMapping(): array
