@@ -62,6 +62,8 @@ use Contao\Model;
  * @property string $pdfSubject
  * @property string $pdfCreator
  * @property string $useProtectedHomeDir
+ *
+ * @method static self|null findByExporterClass(string $class, array $opt=array())
  */
 class ExporterModel extends Model
 {

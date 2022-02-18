@@ -1,12 +1,15 @@
 services:
-
   _defaults:
     autowire: true
-
   _instanceof:
     HeimrichHannot\ContaoExporterBundle\Exporter\ExporterInterface:
       tags: ['huh_exporter.exporter']
       lazy: true
+
+  HeimrichHannot\ContaoExporterBundle\:
+    resource: '../../{Command,Migration}/*'
+    autowire: true
+    autoconfigure: true
 
 # Manager
 
@@ -29,23 +32,14 @@ services:
   huh.exporter.action.export:
     class: HeimrichHannot\ContaoExporterBundle\Action\ExportAction
     public: true
+  HeimrichHannot\ContaoExporterBundle\Action\ExportAction: "@huh.exporter.action.export"
+
   huh.exporter.action.backendexport:
     class: HeimrichHannot\ContaoExporterBundle\Action\BackendExportAction
     public: true
   huh.exporter.action.frontendexport:
     class: HeimrichHannot\ContaoExporterBundle\Action\FrontendExportAction
     public: true
-
-# Commands
-  huh.exporter.command.export:
-    class: HeimrichHannot\ContaoExporterBundle\Command\ExportCommand
-    tags:
-      - { name: 'console.command'}
-
-  huh.exporter.command.migration:
-    class: HeimrichHannot\ContaoExporterBundle\Command\MigrationCommand
-    tags:
-      - { name: 'console.command'}
 
 # Exporter
 
