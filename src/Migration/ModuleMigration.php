@@ -11,6 +11,7 @@ namespace HeimrichHannot\ContaoExporterBundle\Migration;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Migration\MigrationInterface;
 use Contao\CoreBundle\Migration\MigrationResult;
+use Contao\Database;
 use HeimrichHannot\ContaoExporterBundle\Exporter\AbstractExporter;
 use HeimrichHannot\ContaoExporterBundle\Exporter\Concrete\CsvExporter;
 use HeimrichHannot\ContaoExporterBundle\Exporter\Concrete\ExcelExporter;
@@ -35,6 +36,10 @@ class ModuleMigration implements MigrationInterface
     public function shouldRun(): bool
     {
         $this->contaoFramework->initialize();
+
+        if (!Database::getInstance()->tableExists(ExporterModel::getTable())) {
+            return false;
+        }
 
         foreach (array_keys(static::legacyClassMapping()) as $value) {
             if (ExporterModel::findByExporterClass($value)) {

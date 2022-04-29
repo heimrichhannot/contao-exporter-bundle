@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.11.1] - 2022-04-29
+- Fixed: exception in migration if exporter table does not exist
+
 ## [0.11.0] - 2022-02-18
 - Added: ModuleMigration
 - Changed: minimum php version is now 7.4
