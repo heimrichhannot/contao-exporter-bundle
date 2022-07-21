@@ -49,7 +49,8 @@ Add your backend module in your entity's config.php as follows:
 
 ```php
 $GLOBALS['BE_MOD']['mygroup']['name'] = [
-    'export_csv' => ['huh.exporter.action.backendexport', 'export']
+    'export_csv' => ['huh.exporter.action.backendexport', 'export'],
+    'tables' => ['tl_name'],
 ];
 ```
 
