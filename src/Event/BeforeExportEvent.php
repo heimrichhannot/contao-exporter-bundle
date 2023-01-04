@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2022 Heimrich & Hannot GmbH
+ * Copyright (c) 2023 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -41,7 +41,7 @@ class BeforeExportEvent extends Event
      */
     private $fileDir;
 
-    public function __construct($entity, array $fields, string $fileName, AbstractExporter $exporter, string $fileDir = '')
+    public function __construct($entity, array $fields, string $fileName, AbstractExporter $exporter, string $fileDir)
     {
         $this->entity = $entity;
         $this->fields = $fields;
