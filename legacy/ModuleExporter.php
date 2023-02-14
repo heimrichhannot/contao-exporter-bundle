@@ -1,21 +1,25 @@
 <?php
 
+/*
+ * Copyright (c) 2023 Heimrich & Hannot GmbH
+ *
+ * @license LGPL-3.0-or-later
+ */
+
 namespace HeimrichHannot\Exporter;
 
 use Contao\System;
-use HeimrichHannot\ContaoExporterBundle\Action\BackendExportAction;
 
 /**
- * Class ModuleExporter
- * @package HeimrichHannot\Exporter
+ * Class ModuleExporter.
  *
  * @deprecated This class is just kept for compatibility reasons and will soon be removed. Please see UPGRADE.md
  */
 class ModuleExporter
 {
-
     /**
      * @param $objDc
+     *
      * @throws \Exception
      *
      * @deprecated This function is just kept for compatibility reasons and will soon be removed. Please see UPGRADE.md
@@ -26,12 +30,12 @@ class ModuleExporter
     }
 
     /**
-     * @param       $objConfig
+     * @param      $objConfig
      * @param null $objEntity
-     * @param array $arrFields
      *
-     * @return bool|object The exporter or false if no exporter had been found (or error happened).
      * @throws \Exception
+     *
+     * @return bool|object the exporter or false if no exporter had been found (or error happened)
      *
      * @deprecated This function is just kept for compatibility reasons and will soon be removed. Please see UPGRADE.md
      */
@@ -46,19 +50,21 @@ class ModuleExporter
      * @param $strName
      * @param string $strLabel
      * @param string $strIcon
+     *
      * @return array
      *
      * @deprecated This function is just kept for compatibility reasons and will soon be removed. Please see UPGRADE.md
      */
     public static function getGlobalOperation($strName, $strLabel = '', $strIcon = '')
     {
-        return BackendExportAction::getGlobalOperation($strName, $strLabel, $strIcon);
+        return System::getContainer()->get('huh.exporter.action.backendexport')->getGlobalOperation($strName, $strLabel, $strIcon);
     }
 
     /**
      * @param $strName
      * @param string $strLabel
      * @param string $strIcon
+     *
      * @return array
      *
      * @deprecated This function is just kept for compatibility reasons and will soon be removed. Please see UPGRADE.md
@@ -67,8 +73,8 @@ class ModuleExporter
     {
         $arrOperation = [
             'label' => &$strLabel,
-            'href'  => 'key=' . $strName,
-            'icon'  => $strIcon,
+            'href' => 'key='.$strName,
+            'icon' => $strIcon,
         ];
 
         return $arrOperation;
@@ -83,5 +89,4 @@ class ModuleExporter
     {
         return ['huh.exporter.action.backendexport', 'export'];
     }
-
 }

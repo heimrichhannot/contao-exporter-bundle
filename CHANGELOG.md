@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.11.2] - 2023-02-14
+- Fixed: compatibility issue with php 8
+
 ## [0.11.1] - 2022-04-29
 - Fixed: exception in migration if exporter table does not exist
 
