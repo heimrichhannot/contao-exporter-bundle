@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.11.3] - 2023-06-30
+- Fixed: warnings
+- Fixed: some deprecation notices
+
 ## [0.11.2] - 2023-02-14
 - Fixed: compatibility issue with php 8
 
