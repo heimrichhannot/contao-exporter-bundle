@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.11.4] - 2023-10-27
+- Fixed: syntax error
+
 ## [0.11.3] - 2023-06-30
 - Fixed: warnings
 - Fixed: some deprecation notices

@@ -45,7 +45,7 @@ class BeforeExportEvent extends Event
      */
     private $exporter;
 
-    public function __construct($entity, array $fields, string $fileDir = '', string $fileName, AbstractExporter $exporter)
+    public function __construct($entity, array $fields, string $fileDir, string $fileName, AbstractExporter $exporter)
     {
         $this->entity = $entity;
         $this->fields = $fields;
