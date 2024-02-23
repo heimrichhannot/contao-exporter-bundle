@@ -64,7 +64,8 @@ class ModuleFrontendExporter extends Module
         $this->Template->type = $this->getExporterType();
         $this->Template->btnLabel = $this->exporterBtnLabel;
 
-        if (null === ($exportType = $this->container->get("huh.request")->getPost('export')))
+        $exportType = Input::post('export');
+        if (null === $exportType)
         {
             return;
         }
@@ -88,7 +89,7 @@ class ModuleFrontendExporter extends Module
         {
             return $autoItem;
         }
-        if ($id = $this->container->get('huh.request')->getGet('id'))
+        if ($id = Input::get('id'))
         {
             return $id;
         }
