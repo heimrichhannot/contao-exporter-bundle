@@ -64,7 +64,7 @@ class ModuleFrontendExporter extends Module
         $this->Template->type = $this->getExporterType();
         $this->Template->btnLabel = $this->exporterBtnLabel;
 
-        if (null === ($exportType = $this->container->get("huh.request")->getPost('export')))
+        if (!System::getContainer()->get('request_stack')->getCurrentRequest()->request->has('export'))
         {
             return;
         }
@@ -73,7 +73,7 @@ class ModuleFrontendExporter extends Module
         {
             $frontendAction = new FrontendExportAction($this->container);
             $frontendAction->export($this->config);
-        } catch (\Exception $e)
+        } catch (\Exception)
         {
             Message::addError($this->container->get('translator')->trans('huh.exporter.error.exportNotPossible'), 'huh_exporter.frontend');
         }
@@ -88,7 +88,8 @@ class ModuleFrontendExporter extends Module
         {
             return $autoItem;
         }
-        if ($id = $this->container->get('huh.request')->getGet('id'))
+
+        if ($id = (int)Input::get('id'))
         {
             return $id;
         }

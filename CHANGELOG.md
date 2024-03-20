@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased] - 2024-03-20
+- Changed: remove request bundle dependency
+
 ## [0.11.4] - 2023-10-27
 - Fixed: syntax error
 
