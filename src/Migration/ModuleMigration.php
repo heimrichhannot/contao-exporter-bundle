@@ -63,10 +63,11 @@ class ModuleMigration implements MigrationInterface
         $this->contaoFramework->initialize();
 
         foreach (static::legacyClassMapping() as $legacyClass => $newClass) {
-            if ($exporter = ExporterModel::findByExporterClass($legacyClass)) {
-                $exporter->exporterClass = $newClass;
-                ++$updatedClasses;
-                $exporter->save();
+            if ($exporters = ExporterModel::findByExporterClass($legacyClass)) {
+                foreach ($exporters as $exporter) {
+                    $exporter->exporterClass = $newClass;
+                    $exporter->save();
+                }
             }
         }
 
