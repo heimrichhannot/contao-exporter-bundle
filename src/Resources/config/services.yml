@@ -1,6 +1,7 @@
 services:
   _defaults:
     autowire: true
+
   _instanceof:
     HeimrichHannot\ContaoExporterBundle\Exporter\ExporterInterface:
       tags: ['huh_exporter.exporter']
@@ -8,8 +9,15 @@ services:
 
   HeimrichHannot\ContaoExporterBundle\:
     resource: '../../{Command,Migration}/*'
-    autowire: true
     autoconfigure: true
+
+  HeimrichHannot\ContaoExporterBundle\EventListener\Contao\:
+    resource: '../../EventListener/Contao/*'
+    autoconfigure: true
+
+  HeimrichHannot\ContaoExporterBundle\Manager\ExporterOperationManager:
+    arguments:
+      - !tagged_iterator huh.exporter.operation
 
 # Manager
 
@@ -37,6 +45,8 @@ services:
   huh.exporter.action.backendexport:
     class: HeimrichHannot\ContaoExporterBundle\Action\BackendExportAction
     public: true
+  HeimrichHannot\ContaoExporterBundle\Action\BackendExportAction: "@huh.exporter.action.backendexport"
+
   huh.exporter.action.frontendexport:
     class: HeimrichHannot\ContaoExporterBundle\Action\FrontendExportAction
     public: true
