@@ -2,8 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased] - 2024-03-20
+## [0.11.5] - 2024-03-21
 - Changed: remove request bundle dependency
+- Fixed: migration need many runs in some contexts
 
 ## [0.11.4] - 2023-10-27
 - Fixed: syntax error
