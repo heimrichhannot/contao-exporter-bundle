@@ -1,13 +1,21 @@
 <?php
 /**
- * Contao Open Source CMS
+ * This file is part of the heimrichhannot/contao-exporter-bundle package for the Contao Open Source CMS.
  *
- * Copyright (c) 2015 Heimrich & Hannot GmbH
+ * @copyright Heimrich & Hannot GmbH, 2024
  *
- * @package exporter
+ * @package heimrichhannot/contao-exporter-bundle
  * @author  Oliver Janke <o.janke@heimrich-hannot.de>
  * @license http://www.gnu.org/licences/lgpl-3.0.html LGPL
  */
+
+use Contao\DC_Table;
+use Contao\System;
+use HeimrichHannot\ContaoExporterBundle\Exporter\AbstractExporter;
+use HeimrichHannot\ContaoExporterBundle\Exporter\Concrete\CsvExporter;
+use HeimrichHannot\ContaoExporterBundle\Exporter\Concrete\ExcelExporter;
+use HeimrichHannot\ContaoExporterBundle\Exporter\Concrete\MediaExporter;
+use HeimrichHannot\ContaoExporterBundle\Exporter\Concrete\PdfExporter;
 
 /**
  * Table tl_exporter
@@ -16,7 +24,7 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
 
     // Config
     'config'      => [
-        'dataContainer'    => 'Table',
+        'dataContainer'    => DC_Table::class,
         'enableVersioning' => true,
         'onload_callback'  => [
             ['huh.exporter.listener.dc.exporter', 'checkPermission'],
@@ -76,16 +84,18 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
     // Palettes
     'palettes'    => [
         'default' => '{title_legend},title,type;',
-        \HeimrichHannot\ContaoExporterBundle\Exporter\AbstractExporter::TYPE_LIST
-                  => '{title_legend},title,type;'
-            . '{export_legend},target,fileType;'
-            . '{exporter_config_legend},exporterClass;'
-            . '{table_legend},globalOperationKey,linkedTable,addJoinTables,ignoreOnloadCallbacks,addUnformattedFields,tableFieldsForExportCopier,tableFieldsForExport,restrictToPids,whereClause,orderBy;'
-            . '{command_legend},language;',
-        \HeimrichHannot\ContaoExporterBundle\Exporter\AbstractExporter::TYPE_ITEM
-                  => '{title_legend},title,type;'
-            . '{export_legend},target,fileType,exporterClass;'
-            . '{table_legend}},linkedTable,entitySelector,addJoinTables,ignoreOnloadCallbacks,skipFields,skipLabels,whereClause,orderBy;',
+        AbstractExporter::TYPE_LIST => <<<'PALETTE'
+            {title_legend},title,type;
+            {export_legend},target,fileType;
+            {exporter_config_legend},exporterClass;
+            {table_legend},globalOperationKey,linkedTable,addJoinTables,ignoreOnloadCallbacks,addUnformattedFields,tableFieldsForExportCopier,tableFieldsForExport,restrictToPids,whereClause,orderBy;
+            {command_legend},language;
+            PALETTE,
+        AbstractExporter::TYPE_ITEM => <<<'PALETTE'
+            {title_legend},title,type;
+            {export_legend},target,fileType,exporterClass;
+            {table_legend}},linkedTable,entitySelector,addJoinTables,ignoreOnloadCallbacks,skipFields,skipLabels,whereClause,orderBy;
+            PALETTE,
 
         '__selector__' => [
             'fileType',
@@ -102,19 +112,13 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
 
     // Subpalettes
     'subpalettes' => [
-        'target_' . \HeimrichHannot\ContaoExporterBundle\Exporter\AbstractExporter::TARGET_DOWNLOAD
-        => 'fileName,fileNameAddDatime',
-        'target_' . \HeimrichHannot\ContaoExporterBundle\Exporter\AbstractExporter::TARGET_FILE
-        => 'fileDir,useHomeDir,fileSubDirName,fileName,fileNameAddDatime',
+        'target_' . AbstractExporter::TARGET_DOWNLOAD => 'fileName,fileNameAddDatime',
+        'target_' . AbstractExporter::TARGET_FILE     => 'fileDir,useHomeDir,fileSubDirName,fileName,fileNameAddDatime',
 
-        'exporterClass_' . \HeimrichHannot\ContaoExporterBundle\Exporter\Concrete\CsvExporter::getAlias()
-        => 'localizeFields,fieldDelimiter,fieldEnclosure,addHeaderToExportTable',
-        'exporterClass_' . \HeimrichHannot\ContaoExporterBundle\Exporter\Concrete\PdfExporter::getAlias()
-        => 'localizeFields,pdfTemplate,pdfBackground,pdfFontDirectories,pdfMargins,pdfCss,pdfTitle,pdfSubject,pdfCreator',
-        'exporterClass_' . \HeimrichHannot\ContaoExporterBundle\Exporter\Concrete\ExcelExporter::getAlias()
-        => 'localizeFields,addHeaderToExportTable',
-        'exporterClass_' . \HeimrichHannot\ContaoExporterBundle\Exporter\Concrete\MediaExporter::getAlias()
-        => 'compressionType',
+        'exporterClass_' . CsvExporter::getAlias()    => 'localizeFields,fieldDelimiter,fieldEnclosure,addHeaderToExportTable',
+        'exporterClass_' . PdfExporter::getAlias()    => 'localizeFields,pdfTemplate,pdfBackground,pdfFontDirectories,pdfMargins,pdfCss,pdfTitle,pdfSubject,pdfCreator',
+        'exporterClass_' . ExcelExporter::getAlias()  => 'localizeFields,addHeaderToExportTable',
+        'exporterClass_' . MediaExporter::getAlias()  => 'compressionType',
 
         'addHeaderToExportTable'      => 'localizeHeader,overrideHeaderFieldLabels',
         'overrideHeaderFieldLabels'   => 'headerFieldLabels',
@@ -150,8 +154,8 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
             'label'     => &$GLOBALS['TL_LANG']['tl_exporter']['type'],
             'inputType' => 'select',
             'options'   => [
-                \HeimrichHannot\ContaoExporterBundle\Exporter\AbstractExporter::TYPE_LIST,
-                \HeimrichHannot\ContaoExporterBundle\Exporter\AbstractExporter::TYPE_ITEM,
+                AbstractExporter::TYPE_LIST,
+                AbstractExporter::TYPE_ITEM,
             ],
             'reference' => &$GLOBALS['TL_LANG']['tl_exporter']['reference'],
             'eval'      => [
@@ -431,8 +435,8 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
             'exclude'   => true,
             'inputType' => 'select',
             'options'   => [
-                \HeimrichHannot\ContaoExporterBundle\Exporter\AbstractExporter::TARGET_DOWNLOAD,
-                \HeimrichHannot\ContaoExporterBundle\Exporter\AbstractExporter::TARGET_FILE,
+                AbstractExporter::TARGET_DOWNLOAD,
+                AbstractExporter::TARGET_FILE,
             ],
             'reference' => &$GLOBALS['TL_LANG']['tl_exporter']['reference'],
             'eval'      => [
@@ -441,7 +445,7 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
                 'includeBlankOption' => true,
                 'tl_class'           => 'w50',
             ],
-            'sql'       => "varchar(255) NOT NULL default '" . \HeimrichHannot\ContaoExporterBundle\Exporter\AbstractExporter::TARGET_DOWNLOAD . "'",
+            'sql'       => "varchar(255) NOT NULL default '" . AbstractExporter::TARGET_DOWNLOAD . "'",
         ],
         'fileDir'                    => [
             'label'     => &$GLOBALS['TL_LANG']['tl_exporter']['fileDir'],
@@ -645,24 +649,25 @@ $GLOBALS['TL_DCA']['tl_exporter'] = [
             'sql'       => "char(1) NOT NULL default ''",
         ],
         'language' => [
-            'label'                   => &$GLOBALS['TL_LANG']['tl_exporter']['language'],
-            'exclude'                 => true,
-            'filter'                  => true,
-            'inputType'               => 'select',
-            'options' => \Contao\System::getLanguages(),
-            'eval'                    => ['tl_class' => 'w50', 'includeBlankOption' => true, 'chosen' => true],
-            'sql'                     => "varchar(64) NOT NULL default ''"
+            'label'     => &$GLOBALS['TL_LANG']['tl_exporter']['language'],
+            'exclude'   => true,
+            'filter'    => true,
+            'inputType' => 'select',
+            'options'   => System::getContainer()->get('contao.intl.locales')->getLocales(null, true),
+            'eval'      => ['tl_class' => 'w50', 'includeBlankOption' => true, 'chosen' => true],
+            'sql'       => "varchar(64) NOT NULL default ''"
         ],
     ],
 ];
 
 $arrDca = &$GLOBALS['TL_DCA']['tl_exporter'];
 
-if (in_array('protected_homedirs', \ModuleLoader::getActive())) {
-    $arrDca['subpalettes']['target_' . \HeimrichHannot\ContaoExporterBundle\Exporter\AbstractExporter::TARGET_FILE] = str_replace(
+if (in_array('protected_homedirs', array_keys(System::getContainer()->getParameter('kernel.bundles'))))
+{
+    $arrDca['subpalettes']['target_' . AbstractExporter::TARGET_FILE] = str_replace(
         'useHomeDir',
         'useHomeDir,useProtectedHomeDir',
-        $arrDca['subpalettes']['target_' . \HeimrichHannot\ContaoExporterBundle\Exporter\AbstractExporter::TARGET_FILE]
+        $arrDca['subpalettes']['target_' . AbstractExporter::TARGET_FILE]
     );
 
     $arrDca['fields']['useProtectedHomeDir'] = [
