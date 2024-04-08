@@ -1,13 +1,10 @@
 <?php
-/**
- * Contao Open Source CMS
- *
- * Copyright (c) 2018 Heimrich & Hannot GmbH
- *
- * @author  Thomas Körner <t.koerner@heimrich-hannot.de>
- * @license http://www.gnu.org/licences/lgpl-3.0.html LGPL
- */
 
+/*
+ * Copyright (c) 2022 Heimrich & Hannot GmbH
+ *
+ * @license LGPL-3.0-or-later
+ */
 
 namespace HeimrichHannot\ContaoExporterBundle\ContaoManager;
 
@@ -16,16 +13,15 @@ use Contao\ManagerPlugin\Bundle\BundlePluginInterface;
 use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
 use Contao\ManagerPlugin\Bundle\Config\ConfigInterface;
 use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
+use Contao\ManagerPlugin\Routing\RoutingPluginInterface;
 use HeimrichHannot\ContaoExporterBundle\HeimrichHannotContaoExporterBundle;
+use Symfony\Component\Config\Loader\LoaderResolverInterface;
+use Symfony\Component\HttpKernel\KernelInterface;
 
-
-class Plugin implements BundlePluginInterface
+class Plugin implements BundlePluginInterface, RoutingPluginInterface
 {
-
     /**
      * Gets a list of autoload configurations for this bundle.
-     *
-     * @param ParserInterface $parser
      *
      * @return ConfigInterface[]
      */
@@ -36,5 +32,10 @@ class Plugin implements BundlePluginInterface
                 ContaoCoreBundle::class,
             ]),
         ];
+    }
+
+    public function getRouteCollection(LoaderResolverInterface $resolver, KernelInterface $kernel)
+    {
+        return $resolver->resolve(__DIR__.'/../Resources/config/routes.yaml')->load(__DIR__.'/../Resources/config/routes.yaml');
     }
 }
