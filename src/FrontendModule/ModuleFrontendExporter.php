@@ -73,7 +73,7 @@ class ModuleFrontendExporter extends Module
         {
             $frontendAction = new FrontendExportAction($this->container);
             $frontendAction->export($this->config);
-        } catch (\Exception)
+        } catch (\Exception $e)
         {
             Message::addError($this->container->get('translator')->trans('huh.exporter.error.exportNotPossible'), 'huh_exporter.frontend');
         }
