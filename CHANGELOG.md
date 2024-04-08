@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.11.6] - 2024-04-08
+- Fixed: php 7 incompatibility ([#17](https://github.com/heimrichhannot/contao-exporter-bundle/pull/17), [@fritzmg])
+
 ## [0.11.5] - 2024-03-21
 - Changed: remove request bundle dependency
 - Fixed: migration need many runs in some contexts
@@ -191,3 +194,5 @@ every exporter configuration with the correct exporter class again.
 ## [0.1.0] - 2018-07-25
 
 Initial release.
+
+[@fritzmg]: https://github.com/fritzmg
